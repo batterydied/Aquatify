@@ -6,7 +6,7 @@ export default function Index() {
     <View 
       
     >
-      <Text>Hey!</Text>
+      <Text className="text-red-500">Hey!</Text>
       <Pressable onPress={handlePress}>
         <Text>
           Press Me

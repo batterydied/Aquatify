@@ -7,7 +7,7 @@ export default function LoginPage({ login }: LoginProps){
     return(
         <View>
             <Pressable onPress={ login }>
-                <Text>
+                <Text className="text-red-500">
                     Sign in here
                 </Text>
             </Pressable>
