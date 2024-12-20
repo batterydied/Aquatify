@@ -1,5 +1,11 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const root = path.dirname(__dirname);
 
 // Load environment variables
 dotenv.config();
@@ -12,8 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Default route
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to the backend API');
+app.get('/', (req, res) => {
+  res.send("You reached the server!");
 });
 
 // Start the server
