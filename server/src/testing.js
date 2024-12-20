@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Default route
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req, res) => {
   res.send('Welcome to the backend API');
 });
 
