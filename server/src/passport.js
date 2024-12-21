@@ -1,71 +1,63 @@
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as OAuth2Strategy } from 'passport-oauth2';
-import bcrypt from 'bcryptjs';
-import UserModel from './models/UserModel'; 
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as AppleStrategy } from 'passport-apple';
 
-// Local strategy for username/password authentication
+// Google OAuth Strategy
 passport.use(
-  new LocalStrategy(async (email, password, done) => {
-    try {
-      const user = await UserModel.models.User.findOne({ where: { email } });
-      if (!user) {
-        return done(null, false, { message: 'Invalid email or password' });
-      }
-
-      // Compare hashed password
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return done(null, false, { message: 'Invalid email or password' });
-      }
-
-      return done(null, user);
-    } catch (err) {
-      return done(err);
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,  // Google client ID from Google Developer Console
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,  // Google client secret
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,  // Callback URL for Google
+    },
+    (accessToken, refreshToken, profile, done) => {
+      // Handle Google profile
+      return done(null, profile);
     }
-  })
+  )
 );
 
-// passport.use(
-//   'google',
-//   new OAuth2Strategy(
-//     {
-//       authorizationURL: 'https://accounts.google.com/o/oauth2/auth',
-//       tokenURL: 'https://accounts.google.com/o/oauth2/token',
-//       clientID: 'YOUR_GOOGLE_CLIENT_ID', // Replace with your client ID
-//       clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET', // Replace with your client secret
-//       callbackURL: 'http://localhost:5000/auth/google/callback', // Your callback URL
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         const user = await UserModel.models.User.findOrCreate({
-//           where: { email: profile.emails[0].value },
-//           defaults: {
-//             name: profile.displayName,
-//             email: profile.emails[0].value,
-//             avatar: profile.photos ? profile.photos[0].value : null,
-//           },
-//         });
+// Facebook OAuth Strategy
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,  // Facebook app ID
+      clientSecret: process.env.FACEBOOK_APP_SECRET,  // Facebook app secret
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,  // Callback URL for Facebook
+      profileFields: ['id', 'displayName', 'emails', 'photos'],  // Optional profile fields
+    },
+    (accessToken, refreshToken, profile, done) => {
+      // Handle Facebook profile
+      return done(null, profile);
+    }
+  )
+);
 
-//         return done(null, user[0]);
-//       } catch (err) {
-//         return done(err);
-//       }
-//     }
-//   )
-// );
+// Apple OAuth Strategy
+passport.use(
+  new AppleStrategy(
+    {
+      clientID: process.env.APPLE_CLIENT_ID,  // Apple client ID from Apple Developer Console
+      teamID: process.env.APPLE_TEAM_ID,  // Apple team ID
+      keyID: process.env.APPLE_KEY_ID,  // Apple key ID
+      privateKeyLocation: process.env.APPLE_PRIVATE_KEY_PATH,  // Path to Apple private key
+      callbackURL: process.env.APPLE_CALLBACK_URL,  // Callback URL for Apple
+    },
+    (accessToken, refreshToken, idToken, profile, done) => {
+      // Handle Apple profile
+      return done(null, profile);
+    }
+  )
+);
 
-// Serialize user information into session
+// Serialize and Deserialize the user for sessions
 passport.serializeUser((user, done) => {
-  done(null, user.id); // Store only the user ID in the session for efficiency
+  done(null, user);
 });
 
-// Deserialize user from session
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await UserModel.models.User.findByPk(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
+
+export default passport;

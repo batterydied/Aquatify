@@ -10,20 +10,29 @@
     
         initializeRoutes() {
         // Fetch all products
-        this.router.get("/", (req, res) => ProductController.getAllProducts(req, res));
+        this.router.get("/", ProductController.getAllProducts);
     
         // Fetch a single product by ID
-        this.router.get("/:id", (req, res) => ProductController.getProductById(req, res));
+        this.router.get("/:id", ProductController.getProductById);
     
         // Add a new product
-        this.router.post("/", (req, res) => ProductController.addProduct(req, res));
+        this.router.post("/", ProductController.addProduct);
     
         // Update an existing product
-        this.router.put("/:prodid", (req, res) => ProductController.updateProduct(req, res));
+        this.router.put("/:prodid", ProductController.updateProduct);
     
         // Delete a product by ID
-        this.router.delete("/:prodid", (req, res) => ProductController.deleteProduct(req, res));
+        this.router.delete("/:prodid", ProductController.deleteProduct);
+        }
+
+         /**
+         * Return the configured router instance.
+         * @returns {Router} - Express Router instance with all cart routes.
+         */
+        getRouter(){
+            return this.router;
         }
     }
     
-    export default new ProductRoutes().router; // Export the router instance
+    // Export the ProductRoutes instance
+    export default new ProductRoutes().getRouter();

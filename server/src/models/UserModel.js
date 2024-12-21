@@ -12,10 +12,6 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -26,7 +22,7 @@ const User = sequelize.define("User", {
   },
   avatar: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
   },
 });
 
@@ -43,11 +39,11 @@ const Address = sequelize.define("Address", {
   },
   city: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   state: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   zipCode: {
     type: DataTypes.STRING,
@@ -99,7 +95,7 @@ const PaymentMethod = sequelize.define("PaymentMethod", {
   },
   cardName: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
 });
 
@@ -108,31 +104,31 @@ const OrderHistory = sequelize.define("OrderHistory", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   orderDate: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
   total: {
     type: DataTypes.FLOAT,
-    allowNull: false
+    allowNull: false,
   },
   items: {
     type: DataTypes.JSONB,
-    allowNull: false
+    allowNull: false,
   },
 });
 
 // Define Relationships
-User.hasMany(Address, { foreignKey: "profileId", onDelete: "CASCADE" });
-Address.belongsTo(User, { foreignKey: "profileId" });
+User.hasMany(Address, { foreignKey: "userId", onDelete: "CASCADE" });
+Address.belongsTo(User, { foreignKey: "userId" });
 
-User.hasMany(PaymentMethod, { foreignKey: "profileId", onDelete: "CASCADE" });
-PaymentMethod.belongsTo(User, { foreignKey: "profileId" });
+User.hasMany(PaymentMethod, { foreignKey: "userId", onDelete: "CASCADE" });
+PaymentMethod.belongsTo(User, { foreignKey: "userId" });
 
-User.hasMany(OrderHistory, { foreignKey: "profileId", onDelete: "CASCADE" });
-OrderHistory.belongsTo(User, { foreignKey: "profileId" });
+User.hasMany(OrderHistory, { foreignKey: "userId", onDelete: "CASCADE" });
+OrderHistory.belongsTo(User, { foreignKey: "userId" });
 
 // Define the UserModel Class
 class _UserModel {
@@ -143,7 +139,7 @@ class _UserModel {
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync(); 
+      await sequelize.sync(); // Sync with force to ensure the models are up-to-date
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Failed to initialize database:", error);

@@ -5,6 +5,9 @@ import { fileURLToPath } from "url";
 import { handleGlobalError } from "./utils/errorHandler.js";
 import cors from "cors";
 import { connectToDatabase } from "./database.js";
+import session from 'express-session';
+import passport from 'passport';
+import './passport.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,7 +15,8 @@ const root = path.dirname(__dirname);
 
 const port = process.env.PORT
 
-//import UserRoutes from './routes/UserRoutes.js';
+import AuthRoutes from "./routes/AuthRoutes.js";
+import UserRoutes from './routes/UserRoutes.js';
 //import CartRoutes from './routes/CartRoutes.js';
 import ProductRoutes from './routes/ProductRoutes.js';
 //import OrderRoutes from './routes/OrderRoutes.js';
@@ -33,14 +37,28 @@ class Server{
       methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
       credentials: true,
     }));
+    this.app.use(session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+      cookie: { maxAge: 1000 * 60 * 60 } // Expires in 1 hour
+    }));
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+    
   }
   setupRoutes() {
     console.log("Registering routes...");
 
-    // this.app.use('/api/user', (req, res, next) => {
-    //   console.log(`Route hit: ${req.method} ${req.url}`);
-    //   next();
-    // }, UserRoutes);
+    this.app.use('/auth', (req, res, next) => {
+      console.log(`Route hit: ${req.method} ${req.url}`);
+      next();
+    }, AuthRoutes);
+
+    this.app.use('/api/user', (req, res, next) => {
+      console.log(`Route hit: ${req.method} ${req.url}`);
+      next();
+    }, UserRoutes);
 
     this.app.use('/api/product', (req, res, next) => {
         console.log(`Route hit: ${req.method} ${req.url}`);

@@ -16,22 +16,13 @@ class OrderRoutes {
    */
   initializeRoutes() {
     // Fetch all orders for the signed-in user
-    this.router.get("/", (req, res) => {
-      console.log("GET /api/order called.");
-      OrderController.getOrders(req, res); // Fetch user's orders
-    });
+    this.router.get("/", OrderController.getOrders);
 
     // Add a new order
-    this.router.post("/", (req, res) => {
-      console.log("POST /api/order called.");
-      OrderController.addOrder(req, res); // Add a new order
-    });
+    this.router.post("/", OrderController.addOrder);
 
     // Cancel (delete) an existing order
-    this.router.delete("/:id", (req, res) => {
-      console.log(`DELETE /api/order/${req.params.id} called.`);
-      OrderController.cancelOrder(req, res); // Cancel the specified order
-    });
+    this.router.delete("/:id", OrderController.cancelOrder);
   }
 
   /**
