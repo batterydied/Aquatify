@@ -13,7 +13,7 @@
         this.router.get("/", (req, res) => ProductController.getAllProducts(req, res));
     
         // Fetch a single product by ID
-        this.router.get("/:id", (req, res) => ProductController.getProduct(req, res));
+        this.router.get("/:id", (req, res) => ProductController.getProductById(req, res));
     
         // Add a new product
         this.router.post("/", (req, res) => ProductController.addProduct(req, res));

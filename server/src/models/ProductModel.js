@@ -80,57 +80,10 @@ class _ProductModel {
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync({force: true});
+      await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Failed to initialize database:", error);
-      throw error;
-    }
-  }
-
-  async create(productData) {
-    try {
-      const product = await Product.create(productData);
-      return product;
-    } catch (error) {
-      console.error("Error creating product:", error);
-      throw error;
-    }
-  }
-
-  async read(id = null, options = {}) {
-    try {
-      if (id) {
-        return await Product.findByPk(id, { ...options }); // Pass options for relationships
-      }
-      return await Product.findAll({ ...options }); // Fetch all products with options
-    } catch (error) {
-      console.error("Error reading product(s):", error);
-      throw error;
-    }
-  }
-  
-
-  async update(id, updates) {
-    try {
-      const product = await Product.findByPk(id);
-      if (!product) throw new Error("Product not found");
-      await product.update(updates);
-      return product;
-    } catch (error) {
-      console.error("Error updating product:", error);
-      throw error;
-    }
-  }
-
-  async delete(id) {
-    try {
-      const product = await Product.findByPk(id);
-      if (!product) throw new Error("Product not found");
-      await product.destroy();
-      return { message: "Product deleted successfully." };
-    } catch (error) {
-      console.error("Error deleting product:", error);
       throw error;
     }
   }
@@ -139,4 +92,3 @@ class _ProductModel {
 const ProductModel = new _ProductModel();
 ProductModel.init();
 export default ProductModel;
-export { Product, Review, Image, ProductType };

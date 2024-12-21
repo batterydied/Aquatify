@@ -13,10 +13,10 @@ class UserRoutes {
     this.router.get("/", (req, res) => UserController.getAllUsers(req, res));
 
     // Fetch a single User by ID
-    this.router.get("/:id", (req, res) => UserController.getUser(req, res));
+    this.router.get("/:id", (req, res) => UserController.getUserById(req, res));
 
     // Add a new User
-    this.router.post("/", (req, res) => UserController.addUser(req, res));
+    this.router.post("/", (req, res) => UserController.createUser(req, res));
 
     // Update an existing User
     this.router.put("/:prodid", (req, res) => UserController.updateUser(req, res));
