@@ -5,9 +5,6 @@ import { fileURLToPath } from "url";
 import { handleGlobalError } from "./utils/errorHandler.js";
 import cors from "cors";
 import { connectToDatabase } from "./database.js";
-import session from 'express-session';
-import passport from 'passport';
-import './passport.js';
 
 import "./models/UserModel.js";
 import "./models/ProductModel.js";
@@ -32,6 +29,7 @@ class Server{
     this.middleware = this.configureMiddleware();
     this.setupRoutes();
   }
+
   configureMiddleware(){
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
@@ -40,16 +38,8 @@ class Server{
       methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
       credentials: true,
     }));
-    this.app.use(session({
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: true,
-      cookie: { maxAge: 1000 * 60 * 60 } // Expires in 1 hour
-    }));
-    this.app.use(passport.initialize());
-    this.app.use(passport.session());
-    
   }
+
   setupRoutes() {
     console.log("Registering routes...");
 
@@ -90,6 +80,7 @@ class Server{
     
     this.app.use(handleGlobalError);
   }
+  
   start(port = Number(process.env.PORT) || 3000) {
     this.app.listen(port, () => {
       console.log(`Server started on port ${port}`);
