@@ -5,8 +5,6 @@ export default function TabLayout() {
     <Tabs screenOptions={{ 
         tabBarActiveTintColor: 'blue',
         headerShown: false,
-    }}>
-      <Tabs.Screen name="TestPage"></Tabs.Screen>
-    </Tabs>
+    }} />
   );
 }
