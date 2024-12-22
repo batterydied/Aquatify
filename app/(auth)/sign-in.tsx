@@ -3,7 +3,7 @@ import { Link, useRouter } from 'expo-router'
 import { Text, TextInput, Button, View } from 'react-native'
 import React from 'react'
 
-export default function Page() {
+export default function SignInPage() {
   const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
 
@@ -20,6 +20,7 @@ export default function Page() {
         identifier: emailAddress,
         password,
       })
+      console.log(signInAttempt);
 
       // If sign-in process is complete, set the created session as active
       // and redirect the user
@@ -27,7 +28,7 @@ export default function Page() {
         await setActive({ session: signInAttempt.createdSessionId })
         router.replace('/')
       } else {
-        // If the status isn't complete, check why. User might need to
+        // If the status is not complete, check why. User may need to
         // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2))
       }
@@ -40,22 +41,25 @@ export default function Page() {
 
   return (
     <View>
+      <Text>Sign in</Text>
       <TextInput
         autoCapitalize="none"
         value={emailAddress}
         placeholder="Enter email"
+        placeholderTextColor="#666666"
         onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
       />
       <TextInput
         value={password}
         placeholder="Enter password"
+        placeholderTextColor="#666666"
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
       />
-      <Button title="Sign in" onPress={onSignInPress} />
-      <View>
+      <Button title="Sign In" onPress={onSignInPress} />
+      <View style={{ flexDirection: 'row', gap: 4 }}>
         <Text>Don't have an account?</Text>
-        <Link href="./sign-up">
+        <Link href="/sign-up">
           <Text>Sign up</Text>
         </Link>
       </View>
