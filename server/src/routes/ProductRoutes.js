@@ -19,10 +19,10 @@
         this.router.post("/", ProductController.addProduct);
     
         // Update an existing product
-        this.router.put("/:prodid", ProductController.updateProduct);
+        this.router.put("/:id", ProductController.updateProduct);
     
         // Delete a product by ID
-        this.router.delete("/:prodid", ProductController.deleteProduct);
+        this.router.delete("/:id", ProductController.deleteProduct);
         }
 
          /**

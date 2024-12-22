@@ -8,7 +8,7 @@ class ProductController {
   }
 
   // Retrieve all products from the database, including related images
-  async getAllProducts(req, res) {
+  static async getAllProducts(req, res) {
     try {
         const products = await Product.findAll({ include: ["Images", "Reviews", "ProductTypes"] });// Include related
         res.status(200).json(products);
@@ -19,7 +19,7 @@ class ProductController {
   }
 
   // Retrieve a specific product by ID, including related images
-  async getProductById(req, res) {
+  static async getProductById(req, res) {
     try {
       const { id } = req.params;
       const product = await Product.findByPk(id, { include: ["Images", "Reviews", "ProductTypes"] }); // Include related
@@ -36,7 +36,7 @@ class ProductController {
   }
 
   // Add a new product to the database
-  async addProduct(req, res) {
+  static async addProduct(req, res) {
     try {
       const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes, quantity } = req.body;
   
@@ -100,7 +100,7 @@ class ProductController {
     }
   }
 
-  async updateProduct(req, res) {
+  static async updateProduct(req, res) {
     try {
       const { prodid } = req.params;
       const {
@@ -218,7 +218,7 @@ class ProductController {
   
   
   // Delete a product by ID
-  async deleteProduct(req, res) {
+  static async deleteProduct(req, res) {
     try {
       const { prodid } = req.params; // Get the product's prodid from the request parameters
   
@@ -248,4 +248,4 @@ class ProductController {
   }  
 }
 
-export default new ProductController();
+export default ProductController;

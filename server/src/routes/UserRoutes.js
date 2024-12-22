@@ -13,16 +13,16 @@ class UserRoutes {
     this.router.get("/", UserController.getAllUsers);
 
     // Fetch a single User by ID
-    this.router.get("/:userid", UserController.getUserById);
+    this.router.get("/:id", UserController.getUserById);
 
     // Add a new User
     this.router.post("/", UserController.createUser);
 
     // Update an existing User
-    this.router.put("/:userid", UserController.updateUser);
+    this.router.put("/:id", UserController.updateUser);
 
     // Delete a User by ID
-    this.router.delete("/:userid", UserController.deleteUser);
+    this.router.delete("/:id", UserController.deleteUser);
     }
 }
 

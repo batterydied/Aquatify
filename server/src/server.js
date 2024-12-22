@@ -17,7 +17,7 @@ const port = process.env.PORT
 
 import AuthRoutes from "./routes/AuthRoutes.js";
 import UserRoutes from './routes/UserRoutes.js';
-//import CartRoutes from './routes/CartRoutes.js';
+import CartRoutes from './routes/CartRoutes.js';
 import ProductRoutes from './routes/ProductRoutes.js';
 //import OrderRoutes from './routes/OrderRoutes.js';
  
@@ -58,10 +58,10 @@ class Server{
         next();
     }, ProductRoutes);
 
-    // this.app.use('/api/cart', (req, res, next) => {
-    //     console.log(`Route hit: ${req.method} ${req.url}`);
-    //     next();
-    // }, CartRoutes);
+    this.app.use('/api/cart', (req, res, next) => {
+        console.log(`Route hit: ${req.method} ${req.url}`);
+        next();
+    }, CartRoutes);
 
     // this.app.use('/api/order', (req, res, next) => {
     //     console.log(`Route hit: ${req.method} ${req.url}`);
@@ -80,7 +80,7 @@ class Server{
     
     this.app.use(handleGlobalError);
   }
-  
+
   start(port = Number(process.env.PORT) || 3000) {
     this.app.listen(port, () => {
       console.log(`Server started on port ${port}`);

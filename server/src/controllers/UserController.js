@@ -6,7 +6,7 @@ class UserController {
   constructor() {
     this.model = UserModel; // Associate the controller with the UserModel abstraction
   }
-  async getAllUsers(req, res) {
+  static async getAllUsers(req, res) {
     try {
         const users = User.findAll({include : ["Addresses", "PaymentMethods", "OrderHistories"]});
         res.status(200).json(users);
@@ -16,7 +16,7 @@ class UserController {
     }
   }
   // Get a user by ID
-  async getUserById(req, res) {
+  static async getUserById(req, res) {
     try {
       const { id } = req.params;
       const user = await User.findByPk(id, {
@@ -32,7 +32,7 @@ class UserController {
   }
 
   // Create a new user
-  async createUser(req, res) {
+  static async createUser(req, res) {
     try {
       const { name, email, password } = req.body;
       const newUser = await User.create({ name, email, password });
@@ -43,7 +43,7 @@ class UserController {
   }
 
   // Update an existing user
-  async updateUser(req, res) {
+  static async updateUser(req, res) {
     try {
       const { id } = req.params;
       const { name, email, password } = req.body;
@@ -61,7 +61,7 @@ class UserController {
   }
 
   // Delete a user by ID
-  async deleteUser(req, res) {
+  static async deleteUser(req, res) {
     try {
       const { id } = req.params;
 
@@ -78,4 +78,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default UserController;
