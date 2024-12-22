@@ -64,31 +64,19 @@ const ProductType = sequelize.define("ProductType", {
 
 // Define relationships
 Review.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(Review, { foreignKey: "productId" });
+Product.hasMany(Review, { foreignKey: "productId", as: "Reviews" });
 
 Image.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(Image, { foreignKey: "productId" });
+Product.hasMany(Image, { foreignKey: "productId", as: "Images" });
 
 ProductType.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(ProductType, { foreignKey: "productId" });
+Product.hasMany(ProductType, { foreignKey: "productId", as: "ProductTypes" });
 
 class _ProductModel {
   constructor() {
     this.models = { Product, Review, Image, ProductType };
   }
-
-  async init() {
-    try {
-      await sequelize.authenticate();
-      await sequelize.sync();
-      console.log("Database synced successfully.");
-    } catch (error) {
-      console.error("Failed to initialize database:", error);
-      throw error;
-    }
-  }
 }
 
 const ProductModel = new _ProductModel();
-ProductModel.init();
-export default ProductModel;
+export { ProductModel };

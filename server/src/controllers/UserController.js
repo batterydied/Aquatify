@@ -1,4 +1,4 @@
-import UserModel from "../models/UserModel.js";
+import { UserModel } from "../models/UserModel.js";
 
 const { User, Address, PaymentMethod, OrderHistory } = UserModel.models;
 
@@ -8,7 +8,7 @@ class UserController {
   }
   async getAllUsers(req, res) {
     try {
-        const users = User.findAll({include : ["Address", "PaymentMethod", "OrderHistory"]});
+        const users = User.findAll({include : ["Addresses", "PaymentMethods", "OrderHistories"]});
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving users:", error);

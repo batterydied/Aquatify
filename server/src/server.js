@@ -9,6 +9,9 @@ import session from 'express-session';
 import passport from 'passport';
 import './passport.js';
 
+import "./models/UserModel.js";
+import "./models/ProductModel.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.dirname(__dirname);

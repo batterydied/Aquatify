@@ -1,4 +1,4 @@
-import ProductModel from "../models/ProductModel.js";
+import { ProductModel } from "../models/ProductModel.js";
 
 const { Product, Image, Review, ProductType } = ProductModel.models;
 

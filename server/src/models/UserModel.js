@@ -121,34 +121,22 @@ const OrderHistory = sequelize.define("OrderHistory", {
 });
 
 // Define Relationships
-User.hasMany(Address, { foreignKey: "userId", onDelete: "CASCADE" });
 Address.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Address, { foreignKey: "userId", onDelete: "CASCADE", as: "Addresses" });
 
-User.hasMany(PaymentMethod, { foreignKey: "userId", onDelete: "CASCADE" });
 PaymentMethod.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(PaymentMethod, { foreignKey: "userId", onDelete: "CASCADE", as: "PaymentMethods" });
 
-User.hasMany(OrderHistory, { foreignKey: "userId", onDelete: "CASCADE" });
 OrderHistory.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(OrderHistory, { foreignKey: "userId", onDelete: "CASCADE", as: "OrderHistories" });
 
 // Define the UserModel Class
 class _UserModel {
   constructor() {
     this.models = { User, Address, PaymentMethod, OrderHistory };
   }
-
-  async init() {
-    try {
-      await sequelize.authenticate();
-      await sequelize.sync(); // Sync with force to ensure the models are up-to-date
-      console.log("Database synced successfully.");
-    } catch (error) {
-      console.error("Failed to initialize database:", error);
-      throw error;
-    }
-  }
 }
 
 // Initialize and export the UserModel
 const UserModel = new _UserModel();
-UserModel.init();
-export default UserModel;
+export { UserModel };
