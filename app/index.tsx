@@ -1,7 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router'; // Import useRouter hook
+import * as WebBrowser from 'expo-web-browser';
 import { Text } from 'react-native';
+
+export const useWarmUpBrowser = () => {
+  useEffect(() => {
+    // Warm up the android browser to improve UX
+    // https://docs.expo.dev/guides/authentication/#improving-user-experience
+    void WebBrowser.warmUpAsync()
+    return () => {
+      void WebBrowser.coolDownAsync()
+    }
+  }, [])
+}
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
   const { isSignedIn, isLoaded } = useUser(); // Check if the user is signed in and if data is loaded
@@ -10,6 +24,7 @@ export default function App() {
   // Initialize loading state
   const [loading, setLoading] = useState(true);
 
+  useWarmUpBrowser();
   // Wait for the user context to be loaded before checking sign-in status
   useEffect(() => {
     if (isLoaded) {

@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*{
+    font-family: "Montserrat", sans-serif;
+}
+.bg-c1{
+    background-color: #001F3F;
+}
+
+.bg-c2{
+    background-color: #3A6D8C;
+}
+
+.bg-c3{
+    background-color: #6A9AB0;
+}
+
+.bg-c4{
+    background-color: #EAD8B1;
+}
+
+.t-c1{
+    color: #001F3F;
+}
+
+.t-c2{
+    color: #3A6D8C;
+}
+
+.t-c3{
+    color: #6A9AB0;
+}
+
+.t-c4{
+    color: #EAD8B1;
+}
