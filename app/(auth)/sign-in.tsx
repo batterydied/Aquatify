@@ -88,13 +88,15 @@ export default function SignInPage() {
                 style={{fontFamily: "MontserratRegular"}}
             />
             <TouchableOpacity className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" onPress={handleEmailPasswordSignIn}>
-                <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Sign In</Text>
+                <Text className="text-white text-center w-full" style={{fontFamily:"MontserratRegular"}}>Sign In</Text>
             </TouchableOpacity>
             <TouchableOpacity className="bg-c4 w-[80%] flex justify-center items-center p-2 rounded-xl" onPress={handleGoogleSignIn} >
-                <Text className="text-black" style={{fontFamily: "MontserratRegular"}}>Sign In With Google</Text>
+                <Text className="text-black text-center w-full" style={{fontFamily: "MontserratRegular"}}>Sign In With Google</Text>
             </TouchableOpacity>
-
-            <Text className="m-2" style={{fontFamily: "MontserratRegular"}}>
+            <Text className="w-full m-1 text-center text-gray-500" style={{fontFamily: "MontserratRegular"}} onPress={() => router.push('/reset-password')}>
+                Forgot your password?
+            </Text>
+            <Text className="m-1 text-center w-full" style={{fontFamily: "MontserratRegular"}}>
                 Don’t have an account? {''}
                 <Text
                 className="t-c3"
