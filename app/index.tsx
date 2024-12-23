@@ -6,7 +6,7 @@ import { Text } from 'react-native';
 export default function App() {
   const { isSignedIn, isLoaded } = useUser(); // Check if the user is signed in and if data is loaded
   const router = useRouter(); // Access the router for navigation
-
+  
   // Initialize loading state
   const [loading, setLoading] = useState(true);
 

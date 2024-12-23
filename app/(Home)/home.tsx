@@ -11,12 +11,11 @@ export default function HomePage() {
       // You can handle the loading state here if necessary, e.g., log or show loading spinner
       console.log('User data is still loading...');
     }
-  }, [isLoaded]); //
-
+  }, [isLoaded]);
   return (
     <View className="flex-1 justify-center items-center">
         <Text>
-            Hello {user?.fullName}
+            Hello {user?.emailAddresses[0].emailAddress} 
         </Text>
         <SignOutButton />
     </View>
