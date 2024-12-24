@@ -12,7 +12,7 @@ class UserController {
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving users:", error);
-        res.status(500).json({error: "Failed to retrieve users"});
+        res.status(500).json({error: "Failed to retrieve users."});
     }
   }
   // Get a user by ID
@@ -22,16 +22,16 @@ class UserController {
       const user = await User.findByPk(id, { include: ["Addresses", "PaymentMethods", "OrderHistories"] }); // Include related
 
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: "User not found." });
       }
 
       res.status(200).json(user);
     } catch (error) {
       console.error("Error retrieving user:", error);
-      res.status(500).json({ error: "Failed to retrieve user" });
+      res.status(500).json({ error: "Failed to retrieve user." });
     }
   }
-  
+
   static async getUserByEmail(req, res) {
     try {
       const { email } = req.params;
@@ -41,13 +41,13 @@ class UserController {
       });
   
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: "User not found." });
       }
   
       res.status(200).json(user);
     } catch (error) {
       console.error("Error retrieving user by email:", error);
-      res.status(500).json({ error: "Failed to retrieve user" });
+      res.status(500).json({ error: "Failed to retrieve user." });
     }
   }
   
@@ -73,7 +73,7 @@ class UserController {
 
       const user = await User.findByPk(id);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "User not found." });
       }
 
       await user.update({ name, email, password });
@@ -83,6 +83,21 @@ class UserController {
     }
   }
 
+  static async deleteAllUsers(req, res){
+    try{
+      const users = await User.findAll();
+      if(users.length === 0){
+        return res.status(404).json({ message: "No users found." });
+      }
+      for (const user of users) {
+        await user.destroy();
+      }
+      return res.status(200).json({ message: "All users deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting all users:", error);
+      res.status(500).json({ error: "Failed to delete all users." });
+    }
+  }
   // Delete a user by ID
   static async deleteUser(req, res) {
     try {
@@ -90,15 +105,58 @@ class UserController {
 
       const user = await User.findByPk(id);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "User not found." });
       }
-
       await user.destroy();
-      return res.status(204).send();
+      return res.status(200).json({ message: "User deleted successfully." });
     } catch (error) {
       return res.status(500).json({ error: "An error occurred while deleting the user." });
     }
   }
+
+  static async getUserOrCreate(req, res) {
+    const { email } = req.params;
+    try {
+      // Try fetching the user
+      const response = await fetch(`http://localhost:3000/api/user/email/${email}`);
+      if (!response.ok) {
+        throw new Error(`User not found, status: ${response.status}`);
+      }
+  
+      const user = await response.json(); // Parse the response JSON
+  
+      // Respond with the existing user data
+      return res.status(200).json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+  
+      try {
+        // Make a POST request to create a new user
+
+        const postResponse = await fetch(`http://localhost:3000/api/user`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }), // Send the email in the request body
+        });
+  
+        if (!postResponse.ok) {
+          throw new Error(`Failed to create user, status: ${postResponse.status}`);
+        }
+  
+        const newUser = await postResponse.json(); // Parse the new user data
+  
+        // Respond with the newly created user data
+        return res.status(201).json(newUser);
+      } catch (postError) {
+        console.error("Error creating user:", postError);
+  
+        // Respond with an error if both fetch and post fail
+        return res.status(500).json({ error: "Failed to fetch or create user" });
+      }
+    }
+  }
+  
+
 }
 
 export default UserController;

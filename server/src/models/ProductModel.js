@@ -63,14 +63,14 @@ const ProductType = sequelize.define("ProductType", {
 });
 
 // Define relationships
-Review.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(Review, { foreignKey: "productId", as: "Reviews" });
+Review.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
+Product.hasMany(Review, { foreignKey: "productId", as: "Reviews", onDelete: "CASCADE" });
 
-Image.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(Image, { foreignKey: "productId", as: "Images" });
+Image.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
+Product.hasMany(Image, { foreignKey: "productId", as: "Images", onDelete: "CASCADE" });
 
-ProductType.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(ProductType, { foreignKey: "productId", as: "ProductTypes" });
+ProductType.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
+Product.hasMany(ProductType, { foreignKey: "productId", as: "ProductTypes", onDelete: "CASCADE" });
 
 class _ProductModel {
   constructor() {

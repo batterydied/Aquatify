@@ -212,7 +212,7 @@ class ProductController {
   
     } catch (error) {
       console.error("Error updating product:", error);
-      res.status(500).json({ error: "Failed to update product" });
+      res.status(500).json({ error: "Failed to update product." });
     }
   }
   
@@ -226,7 +226,7 @@ class ProductController {
       const productToDelete = await Product.findOne({ where: { prodid } });
   
       if (!productToDelete) {
-        return res.status(404).json({ error: "Product not found" });
+        return res.status(404).json({ error: "Product not found." });
       }
   
       // Step 2: Delete the product
@@ -239,13 +239,37 @@ class ProductController {
       await productToDelete.destroy();
   
       // Step 3: Respond with success
-      res.status(200).json({ status: "Product deleted successfully" });
+      res.status(200).json({ status: "Product deleted successfully." });
   
     } catch (error) {
       console.error("Error deleting product:", error);
-      res.status(500).json({ error: "Failed to delete product" });
+      res.status(500).json({ error: "Failed to delete product." });
     }
   }  
+
+  static async deleteAllProducts(req, res) {
+    try {
+      // Step 1: Find all products
+      const products = await Product.findAll();
+  
+      if (products.length === 0) {
+        return res.status(404).json({ error: "No products found." });
+      }
+  
+      // Step 2: Delete related data for all products
+      for (const product of products) {
+        const prodid = product.prodid;
+        await product.destroy();
+      }
+  
+      // Step 3: Respond with success
+      res.status(200).json({ status: "All products deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting all products:", error);
+      res.status(500).json({ error: "Failed to delete all products." });
+    }
+  }
+  
 }
 
 export default ProductController;

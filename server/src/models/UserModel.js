@@ -10,7 +10,7 @@ const User = sequelize.define("User", {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -121,13 +121,13 @@ const OrderHistory = sequelize.define("OrderHistory", {
 });
 
 // Define Relationships
-Address.belongsTo(User, { foreignKey: "userId" });
+Address.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(Address, { foreignKey: "userId", onDelete: "CASCADE", as: "Addresses" });
 
-PaymentMethod.belongsTo(User, { foreignKey: "userId" });
+PaymentMethod.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(PaymentMethod, { foreignKey: "userId", onDelete: "CASCADE", as: "PaymentMethods" });
 
-OrderHistory.belongsTo(User, { foreignKey: "userId" });
+OrderHistory.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(OrderHistory, { foreignKey: "userId", onDelete: "CASCADE", as: "OrderHistories" });
 
 // Define the UserModel Class

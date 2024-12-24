@@ -14,7 +14,11 @@ class UserRoutes {
 
     // Fetch a single User by ID
     this.router.get("/email/:email", UserController.getUserByEmail);
+
+    // Fetch a User by email or create a new User
+    this.router.get("/fetch/:email", UserController.getUserOrCreate);
     
+    // Fetch a User by ID
     this.router.get("/:id", UserController.getUserById);
 
     // Add a new User
@@ -22,6 +26,9 @@ class UserRoutes {
 
     // Update an existing User
     this.router.put("/:id", UserController.updateUser);
+
+    // Delete all Users
+    this.router.delete("/", UserController.deleteAllUsers);
 
     // Delete a User by ID
     this.router.delete("/:id", UserController.deleteUser);
