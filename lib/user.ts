@@ -18,3 +18,23 @@ export async function fetchUserData(email: string) {
       return null;
     }
 }
+
+export interface homeProduct{
+  id: string;
+  image: string;
+  price: string;
+}
+
+export async function fetchProducts() {
+  try {
+    const response = await fetch(`http://192.168.1.23:3000/api/product}`); // Make the request
+    if (!response.ok) { // Check for response status
+      throw new Error(`Status: ${response.status}`);
+    }
+    const data = await response.json(); // Parse the response JSON
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error); // Log any errors
+    return null;
+  }
+}
