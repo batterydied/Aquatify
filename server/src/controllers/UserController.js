@@ -8,7 +8,7 @@ class UserController {
   }
   static async getAllUsers(req, res) {
     try {
-        const users = User.findAll({include : ["Addresses", "PaymentMethods", "OrderHistories"]});
+        const users = await User.findAll({include : ["Addresses", "PaymentMethods", "OrderHistories"]});
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving users:", error);
@@ -19,23 +19,24 @@ class UserController {
   static async getUserById(req, res) {
     try {
       const { id } = req.params;
-      const user = await User.findByPk(id, {
-        include: [Address, PaymentMethod, OrderHistory],
-      });
+      const user = await User.findByPk(id, { include: ["Addresses", "PaymentMethods", "OrderHistories"] }); // Include related
+
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ error: "User not found" });
       }
-      return res.json(user);
+
+      res.status(200).json(user);
     } catch (error) {
-      return res.status(500).json({ error: "An error occurred while fetching the user." });
+      console.error("Error retrieving user:", error);
+      res.status(500).json({ error: "Failed to retrieve user" });
     }
   }
 
   // Create a new user
   static async createUser(req, res) {
     try {
-      const { name, email, password } = req.body;
-      const newUser = await User.create({ name, email, password });
+      const { name, email } = req.body;
+      const newUser = await User.create({ name, email });
       return res.status(201).json(newUser);
     } catch (error) {
       return res.status(500).json({ error: "An error occurred while creating the user." });

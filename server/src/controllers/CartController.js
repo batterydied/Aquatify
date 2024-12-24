@@ -1,7 +1,5 @@
 import { CartModel } from "../models/CartModel.js";
 
-
-
 const { Cart, Product } = CartModel.models;
 
 class CartController {
