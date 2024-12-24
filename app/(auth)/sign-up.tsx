@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native'
+import { Text, TextInput, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
 
@@ -68,66 +68,70 @@ export default function SignOutPage() {
 
   if (pendingVerification) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="pb-2" style={{fontFamily: "MontserratRegular"}}>Verify your email</Text>
-        <TextInput
-        className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-        placeholder="Enter your verification code"
-        placeholderTextColor="gray"
-        value={code}
-        onChangeText={(code) => setCode(code)}
-        style={{fontFamily: "MontserratRegular"}}
-        />
-        <TouchableOpacity
-        className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
-        onPress={onVerifyPress}>
-            <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Verify</Text>
-        </TouchableOpacity>
-      </View>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View className="flex-1 justify-center items-center">
+                <Text className="pb-2" style={{fontFamily: "MontserratRegular"}}>Verify your email</Text>
+                <TextInput
+                className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
+                placeholder="Enter your verification code"
+                placeholderTextColor="gray"
+                value={code}
+                onChangeText={(code) => setCode(code)}
+                style={{fontFamily: "MontserratRegular"}}
+                />
+                <TouchableOpacity
+                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
+                onPress={onVerifyPress}>
+                    <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Verify</Text>
+                </TouchableOpacity>
+            </View>
+      </TouchableWithoutFeedback>
     )
   }
 
   return (
-    <View className="flex-1 justify-center items-center">  
-        <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
-        <TextInput
-            className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-            placeholder="Enter your email"
-            placeholderTextColor="gray"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            value={emailAddress}
-            onChangeText={setEmailAddress}
-            style={{fontFamily: "MontserratRegular"}}
-        />
-        <TextInput
-            className="text-black p-2 border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4"
-            placeholderTextColor="gray"
-            placeholder="Enter your password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            style={{fontFamily: "MontserratRegular"}}
-        />
-        {errorMessage && (
-            <Text className="text-red-500" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
-        )}
-        <TouchableOpacity
-            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
-            onPress={onSignUpPress}
-        >
-            <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Continue</Text>
-        </TouchableOpacity>
-        <Text className="m-2 text-center w-full" style={{fontFamily: "MontserratRegular"}}>
-            Have an account? {''}
-            <Text
-            className="t-c3"
-            style={{fontFamily: "MontserratRegular"}}
-            onPress={() => router.push('/sign-in')}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View className="flex-1 justify-center items-center">  
+            <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
+            <TextInput
+                className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
+                placeholder="Enter your email"
+                placeholderTextColor="gray"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={emailAddress}
+                onChangeText={setEmailAddress}
+                style={{fontFamily: "MontserratRegular"}}
+            />
+            <TextInput
+                className="text-black p-2 border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4"
+                placeholderTextColor="gray"
+                placeholder="Enter your password"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+                style={{fontFamily: "MontserratRegular"}}
+            />
+            {errorMessage && (
+                <Text className="text-red-500" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
+            )}
+            <TouchableOpacity
+                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
+                onPress={onSignUpPress}
             >
-            Sign in
+                <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Continue</Text>
+            </TouchableOpacity>
+            <Text className="m-2 text-center w-full" style={{fontFamily: "MontserratRegular"}}>
+                Have an account? {''}
+                <Text
+                className="t-c3"
+                style={{fontFamily: "MontserratRegular"}}
+                onPress={() => router.push('/sign-in')}
+                >
+                Sign in
+                </Text>
             </Text>
-        </Text>
-    </View>
+        </View>
+    </TouchableWithoutFeedback>
   )
 }
