@@ -4,6 +4,7 @@ export interface User{
   email: string;
   avatar: string | null;
 }
+
 export async function fetchUserData(email: string) {
     try {
       const response = await fetch(`http://192.168.1.23:3000/api/user/fetch/${email}`); // Make the request

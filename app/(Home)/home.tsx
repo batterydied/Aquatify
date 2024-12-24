@@ -5,6 +5,7 @@ import SignOutButton from '../../components/sign-out';
 import { Redirect } from 'expo-router';  // Correct usage of Redirect
 import { fetchUserData, User } from '../../lib/user';
 
+
 export default function HomePage() {
     const { user, isLoaded } = useUser(); // Check if the user is signed in
     const [userData, setUserData] = useState<User | null>(null);

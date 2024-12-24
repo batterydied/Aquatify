@@ -9,6 +9,18 @@ export default function TabLayout() {
       }}
     >
       {/* Add more Tabs.Screen components here */}
+      <Tabs.Screen 
+      name="home" 
+      options={{
+        title: 'Home',
+      }}
+      />
+      <Tabs.Screen 
+      name="setting" 
+      options={{
+        title: 'Setting',
+      }}
+      />
     </Tabs>
   );
 }
