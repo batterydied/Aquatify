@@ -31,7 +31,26 @@ class UserController {
       res.status(500).json({ error: "Failed to retrieve user" });
     }
   }
-
+  
+  static async getUserByEmail(req, res) {
+    try {
+      const { email } = req.params;
+      const user = await User.findOne({
+        where: { email },
+        include: ["Addresses", "PaymentMethods", "OrderHistories"], // Include related models
+      });
+  
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      res.status(200).json(user);
+    } catch (error) {
+      console.error("Error retrieving user by email:", error);
+      res.status(500).json({ error: "Failed to retrieve user" });
+    }
+  }
+  
   // Create a new user
   static async createUser(req, res) {
     try {
@@ -39,6 +58,9 @@ class UserController {
       const newUser = await User.create({ name, email });
       return res.status(201).json(newUser);
     } catch (error) {
+      if (error.name === 'SequelizeUniqueConstraintError'){
+        return res.status(500).json({ error: "This user already exist." });
+      }
       return res.status(500).json({ error: "An error occurred while creating the user." });
     }
   }

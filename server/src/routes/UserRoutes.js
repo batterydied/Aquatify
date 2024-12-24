@@ -13,6 +13,8 @@ class UserRoutes {
     this.router.get("/", UserController.getAllUsers);
 
     // Fetch a single User by ID
+    this.router.get("/email/:email", UserController.getUserByEmail);
+    
     this.router.get("/:id", UserController.getUserById);
 
     // Add a new User
