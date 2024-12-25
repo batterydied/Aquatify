@@ -13,19 +13,19 @@
         this.router.get("/", ProductController.getAllProducts);
     
         // Fetch a single product by ID
-        this.router.get("/:id", ProductController.getProductById);
+        this.router.get("/:productId", ProductController.getProductById);
     
         // Add a new product
         this.router.post("/", ProductController.addProduct);
     
         // Update an existing product
-        this.router.put("/:id", ProductController.updateProduct);
+        this.router.put("/:productId", ProductController.updateProduct);
             
         // Delete all products
         this.router.delete("/", ProductController.deleteAllProducts);
-        
+
         // Delete a product by ID
-        this.router.delete("/:id", ProductController.deleteProduct);
+        this.router.delete("/:productId", ProductController.deleteProduct);
         }
 
          /**

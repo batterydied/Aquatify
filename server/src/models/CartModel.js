@@ -6,12 +6,13 @@ const Product = ProductModel.models.Product;
 
 const Cart = sequelize.define("Cart", {
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+  productTypeId: { type: DataTypes.INTEGER, allowNull: false},
   quantity: { type: DataTypes.INTEGER, defaultValue: 1 },
   isSaved: { type: DataTypes.BOOLEAN, defaultValue: false },
 });
 
-Cart.belongsTo(Product, { foreignKey: "productId", as: "Products" });
-Product.hasMany(Cart, { foreignKey: "productId" });
+Product.hasMany(Cart, { foreignKey: "productId" }); // A product can appear in many cart entries.
+Cart.belongsTo(Product, { foreignKey: "productId", as: "product" }); // A cart item is associated with one product.
 
 // CartModel Class
 class _CartModel {

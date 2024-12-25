@@ -20,14 +20,18 @@ export async function fetchUserData(email: string) {
 }
 
 export interface homeProduct{
-  id: string;
-  image: string;
-  price: string;
+  productId: string;
+  name: string;
+  images: image[];
+}
+
+export interface image{
+  url: string;
 }
 
 export async function fetchProducts() {
   try {
-    const response = await fetch(`http://192.168.1.23:3000/api/product}`); // Make the request
+    const response = await fetch(`http://192.168.1.23:3000/api/product`); // Make the request
     if (!response.ok) { // Check for response status
       throw new Error(`Status: ${response.status}`);
     }

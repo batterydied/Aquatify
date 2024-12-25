@@ -1,6 +1,8 @@
 import { CartModel } from "../models/CartModel.js";
+import { ProductModel } from "../models/ProductModel.js";
 
 const { Cart, Product } = CartModel.models;
+const { ProductType, Image } = ProductModel.models;
 
 class CartController {
   /**
@@ -10,9 +12,14 @@ class CartController {
     try {
       const cartItems = await Cart.findAll({
         where: { isSaved: false },
-        include: [
-          "Products"
-        ],
+        include: {
+          model: Product,
+          as: "product",
+          include: [
+            { model: ProductType, as: "productTypes"},
+            { model: Image, as: "images" }
+          ]
+        },
       });
 
       if (cartItems.length === 0) {
@@ -31,33 +38,42 @@ class CartController {
    */
   static async addCartItem(req, res) {
     try {
-      const { productId, quantity = 1 } = req.body;
-
+      const { productId, productTypeId, quantity = 1 } = req.body;
+  
       // Check if the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
         return res.status(404).json({ message: "Product not found." });
       }
-
+  
+      // Check if the specified product type exists and is associated with the product
+      const productType = await ProductType.findOne({
+        where: { id: productTypeId, productId },
+      });
+      if (!productType) {
+        return res.status(404).json({ message: "Product type not found for the specified product." });
+      }
+  
       // Check if the item already exists in the cart
       const existingItem = await Cart.findOne({
-        where: { productId, isSaved: false },
+        where: { productId, productTypeId, isSaved: false },
       });
-
+  
       if (existingItem) {
         // If item exists, update quantity
         existingItem.quantity += quantity;
         await existingItem.save();
         return res.status(200).json({ message: "Cart item updated.", item: existingItem });
       }
-
+  
       // Create a new cart item
       const newCartItem = await Cart.create({
         productId,
+        productTypeId,
         quantity,
         isSaved: false,
       });
-
+  
       return res.status(201).json(newCartItem);
     } catch (error) {
       console.error(error);
@@ -110,9 +126,14 @@ class CartController {
     try {
       const savedItems = await Cart.findAll({
         where: { isSaved: true },
-        include: [
-            "Products",
-        ],
+        include: {
+          model: Product,
+          as: "product",
+          include: [
+            { model: ProductType, as: "productTypes"},
+            { model: Image, as: "images" }
+          ]
+        },
       });
 
       if (savedItems.length === 0) {

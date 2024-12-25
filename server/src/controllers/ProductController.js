@@ -10,7 +10,7 @@ class ProductController {
   // Retrieve all products from the database, including related images
   static async getAllProducts(req, res) {
     try {
-        const products = await Product.findAll({ include: ["Images", "Reviews", "ProductTypes"] });// Include related
+        const products = await Product.findAll({ include: ["images", "reviews", "productTypes"] });// Include related
         res.status(200).json(products);
     } catch (error) {
         console.error("Error retrieving products:", error);
@@ -21,8 +21,8 @@ class ProductController {
   // Retrieve a specific product by ID, including related images
   static async getProductById(req, res) {
     try {
-      const { id } = req.params;
-      const product = await Product.findByPk(id, { include: ["Images", "Reviews", "ProductTypes"] }); // Include related
+      const { productId } = req.params;
+      const product = await Product.findByPk(productId, { include: ["images", "reviews", "productTypes"] }); // Include related
 
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
@@ -38,30 +38,28 @@ class ProductController {
   // Add a new product to the database
   static async addProduct(req, res) {
     try {
-      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes, quantity } = req.body;
+      const { name, secondaryName, sellerId, sellerName, category, description, images, reviews, productTypes } = req.body;
   
       // Validate input
-      if (!name || !sellerid || !sellername || !category || !price) {
+      if (!name || !sellerId || !sellerName || !category) {
         return res.status(400).json({ error: "Missing required fields" });
       }
   
       // Create a new product
       const newProduct = await Product.create({
         name,
-        secondaryname,
-        sellerid,
-        sellername,
+        secondaryName,
+        sellerId,
+        sellerName,
         category,
         description,
-        price,
-        quantity,
       });
   
       // Check if images are provided and associate them with the product
       if (images && Array.isArray(images)) {
         // Create the images and associate with the new product
         const imagePromises = images.map(imageUrl => 
-          Image.create({ url: imageUrl, productId: newProduct.prodid })
+          Image.create({ url: imageUrl, productId: newProduct.productId })
         );
         await Promise.all(imagePromises);
       }
@@ -75,18 +73,19 @@ class ProductController {
             rating: review.rating, 
             comment: review.comment, 
             date: new Date(), // You can adjust this based on your actual review data
-            productId: newProduct.prodid 
+            productId: newProduct.productId 
           })
         );
         await Promise.all(reviewPromises);
       }
 
-      if(producttypes && Array.isArray(producttypes)){
-        const productTypePromises = producttypes.map((type)=>
+      if(productTypes && Array.isArray(productTypes)){
+        const productTypePromises = productTypes.map((type)=>
             ProductType.create({
                 type: type.type, 
                 price: type.price, 
-                productId: newProduct.prodid
+                productId: newProduct.productId,
+                quantity: type.quantity
             })
         );
         await Promise.all(productTypePromises);
@@ -102,7 +101,7 @@ class ProductController {
 
   static async updateProduct(req, res) {
     try {
-      const { prodid } = req.params;
+      const { productId } = req.params;
       const {
         name,
         secondaryname,
@@ -113,12 +112,12 @@ class ProductController {
         price,
         images,
         reviews,
-        producttypes,
+        productTypes,
         quantity,
       } = req.body;
   
       // Step 1: Fetch the product by its prodid
-      const productToUpdate = await Product.findOne({ where: { prodid } });
+      const productToUpdate = await Product.findOne({ where: { productId } });
   
       if (!productToUpdate) {
         return res.status(404).json({ error: "Product not found" });
@@ -142,9 +141,9 @@ class ProductController {
   
       // Step 4: Update related images if provided
       if (images && Array.isArray(images)) {
-        await Image.destroy({ where: { productId: prodid } });
+        await Image.destroy({ where: { productId } });
         const imagePromises = images.map(imageUrl =>
-          Image.create({ url: imageUrl, productId: prodid })
+          Image.create({ url: imageUrl, productId })
         );
         await Promise.all(imagePromises);
       }
@@ -154,7 +153,7 @@ class ProductController {
         for (const review of reviews) {
           if (review.id) {
             // If the review has an ID, try to update it
-            const existingReview = await Review.findOne({ where: { id: review.id, productId: prodid } });
+            const existingReview = await Review.findOne({ where: { id: review.id, productId } });
             if (existingReview) {
               await existingReview.update({
                 user: review.user !== undefined ? review.user : existingReview.user,
@@ -169,7 +168,7 @@ class ProductController {
                 rating: review.rating,
                 comment: review.comment,
                 date: review.date || new Date(),
-                productId: prodid
+                productId
               });
             }
           } else {
@@ -179,20 +178,20 @@ class ProductController {
               rating: review.rating,
               comment: review.comment,
               date: review.date || new Date(),
-              productId: prodid
+              productId
             });
           }
         }
       }
   
       // Step 6: Update related product types if provided
-      if (producttypes && Array.isArray(producttypes)) {
-        await ProductType.destroy({ where: { productId: prodid } });
-        const productTypePromises = producttypes.map(type =>
+      if (productTypes && Array.isArray(productTypes)) {
+        await ProductType.destroy({ where: { productId } });
+        const productTypePromises = productTypes.map(type =>
           ProductType.create({
             type: type.type,
             price: type.price,
-            productId: prodid
+            productId
           })
         );
         await Promise.all(productTypePromises);
@@ -200,8 +199,8 @@ class ProductController {
   
       // Step 7: Fetch the updated product with related entities
       const updatedProduct = await Product.findOne({
-        where: { prodid },
-        include: ["Images", "Reviews", "ProductTypes"]
+        where: { productId },
+        include: ["images", "reviews", "productTypes"]
       });
   
       // Step 8: Respond with the updated product
@@ -220,10 +219,10 @@ class ProductController {
   // Delete a product by ID
   static async deleteProduct(req, res) {
     try {
-      const { prodid } = req.params; // Get the product's prodid from the request parameters
-  
+      const { productId } = req.params; // Get the product's prodid from the request parameters
+      console.log( productId);
       // Step 1: Check if the product exists
-      const productToDelete = await Product.findOne({ where: { prodid } });
+      const productToDelete = await Product.findOne({ where: { productId } });
   
       if (!productToDelete) {
         return res.status(404).json({ error: "Product not found." });
@@ -231,9 +230,9 @@ class ProductController {
   
       // Step 2: Delete the product
       // Delete related data (images, reviews, product types)
-      await Image.destroy({ where: { productId: prodid } });
-      await Review.destroy({ where: { productId: prodid } });
-      await ProductType.destroy({ where: { productId: prodid } });
+      await Image.destroy({ where: { productId } });
+      await Review.destroy({ where: { productId } });
+      await ProductType.destroy({ where: { productId } });
   
       // Finally, delete the product itself
       await productToDelete.destroy();
@@ -258,7 +257,6 @@ class ProductController {
   
       // Step 2: Delete related data for all products
       for (const product of products) {
-        const prodid = product.prodid;
         await product.destroy();
       }
   

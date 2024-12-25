@@ -2,7 +2,7 @@ import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 
 const Product = sequelize.define("Product", {
-  prodid: {
+  productId: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
@@ -11,15 +11,15 @@ const Product = sequelize.define("Product", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  secondaryname: {
+  secondaryName: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  sellerid: {
+  sellerId: {
     type: DataTypes.UUID,
     allowNull: false,
   },
-  sellername: {
+  sellerName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -31,14 +31,6 @@ const Product = sequelize.define("Product", {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  price: {
-    type: DataTypes.DECIMAL,
-    allowNull: false,
-  },
-  quantity: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  }
 });
 
 const Review = sequelize.define("Review", {
@@ -60,17 +52,18 @@ const ProductType = sequelize.define("ProductType", {
   type: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.FLOAT, allowNull: false },
   productId: { type: DataTypes.UUID, allowNull: false },
+  quantity: { type: DataTypes.INTEGER, allowNull: true },
 });
 
 // Define relationships
 Review.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
-Product.hasMany(Review, { foreignKey: "productId", as: "Reviews", onDelete: "CASCADE" });
+Product.hasMany(Review, { foreignKey: "productId", as: "reviews", onDelete: "CASCADE" });
 
 Image.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
-Product.hasMany(Image, { foreignKey: "productId", as: "Images", onDelete: "CASCADE" });
+Product.hasMany(Image, { foreignKey: "productId", as: "images", onDelete: "CASCADE" });
 
 ProductType.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
-Product.hasMany(ProductType, { foreignKey: "productId", as: "ProductTypes", onDelete: "CASCADE" });
+Product.hasMany(ProductType, { foreignKey: "productId", as: "productTypes", onDelete: "CASCADE" });
 
 class _ProductModel {
   constructor() {
