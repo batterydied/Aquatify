@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSignIn } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const [successfulCreation, setSuccessfulCreation] = useState(false);
@@ -18,7 +19,7 @@ export default function ForgotPasswordPage() {
   }
 
   const create = async () => {
-    if (!email) {
+    if (!emailAddress) {
       Alert.alert('Error', 'Please enter a valid email address.');
       return;
     }
@@ -26,7 +27,7 @@ export default function ForgotPasswordPage() {
     try {
       await signIn?.create({
         strategy: 'reset_password_email_code',
-        identifier: email,
+        identifier: emailAddress,
       });
       setSuccessfulCreation(true);
       setError('');
@@ -51,7 +52,7 @@ export default function ForgotPasswordPage() {
 
       if (result?.status === 'complete') {
         Alert.alert('Success', 'Password reset successfully!');
-        router.push('/sign-in'); // Navigate back to the sign-in page
+        router.push('/(auth)/sign-in'); // Navigate back to the sign-in page
       } else {
         console.log(result);
         Alert.alert('Error', 'Unexpected status: ' + result?.status);
@@ -69,16 +70,25 @@ export default function ForgotPasswordPage() {
         <Text className="text-2xl font-bold mb-4 text-center" style={{fontFamily: "MontserratRegular"}}>Forgot Password?</Text>
         {!successfulCreation ? (
             <>
-            <TextInput
-                className= "text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-                placeholder="Enter your email"
-                placeholderTextColor="gray"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-                style={{fontFamily: "MontserratRegular"}}
-            />
+            {/* Email/Password Sign-In */}
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <FontAwesome
+                    name="envelope"
+                    size={20}
+                    color="gray"
+                    className="ml-2" // Adds some margin to the left of the icon
+                />
+                <TextInput
+                    className="flex-1 text-black ml-2"
+                    placeholder="Enter your email"
+                    placeholderTextColor="gray"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={emailAddress}
+                    onChangeText={setEmailAddress}
+                    style={{ fontFamily: "MontserratRegular" }}
+                />
+            </View>
             <TouchableOpacity
                 className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
                 onPress={create}
@@ -86,26 +96,43 @@ export default function ForgotPasswordPage() {
                 <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send Reset Code</Text>
             </TouchableOpacity>
             {error ? <Text className="text-red-500 text-center mt-2">{error}</Text> : null}
+            <Text onPress={()=>router.push('/(auth)/sign-in')} style={{fontFamily: "MontserratRegular"}} className="text-gray-500"> Back to sign in</Text>
             </>
         ) : (
             <>
-            <TextInput
-                className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-                placeholder="Enter new password"
-                placeholderTextColor="gray"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                style={{fontFamily: "MontserratRegular"}}
-            />
-            <TextInput
-                className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-                placeholder="Enter reset code"
-                placeholderTextColor="gray"
-                value={code}
-                onChangeText={setCode}
-                style={{fontFamily: "MontserratRegular"}}
-            />
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                    <FontAwesome
+                        name="lock"
+                        size={20}
+                        color="gray"
+                        className="ml-2" // Adds some margin to the left of the icon
+                    />
+                     <TextInput
+                        className="flex-1 text-black ml-2"
+                        placeholderTextColor="gray"
+                        placeholder="Enter new password"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                        style={{ fontFamily: 'MontserratRegular' }}
+                    />
+            </View>
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <FontAwesome
+                        name="key"
+                        size={14}
+                        color="gray"
+                        className="ml-2" // Adds some margin to the left of the icon
+                />
+                <TextInput
+                    className="flex-1 text-black ml-2"
+                    placeholder="Enter reset code"
+                    placeholderTextColor="gray"
+                    value={code}
+                    onChangeText={setCode}
+                    style={{fontFamily: "MontserratRegular"}}
+                />
+            </View>
             <TouchableOpacity
                 className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
                 onPress={reset}
@@ -113,6 +140,7 @@ export default function ForgotPasswordPage() {
                 <Text className="text-white text-center">Reset Password</Text>
             </TouchableOpacity>
             {error ? <Text className="text-red-500 text-center mt-2">{error}</Text> : null}
+            <Text onPress={()=>router.push('/(auth)/sign-in')} style={{fontFamily: "MontserratRegular"}} className="text-gray-500"> Back to sign in</Text>
             </>
         )}
         </View>

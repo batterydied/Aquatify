@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Text, TextInput, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
+import { FontAwesome } from '@expo/vector-icons'
 
 export default function SignOutPage() {
   const { isLoaded, signUp, setActive } = useSignUp()
@@ -93,25 +94,41 @@ export default function SignOutPage() {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View className="flex-1 justify-center items-center">  
             <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
-            <TextInput
-                className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-                placeholder="Enter your email"
-                placeholderTextColor="gray"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                value={emailAddress}
-                onChangeText={setEmailAddress}
-                style={{fontFamily: "MontserratRegular"}}
-            />
-            <TextInput
-                className="text-black p-2 border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4"
-                placeholderTextColor="gray"
-                placeholder="Enter your password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                style={{fontFamily: "MontserratRegular"}}
-            />
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <FontAwesome
+                    name="user"
+                    size={20}
+                    color="gray"
+                    className="ml-2" // Adds some margin to the left of the icon
+                />
+                <TextInput
+                    className="flex-1 text-black ml-2"
+                    placeholder="Enter your email"
+                    placeholderTextColor="gray"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={emailAddress}
+                    onChangeText={setEmailAddress}
+                    style={{ fontFamily: "MontserratRegular" }}
+                />
+            </View>
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <FontAwesome
+                    name="lock"
+                    size={20}
+                    color="gray"
+                    className="ml-2" // Adds some margin to the left of the icon
+                />
+                    <TextInput
+                    className="flex-1 text-black ml-2"
+                    placeholderTextColor="gray"
+                    placeholder="Enter your password"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    style={{ fontFamily: 'MontserratRegular' }}
+                />
+            </View>
             {errorMessage && (
                 <Text className="text-red-500" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
             )}
@@ -126,7 +143,7 @@ export default function SignOutPage() {
                 <Text
                 className="t-c3"
                 style={{fontFamily: "MontserratRegular"}}
-                onPress={() => router.push('/sign-in')}
+                onPress={() => router.push('/(auth)/sign-in')}
                 >
                 Sign in
                 </Text>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-expo';
-import { useRouter } from 'expo-router'; // Import useRouter hook
+import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Text } from 'react-native';
 
@@ -36,9 +36,9 @@ export default function App() {
   useEffect(() => {
     if (!loading) {
       if (isSignedIn) {
-        router.push('/home');
+        router.push('/(home)/home');
       } else {
-        router.push('/sign-in');
+        router.push('/(auth)/sign-in');
       }
     }
   }, [isSignedIn, loading, router]); // Run this effect only after loading is complete

@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function SignInPage() {
     const [fontsLoaded] = useFonts({
@@ -62,26 +63,41 @@ export default function SignInPage() {
             <View className="flex-1 justify-center items-center p-6">
                 <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
                 {/* Email/Password Sign-In */}
-                <TextInput
-                    className="text-black mb-2 p-2 border-gray-300 border-[1px] rounded-2xl w-[80%]"
-                    placeholder="Enter your email"
-                    placeholderTextColor="gray"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
-                    style={{ fontFamily: 'MontserratRegular' }}
-                />
-
-                <TextInput
-                    className="text-black p-2 border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4"
-                    placeholderTextColor="gray"
-                    placeholder="Enter your password"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
-                    style={{ fontFamily: 'MontserratRegular' }}
-                />
+                <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                    <FontAwesome
+                        name="user"
+                        size={20}
+                        color="gray"
+                        className="ml-2" // Adds some margin to the left of the icon
+                    />
+                    <TextInput
+                        className="flex-1 text-black ml-2"
+                        placeholder="Enter your email"
+                        placeholderTextColor="gray"
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        value={emailAddress}
+                        onChangeText={setEmailAddress}
+                        style={{ fontFamily: "MontserratRegular" }}
+                    />
+                </View>
+                <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                    <FontAwesome
+                        name="lock"
+                        size={20}
+                        color="gray"
+                        className="ml-2" // Adds some margin to the left of the icon
+                    />
+                     <TextInput
+                        className="flex-1 text-black ml-2"
+                        placeholderTextColor="gray"
+                        placeholder="Enter your password"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                        style={{ fontFamily: 'MontserratRegular' }}
+                    />
+                </View>
                 <TouchableOpacity
                     className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
                     onPress={handleEmailPasswordSignIn}
@@ -110,7 +126,7 @@ export default function SignInPage() {
                     <Text
                         className="t-c3"
                         style={{ fontFamily: 'MontserratRegular' }}
-                        onPress={() => router.push('/sign-up')}
+                        onPress={() => router.push('/(auth)/sign-up')}
                     >
                         Sign up
                     </Text>

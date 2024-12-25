@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Ionicons, FontAwesome } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 
 export default function TabLayout() {
   return (
@@ -52,6 +52,12 @@ export default function TabLayout() {
         tabBarIcon: ({ color, size }) => (
             <FontAwesome name="user" size={size * 0.9} color={color}/>
           ),
+      }}
+      />
+      <Tabs.Screen 
+      name="(product)/[productId]"
+      options={{
+        href: null,
       }}
       />
     </Tabs>
