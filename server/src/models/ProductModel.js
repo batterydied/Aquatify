@@ -1,36 +1,45 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 
+// Define Models
 const Product = sequelize.define("Product", {
   productId: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  secondaryName: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  sellerId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
-  sellerName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  category: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  name: { type: DataTypes.STRING, allowNull: false },
+  secondaryName: { type: DataTypes.STRING, allowNull: true },
+  sellerId: { type: DataTypes.UUID, allowNull: false },
+  sellerName: { type: DataTypes.STRING, allowNull: false },
+  category: { type: DataTypes.STRING, allowNull: false },
+  description: { type: DataTypes.STRING, allowNull: true },
+}, {
+  // Add virtual fields
+  defaultScope: {
+    attributes: { 
+      include: [
+        [
+          sequelize.literal(`(
+            SELECT AVG("rating") 
+            FROM "Reviews" 
+            WHERE "Reviews"."productId" = "Product"."productId"
+          )`), 
+          'rating'
+        ],
+        [
+          sequelize.literal(`(
+            SELECT "price" 
+            FROM "ProductTypes" 
+            WHERE "ProductTypes"."productId" = "Product"."productId"
+            ORDER BY "id" ASC
+            LIMIT 1
+          )`), 
+          'price'
+        ]
+      ]
+    }
+  }
 });
 
 const Review = sequelize.define("Review", {
@@ -55,7 +64,7 @@ const ProductType = sequelize.define("ProductType", {
   quantity: { type: DataTypes.INTEGER, allowNull: true },
 });
 
-// Define relationships
+// Define Relationships
 Review.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
 Product.hasMany(Review, { foreignKey: "productId", as: "reviews", onDelete: "CASCADE" });
 
@@ -65,6 +74,7 @@ Product.hasMany(Image, { foreignKey: "productId", as: "images", onDelete: "CASCA
 ProductType.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
 Product.hasMany(ProductType, { foreignKey: "productId", as: "productTypes", onDelete: "CASCADE" });
 
+// Export Models
 class _ProductModel {
   constructor() {
     this.models = { Product, Review, Image, ProductType };

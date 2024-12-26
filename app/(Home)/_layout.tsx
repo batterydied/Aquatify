@@ -19,15 +19,6 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen 
-      name="market" 
-      options={{
-        title: '',
-        tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="home" size={size} color={color}/>
-          ),
-      }}
-      />
-      <Tabs.Screen 
       name="favorites" 
       options={{
         title: '',
