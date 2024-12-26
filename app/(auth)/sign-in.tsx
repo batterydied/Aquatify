@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from 'react-native';
 import { useSignIn, useOAuth } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
@@ -12,6 +12,14 @@ export default function SignInPage() {
         MontserratRegular: Montserrat_400Regular,
         MontserratBold: Montserrat_700Bold,
     });
+
+    if (!fontsLoaded) {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
     const { signIn, setActive, isLoaded } = useSignIn();
     const router = useRouter();

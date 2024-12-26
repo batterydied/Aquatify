@@ -42,10 +42,10 @@ export default function SettingPage() {
 
     return (
         <View className="flex-1 justify-center items-center">
-            <Text>
+            <Text style={{ fontFamily: "MontserratRegular" }}>
                 Hello {user?.emailAddresses[0].emailAddress}
             </Text>
-            <Text>
+            <Text style={{ fontFamily: "MontserratRegular" }}>
                 {userData?.id}
             </Text>
             <SignOutButton />

@@ -1,8 +1,10 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
 import { homeProduct, fetchProducts, filterCriteriaType } from "@/lib/user";
 import { useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import { useFonts } from 'expo-font';
+import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function HomePage() {
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
@@ -16,6 +18,21 @@ export default function HomePage() {
     });
 
     const router = useRouter();
+
+    // Load custom fonts
+    const [fontsLoaded] = useFonts({
+        MontserratRegular: Montserrat_400Regular,
+        MontserratBold: Montserrat_700Bold,
+    });
+
+    // If fonts are not loaded, show a loading indicator
+    if (!fontsLoaded) {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
     const renderItem = ({ item }: { item: homeProduct }) => (
         <View className="flex-1 mx-2 mb-4">
@@ -87,6 +104,7 @@ export default function HomePage() {
                     placeholder="Search products..."
                     placeholderTextColor="gray"
                     className="flex-1 h-10 pl-2 text-black"
+                    style={{ fontFamily: "MontserratRegular" }}
                 />
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <FontAwesome name="filter" size={20} color="gray" />
