@@ -202,23 +202,24 @@ export default function HomePage() {
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
                             style={{ fontFamily: "MontserratRegular" }}
                         />
-                        <TextInput
-                            placeholder="Category"
-                            placeholderTextColor="grey"
-                            value={currFilterCriteria.category}
-                            onChangeText={(text) =>
-                                setCurrFilterCriteria({
-                                    ...currFilterCriteria,
-                                    category: text,
-                                })
-                            }
-                            className="mb-4 p-2 border-[1px] border-gray-300 rounded"
-                            style={{ fontFamily: "MontserratRegular" }}
-                        />
                         <Text>Choose a category?</Text>
-                        <View>
+                        <View className="mb-4">
                             {categories.map((category)=>(
-                                <TouchableOpacity key={category}><Text>{category}</Text></TouchableOpacity>
+                                <TouchableOpacity key={category}><Text style={{ fontFamily: currFilterCriteria["category"] === category
+                                    ? "MontserratBold"  
+                                    : "MontserratRegular",  }} onPress={()=>{
+                                        if(currFilterCriteria["category"] === ""){
+                                            setCurrFilterCriteria({
+                                            ...currFilterCriteria,
+                                            category: category,
+                                            })
+                                        }else{
+                                            setCurrFilterCriteria({
+                                                ...currFilterCriteria,
+                                                category: "",
+                                            })
+                                        }
+                                    }}>{category}</Text></TouchableOpacity>
                             ))}
                         </View>
                         <View className="flex-row">

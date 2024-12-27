@@ -51,11 +51,13 @@ export async function fetchProducts() {
   }
 }
 
-export interface filterCriteriaType{
+export type filterCriteriaType = {
   minPrice: number | null;
   maxPrice: number | null;
   minRating: number | null;
   category: string;
+} & {
+  [key: string]: string | number | null; // Allow dynamic string keys
 };
 
 export const categories: string[] = ["Livestocks", "Plants", "Materials", "Miscellaneous"];
