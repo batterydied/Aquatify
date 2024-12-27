@@ -61,11 +61,11 @@ export default function SignInPage() {
     if (!fontsLoaded) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="grey" />
             </View>
         );
     }
-    
+
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View className="flex-1 justify-center items-center p-6">

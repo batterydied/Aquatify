@@ -100,7 +100,7 @@ export default function HomePage() {
     if (!fontsLoaded) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="grey" />
             </View>
         );
     }
@@ -179,7 +179,7 @@ export default function HomePage() {
                             >
                                 <Text className="text-gray-600">Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={applyFilters}>
+                            <TouchableOpacity onPress={()=>applyFilters(filterCriteria)}>
                                 <Text className="text-blue-600">Apply</Text>
                             </TouchableOpacity>
                         </View>
