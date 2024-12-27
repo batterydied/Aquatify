@@ -140,7 +140,7 @@ export default function HomePage() {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <View className="flex-1 justify-center items-center bg-c3 bg-opacity-50">
+                <View className="flex-1 justify-center items-center bg-black/50">
                     <View className="bg-white p-6 rounded-lg w-4/5">
                         <Text className="text-lg font-bold mb-4" style={{ fontFamily: "MontserratBold" }}>Filters</Text>
                         <TextInput
@@ -159,7 +159,7 @@ export default function HomePage() {
                         />
                         {filterError && (<Text className="text-red-500">Min price can't be higher than max price.</Text>)}
                         <TextInput
-                            placeholder="Max Price"
+                            placeholder="Max price"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
                             value={filterCriteria.maxPrice?.toString() || ""}
@@ -173,7 +173,7 @@ export default function HomePage() {
                             style={{ fontFamily: "MontserratRegular" }}
                         />
                         <TextInput
-                            placeholder="Min Rating"
+                            placeholder="Min rating"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
                             value={filterCriteria.minRating?.toString() || ""}
