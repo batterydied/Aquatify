@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
-import { homeProduct, fetchProducts, filterCriteriaType } from "@/lib/user";
+import { homeProduct, fetchProducts, filterCriteriaType, categories } from "@/lib/user";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
@@ -10,6 +10,7 @@ export default function HomePage() {
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    //searchInput is a placeholder, when return is pressed, it calls setSearchQuery
     const [searchInput, setSearchInput] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
     const [filterError, setFilterError] = useState(false);
@@ -19,6 +20,7 @@ export default function HomePage() {
         minRating: null,
         category: "",
     });
+    //currFilterCriteria is a placeholder, when the apply button is pressed, it calls setFilterCriteria
     const [currFilterCriteria, setCurrFilterCriteria] = useState<filterCriteriaType>({
         minPrice: null,
         maxPrice: null,
@@ -213,6 +215,12 @@ export default function HomePage() {
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
                             style={{ fontFamily: "MontserratRegular" }}
                         />
+                        <Text>Choose a category?</Text>
+                        <View>
+                            {categories.map((category)=>(
+                                <TouchableOpacity key={category}><Text>{category}</Text></TouchableOpacity>
+                            ))}
+                        </View>
                         <View className="flex-row">
                             <TouchableOpacity
                                 onPress={() => resetFilter()}

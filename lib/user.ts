@@ -57,3 +57,5 @@ export interface filterCriteriaType{
   minRating: number | null;
   category: string;
 };
+
+export const categories: string[] = ["Livestocks", "Plants", "Materials", "Miscellaneous"];
