@@ -19,6 +19,12 @@ export default function HomePage() {
         minRating: null,
         category: "",
     });
+    const [currFilterCriteria, setCurrFilterCriteria] = useState<filterCriteriaType>({
+        minPrice: null,
+        maxPrice: null,
+        minRating: null,
+        category: "",
+    });
 
     const router = useRouter();
 
@@ -28,6 +34,14 @@ export default function HomePage() {
         MontserratBold: Montserrat_700Bold,
     });
 
+    const resetFilter = ()=>{
+        setCurrFilterCriteria({
+            minPrice: null,
+            maxPrice: null,
+            minRating: null,
+            category: "",
+        })
+    }
 
     const renderItem = ({ item }: { item: homeProduct }) => (
         <View className="flex-1 mx-2 mb-4">
@@ -147,10 +161,10 @@ export default function HomePage() {
                             placeholder="Min Price"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
-                            value={filterCriteria.minPrice?.toString() || ""}
+                            value={currFilterCriteria.minPrice?.toString() || ""}
                             onChangeText={(text) =>
-                                setFilterCriteria({
-                                    ...filterCriteria,
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
                                     minPrice: parseFloat(text) || null,
                                 })
                             }
@@ -162,10 +176,10 @@ export default function HomePage() {
                             placeholder="Max price"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
-                            value={filterCriteria.maxPrice?.toString() || ""}
+                            value={currFilterCriteria.maxPrice?.toString() || ""}
                             onChangeText={(text) =>
-                                setFilterCriteria({
-                                    ...filterCriteria,
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
                                     maxPrice: parseFloat(text) || null,
                                 })
                             }
@@ -176,10 +190,10 @@ export default function HomePage() {
                             placeholder="Min rating"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
-                            value={filterCriteria.minRating?.toString() || ""}
+                            value={currFilterCriteria.minRating?.toString() || ""}
                             onChangeText={(text) =>
-                                setFilterCriteria({
-                                    ...filterCriteria,
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
                                     minRating: parseFloat(text) || null,
                                 })
                             }
@@ -189,26 +203,33 @@ export default function HomePage() {
                         <TextInput
                             placeholder="Category"
                             placeholderTextColor="grey"
-                            value={filterCriteria.category}
+                            value={currFilterCriteria.category}
                             onChangeText={(text) =>
-                                setFilterCriteria({
-                                    ...filterCriteria,
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
                                     category: text,
                                 })
                             }
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
                             style={{ fontFamily: "MontserratRegular" }}
                         />
-                        <View className="flex-row justify-end">
+                        <View className="flex-row">
                             <TouchableOpacity
-                                onPress={() => setModalVisible(false)}
-                                className="mr-4"
+                                onPress={() => resetFilter()}
                             >
-                                <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
+                                <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>applyFilters(filterCriteria)}>
-                                <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
-                            </TouchableOpacity>
+                            <View className="w-[75%] flex-row justify-end">
+                                <TouchableOpacity
+                                    onPress={() => setModalVisible(false)}
+                                    className="mr-4"
+                                >
+                                    <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={()=>applyFilters(currFilterCriteria)}>
+                                    <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
