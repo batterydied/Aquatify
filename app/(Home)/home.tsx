@@ -12,9 +12,11 @@ export default function HomePage() {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [filterError, setFilterError] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState<filterCriteriaType>({
-        price: null,
-        rating: null,
+        minPrice: null,
+        maxPrice: null,
+        minRating: null,
         category: "",
     });
 
@@ -73,15 +75,17 @@ export default function HomePage() {
     
         // Apply additional filters
         filtered = filtered.filter((product) => {
-            const matchesPrice =
-                filterCriteria.price === null || product.price <= filterCriteria.price;
+            const matchesMinPrice =
+                filterCriteria.minPrice === null || product.price >= filterCriteria.minPrice;
+            const matchesMaxPrice =
+                filterCriteria.maxPrice === null || product.price <= filterCriteria.maxPrice;
             const matchesRating =
-                filterCriteria.rating === null || product.rating >= filterCriteria.rating;
+                filterCriteria.minRating === null || product.rating >= filterCriteria.minRating;
             const matchesCategory =
                 filterCriteria.category === "" || 
                 product.category.toLowerCase().includes(filterCriteria.category.toLowerCase());
     
-            return matchesPrice && matchesRating && matchesCategory;
+            return matchesMinPrice && matchesMaxPrice && matchesRating && matchesCategory;
         });
     
         setFilteredProducts(filtered);
@@ -92,8 +96,13 @@ export default function HomePage() {
     };
     
     const applyFilters = (newFilters: filterCriteriaType) => {
-        setFilterCriteria(newFilters);
-        setModalVisible(false);
+        if(newFilters.minPrice && newFilters.maxPrice && newFilters.minPrice > newFilters.maxPrice){
+            setFilterError(true);
+        }else{
+            setFilterError(false);
+            setFilterCriteria(newFilters);
+            setModalVisible(false);
+        }
     };
 
     // If fonts are not loaded, show a loading indicator
@@ -120,7 +129,7 @@ export default function HomePage() {
                     style={{ fontFamily: "MontserratRegular" }}
                 />
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <FontAwesome name="filter" size={20} color="gray" />
+                    <FontAwesome name="list" size={20} color="gray" />
                 </TouchableOpacity>
             </View>
 
@@ -131,34 +140,51 @@ export default function HomePage() {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+                <View className="flex-1 justify-center items-center bg-c3 bg-opacity-50">
                     <View className="bg-white p-6 rounded-lg w-4/5">
-                        <Text className="text-lg font-bold mb-4">Filters</Text>
+                        <Text className="text-lg font-bold mb-4" style={{ fontFamily: "MontserratBold" }}>Filters</Text>
+                        <TextInput
+                            placeholder="Min Price"
+                            placeholderTextColor="grey"
+                            keyboardType="numeric"
+                            value={filterCriteria.minPrice?.toString() || ""}
+                            onChangeText={(text) =>
+                                setFilterCriteria({
+                                    ...filterCriteria,
+                                    minPrice: parseFloat(text) || null,
+                                })
+                            }
+                            className={`p-2 border-[1px] border-gray-300 rounded ${!filterError && "mb-4"}`}
+                            style={{ fontFamily: "MontserratRegular" }}
+                        />
+                        {filterError && (<Text className="text-red-500">Min price can't be higher than max price.</Text>)}
                         <TextInput
                             placeholder="Max Price"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
-                            value={filterCriteria.price?.toString() || ""}
+                            value={filterCriteria.maxPrice?.toString() || ""}
                             onChangeText={(text) =>
                                 setFilterCriteria({
                                     ...filterCriteria,
-                                    price: parseFloat(text) || null,
+                                    maxPrice: parseFloat(text) || null,
                                 })
                             }
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
+                            style={{ fontFamily: "MontserratRegular" }}
                         />
                         <TextInput
                             placeholder="Min Rating"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
-                            value={filterCriteria.rating?.toString() || ""}
+                            value={filterCriteria.minRating?.toString() || ""}
                             onChangeText={(text) =>
                                 setFilterCriteria({
                                     ...filterCriteria,
-                                    rating: parseFloat(text) || null,
+                                    minRating: parseFloat(text) || null,
                                 })
                             }
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
+                            style={{ fontFamily: "MontserratRegular" }}
                         />
                         <TextInput
                             placeholder="Category"
@@ -171,16 +197,17 @@ export default function HomePage() {
                                 })
                             }
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
+                            style={{ fontFamily: "MontserratRegular" }}
                         />
                         <View className="flex-row justify-end">
                             <TouchableOpacity
                                 onPress={() => setModalVisible(false)}
                                 className="mr-4"
                             >
-                                <Text className="text-gray-600">Cancel</Text>
+                                <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={()=>applyFilters(filterCriteria)}>
-                                <Text className="text-blue-600">Apply</Text>
+                                <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

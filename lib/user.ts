@@ -52,7 +52,8 @@ export async function fetchProducts() {
 }
 
 export interface filterCriteriaType{
-  price: number | null;
-  rating: number | null;
+  minPrice: number | null;
+  maxPrice: number | null;
+  minRating: number | null;
   category: string;
 };
