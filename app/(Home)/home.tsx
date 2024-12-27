@@ -9,7 +9,8 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function HomePage() {
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchInput, setSearchInput] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState<filterCriteriaType>({
         price: null,
@@ -48,27 +49,30 @@ export default function HomePage() {
             try {
                 const data = await fetchProducts();
                 setHomeProducts(data || []);
-                setFilteredProducts(data || []);
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
         };
-
+    
         fetchData();
         const intervalId = setInterval(fetchData, 10000);
-
+    
         return () => clearInterval(intervalId);
     }, []);
-
-    const handleSearch = () => {
-        const filtered = homeProducts.filter((product) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredProducts(filtered);
-    };
-
-    const applyFilters = () => {
-        const filtered = homeProducts.filter((product) => {
+    
+    // Reapply filters whenever homeProducts, searchQuery, or filterCriteria change
+    useEffect(() => {
+        let filtered = homeProducts;
+    
+        // Apply search filter
+        if (searchQuery) {
+            filtered = filtered.filter((product) =>
+                product.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+    
+        // Apply additional filters
+        filtered = filtered.filter((product) => {
             const matchesPrice =
                 filterCriteria.price === null || product.price <= filterCriteria.price;
             const matchesRating =
@@ -76,11 +80,19 @@ export default function HomePage() {
             const matchesCategory =
                 filterCriteria.category === "" || 
                 product.category.toLowerCase().includes(filterCriteria.category.toLowerCase());
-        
+    
             return matchesPrice && matchesRating && matchesCategory;
         });
-
+    
         setFilteredProducts(filtered);
+    }, [homeProducts, searchQuery, filterCriteria]);
+    
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+    };
+    
+    const applyFilters = (newFilters: filterCriteriaType) => {
+        setFilterCriteria(newFilters);
         setModalVisible(false);
     };
 
@@ -92,16 +104,16 @@ export default function HomePage() {
             </View>
         );
     }
-    
+
     return (
         <View className="flex-1 mt-16 p-5 bg-c3">
             {/* Search Bar */}
             <View className="flex-row items-center rounded-md bg-white px-3 mb-4">
                 <FontAwesome name="search" size={20} color="gray" />
                 <TextInput
-                    value={searchQuery}
-                    onChangeText={(text) => setSearchQuery(text)}
-                    onSubmitEditing={handleSearch}
+                    value={searchInput}
+                    onChangeText={(text) => setSearchInput(text)}
+                    onSubmitEditing={(e)=>handleSearch(e.nativeEvent.text)}
                     placeholder="Search products..."
                     placeholderTextColor="gray"
                     className="flex-1 h-10 pl-2 text-black"
