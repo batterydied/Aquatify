@@ -25,14 +25,6 @@ export default function HomePage() {
         MontserratBold: Montserrat_700Bold,
     });
 
-    // If fonts are not loaded, show a loading indicator
-    if (!fontsLoaded) {
-        return (
-            <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-        );
-    }
 
     const renderItem = ({ item }: { item: homeProduct }) => (
         <View className="flex-1 mx-2 mb-4">
@@ -92,6 +84,15 @@ export default function HomePage() {
         setModalVisible(false);
     };
 
+    // If fonts are not loaded, show a loading indicator
+    if (!fontsLoaded) {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+    
     return (
         <View className="flex-1 mt-16 p-5 bg-c3">
             {/* Search Bar */}

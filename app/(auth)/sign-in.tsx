@@ -13,14 +13,6 @@ export default function SignInPage() {
         MontserratBold: Montserrat_700Bold,
     });
 
-    if (!fontsLoaded) {
-        return (
-            <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-        );
-    }
-
     const { signIn, setActive, isLoaded } = useSignIn();
     const router = useRouter();
 
@@ -66,6 +58,14 @@ export default function SignInPage() {
         }
     }, [isLoaded, emailAddress, password, signIn, setActive, router]);
 
+    if (!fontsLoaded) {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+    
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View className="flex-1 justify-center items-center p-6">
