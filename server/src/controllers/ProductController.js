@@ -38,10 +38,10 @@ class ProductController {
   // Add a new product to the database
   static async addProduct(req, res) {
     try {
-      const { name, secondaryName, sellerId, sellerName, category, description, images, reviews, productTypes } = req.body;
+      const { name, secondaryName, sellerId, sellerName, categories, description, images, reviews, productTypes } = req.body;
   
       // Validate input
-      if (!name || !sellerId || !sellerName || !category) {
+      if (!name || !sellerId || !sellerName || !categories) {
         return res.status(400).json({ error: "Missing required fields" });
       }
   
@@ -51,7 +51,7 @@ class ProductController {
         secondaryName,
         sellerId,
         sellerName,
-        category,
+        categories,
         description,
       });
   
@@ -107,7 +107,7 @@ class ProductController {
         secondaryname,
         sellerid,
         sellername,
-        category,
+        categories,
         description,
         price,
         images,
@@ -129,7 +129,7 @@ class ProductController {
       if (secondaryname !== undefined) updatedFields.secondaryname = secondaryname;
       if (sellerid !== undefined) updatedFields.sellerid = sellerid;
       if (sellername !== undefined) updatedFields.sellername = sellername;
-      if (category !== undefined) updatedFields.category = category;
+      if (categories !== undefined) updatedFields.categories = categories;
       if (description !== undefined) updatedFields.description = description;
       if (price !== undefined) updatedFields.price = price;
       if (quantity !== undefined) updatedFields.quantity = quantity;

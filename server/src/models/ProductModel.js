@@ -12,7 +12,10 @@ const Product = sequelize.define("Product", {
   secondaryName: { type: DataTypes.STRING, allowNull: true },
   sellerId: { type: DataTypes.UUID, allowNull: false },
   sellerName: { type: DataTypes.STRING, allowNull: false },
-  category: { type: DataTypes.STRING, allowNull: false },
+  categories: { 
+    type: DataTypes.ARRAY(DataTypes.STRING), // Array of strings
+    allowNull: false 
+  },
   description: { type: DataTypes.STRING, allowNull: true },
 }, {
   // Add virtual fields

@@ -12,19 +12,19 @@ class CartController {
     try {
       const cartItems = await Cart.findAll({
         where: { isSaved: false },
-        include: {
-          model: Product,
-          as: "product",
-          include: [
-            { model: ProductType, as: "productTypes"},
-            { model: Image, as: "images" }
-          ]
-        },
+        include: [
+          {
+            model: Product,
+            include: [
+              {
+                model: ProductType,
+                as: "productTypes",
+              }
+            ],
+            logging: console.log,
+          }
+        ],
       });
-
-      if (cartItems.length === 0) {
-        return res.status(404).json({ message: "No items found in the cart." });
-      }
 
       return res.status(200).json(cartItems);
     } catch (error) {
@@ -128,7 +128,6 @@ class CartController {
         where: { isSaved: true },
         include: {
           model: Product,
-          as: "product",
           include: [
             { model: ProductType, as: "productTypes"},
             { model: Image, as: "images" }

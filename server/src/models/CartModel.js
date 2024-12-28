@@ -12,7 +12,7 @@ const Cart = sequelize.define("Cart", {
 });
 
 Product.hasMany(Cart, { foreignKey: "productId" }); // A product can appear in many cart entries.
-Cart.belongsTo(Product, { foreignKey: "productId", as: "product" }); // A cart item is associated with one product.
+Cart.belongsTo(Product, { foreignKey: 'productId' });
 
 // CartModel Class
 class _CartModel {

@@ -20,7 +20,6 @@ const connectToDatabase = async () => {
     console.log('Connection to the database has been established successfully.');
 
     await sequelize.sync();
-    //await sequelize.sync();
     console.log('Database synchronized successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);

@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
-import { homeProduct, fetchProducts, filterCriteriaType, categories } from "@/lib/user";
+import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes } from "@/lib/user";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
@@ -18,14 +18,14 @@ export default function HomePage() {
         minPrice: null,
         maxPrice: null,
         minRating: null,
-        category: "",
+        categories: [],
     });
     //currFilterCriteria is a placeholder, when the apply button is pressed, it calls setFilterCriteria
     const [currFilterCriteria, setCurrFilterCriteria] = useState<filterCriteriaType>({
         minPrice: null,
         maxPrice: null,
         minRating: null,
-        category: "",
+        categories: [],
     });
 
     const router = useRouter();
@@ -41,7 +41,7 @@ export default function HomePage() {
             minPrice: null,
             maxPrice: null,
             minRating: null,
-            category: "",
+            categories: [],
         })
     }
 
@@ -97,13 +97,20 @@ export default function HomePage() {
                 filterCriteria.maxPrice === null || product.price <= filterCriteria.maxPrice;
             const matchesRating =
                 filterCriteria.minRating === null || product.rating >= filterCriteria.minRating;
-            const matchesCategory =
-                filterCriteria.category === "" || 
-                product.category.toLowerCase().includes(filterCriteria.category.toLowerCase());
-    
-            return matchesMinPrice && matchesMaxPrice && matchesRating && matchesCategory;
+        
+            // Handle categories logic
+            const matchesCategories =
+                filterCriteria.categories.length === 0 ||
+                filterCriteria.categories.some(category =>
+                    product.categories.some(productCategory =>
+                        productCategory.toLowerCase() === category.toLowerCase()
+                    )
+                );
+        
+            return matchesMinPrice && matchesMaxPrice && matchesRating && matchesCategories;
         });
-    
+        
+        
         setFilteredProducts(filtered);
     }, [homeProducts, searchQuery, filterCriteria]);
     
@@ -202,21 +209,22 @@ export default function HomePage() {
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
                             style={{ fontFamily: "MontserratRegular" }}
                         />
-                        <Text>Choose a category?</Text>
+                        <Text style={{ fontFamily: "MontserratBold" }}>Categories:</Text>
                         <View className="mb-4">
-                            {categories.map((category)=>(
-                                <TouchableOpacity key={category}><Text style={{ fontFamily: currFilterCriteria["category"] === category
-                                    ? "MontserratBold"  
-                                    : "MontserratRegular",  }} onPress={()=>{
-                                        if(currFilterCriteria["category"] === ""){
+                            {categoryTypes.map((category)=>(
+                                <TouchableOpacity key={category}><Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
+                                        const index = currFilterCriteria.categories.indexOf(category);
+                                        if(index === -1){
                                             setCurrFilterCriteria({
                                             ...currFilterCriteria,
-                                            category: category,
+                                            categories: [...currFilterCriteria.categories, category]
                                             })
                                         }else{
+                                            const newCategories = currFilterCriteria.categories;
+                                            newCategories.splice(index, 1);
                                             setCurrFilterCriteria({
                                                 ...currFilterCriteria,
-                                                category: "",
+                                                categories: newCategories,
                                             })
                                         }
                                     }}>{category}</Text></TouchableOpacity>

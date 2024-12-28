@@ -22,7 +22,7 @@ export async function fetchUserData(email: string) {
 export interface homeProduct{
   productId: string;
   name: string;
-  category: string;
+  categories: string[];
   images: image[];
   reviews: review[];
   rating: number;
@@ -55,9 +55,9 @@ export type filterCriteriaType = {
   minPrice: number | null;
   maxPrice: number | null;
   minRating: number | null;
-  category: string;
+  categories: string[];
 } & {
-  [key: string]: string | number | null; // Allow dynamic string keys
+  [key: string]: string[] | number | null; // Allow dynamic string keys
 };
 
-export const categories: string[] = ["Livestocks", "Plants", "Materials", "Miscellaneous"];
+export const categoryTypes: string[] = ["Livestocks", "Plants", "Materials", "Miscellaneous"];
