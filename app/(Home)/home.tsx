@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, Dimensions } from "react-native";
 import { useState, useEffect } from "react";
 import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes } from "@/lib/user";
 import { useRouter } from "expo-router";
@@ -137,6 +137,11 @@ export default function HomePage() {
         );
     }
 
+    const { width: screenWidth } = Dimensions.get('window'); // Get screen width
+    const itemSpacing = 12; // Spacing between items
+    const desiredItemWidth = 200; // Desired item width
+    const itemsPerRow = Math.floor(screenWidth / (desiredItemWidth + itemSpacing)); // Calculate items per row
+    const itemWidth = (screenWidth - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20; // Calculate final item width
     return (
         <View className="flex-1 mt-16 p-5 bg-c3">
             {/* Search Bar */}
@@ -253,14 +258,20 @@ export default function HomePage() {
             </Modal>
 
             {/* Product List */}
-            <FlatList
-                data={filteredProducts}
-                keyExtractor={(item: homeProduct) => item.productId}
-                numColumns={2}
-                renderItem={renderItem}
-                columnWrapperStyle={{ justifyContent: "space-between" }}
-                contentContainerStyle={{ paddingBottom: 16 }}
-            />
+            <View className="flex-1 items-center">
+                <FlatList
+                    data={filteredProducts}
+                    keyExtractor={(item: homeProduct) => item.productId}
+                    renderItem={({ item }) => (
+                    <View style={[{ width: itemWidth}]}>
+                        {renderItem({ item })}
+                    </View>
+                    )}
+                    numColumns={itemsPerRow} // Dynamically set number of columns
+                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "space-between" }} // Apply conditionally
+                />
+            </View>
+
         </View>
     );
 }
