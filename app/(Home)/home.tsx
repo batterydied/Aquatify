@@ -148,9 +148,9 @@ export default function HomePage() {
     const itemsPerRow = Math.floor(screenWidth / (desiredItemWidth + itemSpacing)); // Calculate items per row
     const itemWidth = (screenWidth - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20; // Calculate final item width
     return (
-        <View className="flex-1 mt-16 p-5 bg-c3">
+        <View className="flex-1 p-5 bg-c3">
             {/* Search Bar */}
-            <View className="flex-row items-center rounded-md bg-white px-3 mb-4">
+            <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
                 </TouchableOpacity>
