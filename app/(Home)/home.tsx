@@ -268,7 +268,7 @@ export default function HomePage() {
                     </View>
                     )}
                     numColumns={itemsPerRow} // Dynamically set number of columns
-                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "space-between" }} // Apply conditionally
+                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }} // Apply conditionally
                 />
             </View>
 
