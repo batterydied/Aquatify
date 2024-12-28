@@ -46,14 +46,19 @@ export default function HomePage() {
     }
 
     const renderItem = ({ item }: { item: homeProduct }) => (
-        <View className="flex-1 mx-2 mb-4">
+        <View className="flex-1 mx-1 mb-1">
             <TouchableOpacity onPress={() => goToProductPage(item.productId)}>
                 <Image
                     source={{ uri: item.images[0]?.url }}
-                    className="w-full h-32"
-                    resizeMode="contain"
+                    className="h-40 w-full rounded-lg"
+                    resizeMode="cover"
                 />
-                <Text className="mt-2 text-center">{item.name}</Text>
+                <Text className="">{item.name}</Text>
+                <View className="flex-row justify-between">
+                    <Text>{'$'+item.price}</Text>
+                    <Text>{item.rating + '★'}</Text>
+                </View>
+                
             </TouchableOpacity>
         </View>
     );
