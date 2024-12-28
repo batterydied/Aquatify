@@ -57,7 +57,7 @@ export default function HomePage() {
                 <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
                 <View className="flex-row justify-between">
                     <Text style={{ fontFamily: "MontserratRegular" }}>{'$'+item.price}</Text>
-                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating + '★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
+                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
                 </View>
             </TouchableOpacity>
         </View>
