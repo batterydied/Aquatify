@@ -101,7 +101,7 @@ export default function HomePage() {
             // Handle categories logic
             const matchesCategories =
                 filterCriteria.categories.length === 0 ||
-                filterCriteria.categories.some(category =>
+                filterCriteria.categories.every(category =>
                     product.categories.some(productCategory =>
                         productCategory.toLowerCase() === category.toLowerCase()
                     )
@@ -167,7 +167,7 @@ export default function HomePage() {
                     <View className="bg-white p-6 rounded-lg w-4/5">
                         <Text className="text-lg font-bold mb-4" style={{ fontFamily: "MontserratBold" }}>Filters</Text>
                         <TextInput
-                            placeholder="Min Price"
+                            placeholder="Min price"
                             placeholderTextColor="grey"
                             keyboardType="numeric"
                             value={currFilterCriteria.minPrice?.toString() || ""}
@@ -230,13 +230,13 @@ export default function HomePage() {
                                     }}>{category}</Text></TouchableOpacity>
                             ))}
                         </View>
-                        <View className="flex-row">
-                            <TouchableOpacity
+                        <View className="flex-row w-full">
+                            <TouchableOpacity className="w-[40%]"
                                 onPress={() => resetFilter()}
                             >
                                 <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
                             </TouchableOpacity>
-                            <View className="w-[75%] flex-row justify-end">
+                            <View className="w-[60%] flex-row justify-end">
                                 <TouchableOpacity
                                     onPress={() => setModalVisible(false)}
                                     className="mr-4"
