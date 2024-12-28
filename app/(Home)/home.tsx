@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, Dimensions } from "react-native";
 import { useState, useEffect } from "react";
-import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes } from "@/lib/user";
+import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes, formatReviewsCount } from "@/lib/utils";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
@@ -49,14 +49,15 @@ export default function HomePage() {
         <View className="flex-1 mx-1 mb-1">
             <TouchableOpacity onPress={() => goToProductPage(item.productId)}>
                 <Image
-                    source={{ uri: item.images[0]?.url }}
+                    source={{ uri: item.images
+                        ?.sort((a, b) => (a.id || 0) - (b.id || 0))[0]?.url }}
                     className="h-40 w-full rounded-lg"
                     resizeMode="cover"
                 />
-                <Text style={{ fontFamily: "MontserratRegular" }}>{item.name}</Text>
+                <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
                 <View className="flex-row justify-between">
                     <Text style={{ fontFamily: "MontserratRegular" }}>{'$'+item.price}</Text>
-                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating + '★'}</Text>
+                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating + '★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
                 </View>
             </TouchableOpacity>
         </View>

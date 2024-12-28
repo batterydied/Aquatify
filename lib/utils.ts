@@ -31,6 +31,7 @@ export interface homeProduct{
 
 export interface image{
   url: string;
+  id: number;
 }
 
 export interface review{
@@ -60,4 +61,14 @@ export type filterCriteriaType = {
   [key: string]: string[] | number | null; // Allow dynamic string keys
 };
 
-export const categoryTypes: string[] = ["Livestocks", "Plants", "Materials", "Miscellaneous"];
+export function formatReviewsCount(reviews: number) {
+  if (reviews >= 1_000_000) {
+    return `${(reviews / 1_000_000).toFixed(1)}M`.replace(/\.0$/, "M");
+  } else if (reviews >= 1_000) {
+    return `${(reviews / 1_000).toFixed(1)}k`.replace(/\.0$/, "k");
+  } else {
+    return reviews.toString();
+  }
+}
+
+export const categoryTypes: string[] = ["Livestocks", "Freshwater", "Saltwater", "Invertebrates", "Plants", "Care", "Materials", "Miscellaneous"];
