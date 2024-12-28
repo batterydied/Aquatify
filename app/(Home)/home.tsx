@@ -53,12 +53,11 @@ export default function HomePage() {
                     className="h-40 w-full rounded-lg"
                     resizeMode="cover"
                 />
-                <Text className="">{item.name}</Text>
+                <Text style={{ fontFamily: "MontserratRegular" }}>{item.name}</Text>
                 <View className="flex-row justify-between">
-                    <Text>{'$'+item.price}</Text>
-                    <Text>{item.rating + '★'}</Text>
+                    <Text style={{ fontFamily: "MontserratRegular" }}>{'$'+item.price}</Text>
+                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating + '★'}</Text>
                 </View>
-                
             </TouchableOpacity>
         </View>
     );
@@ -151,7 +150,9 @@ export default function HomePage() {
         <View className="flex-1 mt-16 p-5 bg-c3">
             {/* Search Bar */}
             <View className="flex-row items-center rounded-md bg-white px-3 mb-4">
-                <FontAwesome name="search" size={20} color="gray" />
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <FontAwesome name="list" size={20} color="gray" />
+                </TouchableOpacity>
                 <TextInput
                     value={searchInput}
                     onChangeText={(text) => setSearchInput(text)}
@@ -161,9 +162,6 @@ export default function HomePage() {
                     className="flex-1 h-10 pl-2 text-black"
                     style={{ fontFamily: "MontserratRegular" }}
                 />
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <FontAwesome name="list" size={20} color="gray" />
-                </TouchableOpacity>
             </View>
 
             {/* Filter Modal */}
@@ -210,12 +208,21 @@ export default function HomePage() {
                             placeholderTextColor="grey"
                             keyboardType="numeric"
                             value={currFilterCriteria.minRating?.toString() || ""}
-                            onChangeText={(text) =>
-                                setCurrFilterCriteria({
-                                    ...currFilterCriteria,
-                                    minRating: parseFloat(text) || null,
-                                })
-                            }
+                            onChangeText={(text) =>{
+                                const numericValue = parseFloat(text);
+                                // Ensure the value is between 0 and 5
+                                if (!isNaN(numericValue)) {
+                                    setCurrFilterCriteria({
+                                        ...currFilterCriteria,
+                                        minRating: Math.max(0, Math.min(5, numericValue)), // Clamp value between 0 and 5
+                                    });
+                                } else {
+                                    setCurrFilterCriteria({
+                                        ...currFilterCriteria,
+                                        minRating: null, // Clear value if input is not a valid number
+                                    });
+                                }
+                            }}
                             className="mb-4 p-2 border-[1px] border-gray-300 rounded"
                             style={{ fontFamily: "MontserratRegular" }}
                         />
