@@ -164,7 +164,6 @@ export default function HomePage() {
                     style={{ fontFamily: "MontserratRegular" }}
                 />
             </View>
-
             {/* Filter Modal */}
             <Modal
                 animationType="slide"

@@ -36,6 +36,8 @@ export interface image{
 
 export interface review{
   rating: number;
+  user: string;
+  comment: string;
 }
 
 export async function fetchProducts() {
@@ -50,6 +52,39 @@ export async function fetchProducts() {
     console.error('Error fetching user data:', error); // Log any errors
     return null;
   }
+}
+
+export async function fetchProductById(productId: string){
+  try {
+    const response = await fetch(`http://192.168.1.23:3000/api/product/${productId}`); // Make the request
+    if (!response.ok) { // Check for response status
+      throw new Error(`Status: ${response.status}`);
+    }
+    const data = await response.json(); // Parse the response JSON
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error); // Log any errors
+    return null;
+  }
+}
+
+export interface productInterface{
+  name: string;
+  secondaryName: string;
+  sellerId: string;
+  sellerName: string;
+  description: string;
+  rating: number;
+  images: image[];
+  reviews: review[];
+  productTypes: productType[];
+}
+
+export interface productType{
+  id: number;
+  price: number;
+  type: string;
+  quantity: number;
 }
 
 export type filterCriteriaType = {
