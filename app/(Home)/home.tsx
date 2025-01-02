@@ -185,7 +185,97 @@ export default function HomePage() {
                 <View className="flex-1 justify-center items-center bg-black/50">
                     <View className="bg-white p-6 rounded-lg w-4/5">
                         <Text className="text-lg font-bold mb-4" style={{ fontFamily: "MontserratBold" }}>Filters</Text>
-                        {/* Filter form goes here */}
+                        <TextInput
+                            placeholder="Min price"
+                            placeholderTextColor="grey"
+                            keyboardType="numeric"
+                            value={currFilterCriteria.minPrice?.toString() || ""}
+                            onChangeText={(text) =>
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
+                                    minPrice: parseFloat(text) || null,
+                                })
+                            }
+                            className={`p-2 border-[1px] border-gray-300 rounded ${!filterError ? "mb-4" : ""}`}
+                            style={{ fontFamily: "MontserratRegular" }}
+                        />
+                        {filterError && (<Text className="text-red-500">Min price can't be higher than max price.</Text>)}
+                        <TextInput
+                            placeholder="Max price"
+                            placeholderTextColor="grey"
+                            keyboardType="numeric"
+                            value={currFilterCriteria.maxPrice?.toString() || ""}
+                            onChangeText={(text) =>
+                                setCurrFilterCriteria({
+                                    ...currFilterCriteria,
+                                    maxPrice: parseFloat(text) || null,
+                                })
+                            }
+                            className="mb-4 p-2 border-[1px] border-gray-300 rounded"
+                            style={{ fontFamily: "MontserratRegular" }}
+                        />
+                        <TextInput
+                            placeholder="Min rating"
+                            placeholderTextColor="grey"
+                            keyboardType="numeric"
+                            value={currFilterCriteria.minRating?.toString() || ""}
+                            onChangeText={(text) =>{
+                                const numericValue = parseFloat(text);
+                                // Ensure the value is between 0 and 5
+                                if (!isNaN(numericValue)) {
+                                    setCurrFilterCriteria({
+                                        ...currFilterCriteria,
+                                        minRating: Math.max(0, Math.min(5, numericValue)), // Clamp value between 0 and 5
+                                    });
+                                } else {
+                                    setCurrFilterCriteria({
+                                        ...currFilterCriteria,
+                                        minRating: null, // Clear value if input is not a valid number
+                                    });
+                                }
+                            }}
+                            className="mb-4 p-2 border-[1px] border-gray-300 rounded"
+                            style={{ fontFamily: "MontserratRegular" }}
+                        />
+                        <Text style={{ fontFamily: "MontserratBold" }}>Categories:</Text>
+                        <View className="mb-4">
+                            {categoryTypes.map((category)=>(
+                                <TouchableOpacity key={category}><Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
+                                        const index = currFilterCriteria.categories.indexOf(category);
+                                        if(index === -1){
+                                            setCurrFilterCriteria({
+                                            ...currFilterCriteria,
+                                            categories: [...currFilterCriteria.categories, category]
+                                            })
+                                        }else{
+                                            const newCategories = currFilterCriteria.categories;
+                                            newCategories.splice(index, 1);
+                                            setCurrFilterCriteria({
+                                                ...currFilterCriteria,
+                                                categories: newCategories,
+                                            })
+                                        }
+                                    }}>{category}</Text></TouchableOpacity>
+                            ))}
+                        </View>
+                        <View className="flex-row w-full">
+                            <TouchableOpacity className="w-[40%]"
+                                onPress={() => resetFilter()}
+                            >
+                                <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
+                            </TouchableOpacity>
+                            <View className="w-[60%] flex-row justify-end">
+                                <TouchableOpacity
+                                    onPress={() => setModalVisible(false)}
+                                    className="mr-4"
+                                >
+                                    <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={()=>applyFilters(currFilterCriteria)}>
+                                    <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </Modal>
