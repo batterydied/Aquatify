@@ -1,3 +1,8 @@
+function getIP(){
+  return "192.168.1.23";
+}
+const BASE_URL = "http://" + getIP();
+
 export interface User{
   id: string;
   name: string | null;
@@ -7,7 +12,7 @@ export interface User{
 
 export async function fetchUserData(email: string) {
     try {
-      const response = await fetch(`http://192.168.1.23:3000/api/user/fetch/${email}`); // Make the request
+      const response = await fetch(`${BASE_URL}:3000/api/user/fetch/${email}`); // Make the request
       if (!response.ok) { // Check for response status
         throw new Error(`Status: ${response.status}`);
       }
@@ -42,7 +47,7 @@ export interface review{
 
 export async function fetchProducts() {
   try {
-    const response = await fetch(`http://192.168.1.23:3000/api/product`); // Make the request
+    const response = await fetch(`${BASE_URL}:3000/api/product`); // Make the request
     if (!response.ok) { // Check for response status
       throw new Error(`Status: ${response.status}`);
     }
@@ -56,7 +61,7 @@ export async function fetchProducts() {
 
 export async function fetchProductById(productId: string){
   try {
-    const response = await fetch(`http://192.168.1.23:3000/api/product/${productId}`); // Make the request
+    const response = await fetch(`${BASE_URL}:3000/api/product/${productId}`); // Make the request
     if (!response.ok) { // Check for response status
       throw new Error(`Status: ${response.status}`);
     }
