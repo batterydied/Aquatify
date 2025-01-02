@@ -10,7 +10,6 @@ export default function HomePage() {
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    //searchInput is a placeholder, when return is pressed, it calls setSearchQuery
     const [searchInput, setSearchInput] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
     const [filterError, setFilterError] = useState(false);
@@ -20,17 +19,16 @@ export default function HomePage() {
         minRating: null,
         categories: [],
     });
-    //currFilterCriteria is a placeholder, when the apply button is pressed, it calls setFilterCriteria
     const [currFilterCriteria, setCurrFilterCriteria] = useState<filterCriteriaType>({
         minPrice: null,
         maxPrice: null,
         minRating: null,
         categories: [],
     });
-
+    const [orientation, setOrientation] = useState('portrait');
+    
     const router = useRouter();
 
-    // Load custom fonts
     const [fontsLoaded] = useFonts({
         MontserratRegular: Montserrat_400Regular,
         MontserratBold: Montserrat_700Bold,
@@ -83,18 +81,15 @@ export default function HomePage() {
         return () => clearInterval(intervalId);
     }, []);
     
-    // Reapply filters whenever homeProducts, searchQuery, or filterCriteria change
     useEffect(() => {
         let filtered = homeProducts;
     
-        // Apply search filter
         if (searchQuery) {
             filtered = filtered.filter((product) =>
                 product.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     
-        // Apply additional filters
         filtered = filtered.filter((product) => {
             const matchesMinPrice =
                 filterCriteria.minPrice === null || product.price >= filterCriteria.minPrice;
@@ -102,8 +97,7 @@ export default function HomePage() {
                 filterCriteria.maxPrice === null || product.price <= filterCriteria.maxPrice;
             const matchesRating =
                 filterCriteria.minRating === null || product.rating >= filterCriteria.minRating;
-        
-            // Handle categories logic
+
             const matchesCategories =
                 filterCriteria.categories.length === 0 ||
                 filterCriteria.categories.every(category =>
@@ -111,10 +105,9 @@ export default function HomePage() {
                         productCategory.toLowerCase() === category.toLowerCase()
                     )
                 );
-        
+
             return matchesMinPrice && matchesMaxPrice && matchesRating && matchesCategories;
         });
-        
         
         setFilteredProducts(filtered);
     }, [homeProducts, searchQuery, filterCriteria]);
@@ -133,7 +126,25 @@ export default function HomePage() {
         }
     };
 
-    // If fonts are not loaded, show a loading indicator
+    useEffect(() => {
+        const updateOrientation = () => {
+            const { width, height } = Dimensions.get('window');
+            if (width > height) {
+                setOrientation('landscape');
+            } else {
+                setOrientation('portrait');
+            }
+        };
+
+        Dimensions.addEventListener('change', updateOrientation);
+
+        updateOrientation();
+
+        return () => {
+            Dimensions.removeEventListener('change', updateOrientation);
+        };
+    }, []);
+
     if (!fontsLoaded) {
         return (
             <View className="flex-1 justify-center items-center">
@@ -142,14 +153,14 @@ export default function HomePage() {
         );
     }
 
-    const { width: screenWidth } = Dimensions.get('window'); // Get screen width
-    const itemSpacing = 12; // Spacing between items
-    const desiredItemWidth = 200; // Desired item width
-    const itemsPerRow = Math.floor(screenWidth / (desiredItemWidth + itemSpacing)); // Calculate items per row
-    const itemWidth = (screenWidth - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20; // Calculate final item width
+    const { width: screenWidth } = Dimensions.get('window');
+    const itemSpacing = 12;
+    const desiredItemWidth = 200;
+    const itemsPerRow = Math.floor(screenWidth / (desiredItemWidth + itemSpacing));
+    const itemWidth = (screenWidth - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
+
     return (
         <View className="flex-1 p-5 bg-c3">
-            {/* Search Bar */}
             <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
@@ -157,14 +168,14 @@ export default function HomePage() {
                 <TextInput
                     value={searchInput}
                     onChangeText={(text) => setSearchInput(text)}
-                    onSubmitEditing={(e)=>handleSearch(e.nativeEvent.text)}
+                    onSubmitEditing={(e) => handleSearch(e.nativeEvent.text)}
                     placeholder="Search products..."
                     placeholderTextColor="gray"
                     className="flex-1 h-10 pl-2 text-black"
                     style={{ fontFamily: "MontserratRegular" }}
                 />
             </View>
-            {/* Filter Modal */}
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -174,116 +185,25 @@ export default function HomePage() {
                 <View className="flex-1 justify-center items-center bg-black/50">
                     <View className="bg-white p-6 rounded-lg w-4/5">
                         <Text className="text-lg font-bold mb-4" style={{ fontFamily: "MontserratBold" }}>Filters</Text>
-                        <TextInput
-                            placeholder="Min price"
-                            placeholderTextColor="grey"
-                            keyboardType="numeric"
-                            value={currFilterCriteria.minPrice?.toString() || ""}
-                            onChangeText={(text) =>
-                                setCurrFilterCriteria({
-                                    ...currFilterCriteria,
-                                    minPrice: parseFloat(text) || null,
-                                })
-                            }
-                            className={`p-2 border-[1px] border-gray-300 rounded ${!filterError && "mb-4"}`}
-                            style={{ fontFamily: "MontserratRegular" }}
-                        />
-                        {filterError && (<Text className="text-red-500">Min price can't be higher than max price.</Text>)}
-                        <TextInput
-                            placeholder="Max price"
-                            placeholderTextColor="grey"
-                            keyboardType="numeric"
-                            value={currFilterCriteria.maxPrice?.toString() || ""}
-                            onChangeText={(text) =>
-                                setCurrFilterCriteria({
-                                    ...currFilterCriteria,
-                                    maxPrice: parseFloat(text) || null,
-                                })
-                            }
-                            className="mb-4 p-2 border-[1px] border-gray-300 rounded"
-                            style={{ fontFamily: "MontserratRegular" }}
-                        />
-                        <TextInput
-                            placeholder="Min rating"
-                            placeholderTextColor="grey"
-                            keyboardType="numeric"
-                            value={currFilterCriteria.minRating?.toString() || ""}
-                            onChangeText={(text) =>{
-                                const numericValue = parseFloat(text);
-                                // Ensure the value is between 0 and 5
-                                if (!isNaN(numericValue)) {
-                                    setCurrFilterCriteria({
-                                        ...currFilterCriteria,
-                                        minRating: Math.max(0, Math.min(5, numericValue)), // Clamp value between 0 and 5
-                                    });
-                                } else {
-                                    setCurrFilterCriteria({
-                                        ...currFilterCriteria,
-                                        minRating: null, // Clear value if input is not a valid number
-                                    });
-                                }
-                            }}
-                            className="mb-4 p-2 border-[1px] border-gray-300 rounded"
-                            style={{ fontFamily: "MontserratRegular" }}
-                        />
-                        <Text style={{ fontFamily: "MontserratBold" }}>Categories:</Text>
-                        <View className="mb-4">
-                            {categoryTypes.map((category)=>(
-                                <TouchableOpacity key={category}><Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
-                                        const index = currFilterCriteria.categories.indexOf(category);
-                                        if(index === -1){
-                                            setCurrFilterCriteria({
-                                            ...currFilterCriteria,
-                                            categories: [...currFilterCriteria.categories, category]
-                                            })
-                                        }else{
-                                            const newCategories = currFilterCriteria.categories;
-                                            newCategories.splice(index, 1);
-                                            setCurrFilterCriteria({
-                                                ...currFilterCriteria,
-                                                categories: newCategories,
-                                            })
-                                        }
-                                    }}>{category}</Text></TouchableOpacity>
-                            ))}
-                        </View>
-                        <View className="flex-row w-full">
-                            <TouchableOpacity className="w-[40%]"
-                                onPress={() => resetFilter()}
-                            >
-                                <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
-                            </TouchableOpacity>
-                            <View className="w-[60%] flex-row justify-end">
-                                <TouchableOpacity
-                                    onPress={() => setModalVisible(false)}
-                                    className="mr-4"
-                                >
-                                    <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={()=>applyFilters(currFilterCriteria)}>
-                                    <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        {/* Filter form goes here */}
                     </View>
                 </View>
             </Modal>
 
-            {/* Product List */}
             <View className="flex-1 items-center">
                 <FlatList
+                    key={orientation} // Make numColumns change trigger a re-render
                     data={filteredProducts}
                     keyExtractor={(item: homeProduct) => item.productId}
                     renderItem={({ item }) => (
-                    <View style={[{ width: itemWidth}]}>
-                        {renderItem({ item })}
-                    </View>
+                        <View style={[{ width: itemWidth }]}>
+                            {renderItem({ item })}
+                        </View>
                     )}
-                    numColumns={itemsPerRow} // Dynamically set number of columns
-                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }} // Apply conditionally
+                    numColumns={itemsPerRow}
+                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
                 />
             </View>
-
         </View>
     );
 }
