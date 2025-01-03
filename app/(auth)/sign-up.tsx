@@ -93,7 +93,7 @@ export default function SignOutPage() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View className="flex-1 justify-center items-center">  
-            <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
+            <Image className="w-[300px] h-[300px]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
             <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                 <FontAwesome
                     name="user"

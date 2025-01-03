@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, ActivityIndicator, Dimensions } from 'react-native';
 import { useSignIn, useOAuth } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
@@ -69,7 +69,7 @@ export default function SignInPage() {
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View className="flex-1 justify-center items-center p-6">
-                <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
+                <Image className="w-[300px] h-[300px]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
                 {/* Email/Password Sign-In */}
                 <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                     <FontAwesome

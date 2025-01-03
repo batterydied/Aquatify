@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View className="flex-1 justify-center items-center p-4">
-            <Image className="w-[40%] h-[20%]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
+            <Image className="w-[300px] h-[300px]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
         <Text className="text-2xl font-bold mb-4 text-center" style={{fontFamily: "MontserratRegular"}}>Forgot Password?</Text>
         {!successfulCreation ? (
             <>

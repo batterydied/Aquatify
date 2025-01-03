@@ -136,12 +136,12 @@ export default function HomePage() {
             }
         };
 
-        Dimensions.addEventListener('change', updateOrientation);
+        const subscription = Dimensions.addEventListener('change', updateOrientation);
 
         updateOrientation();
 
         return () => {
-            Dimensions.removeEventListener('change', updateOrientation);
+            subscription.remove();
         };
     }, []);
 
