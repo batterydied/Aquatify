@@ -69,7 +69,7 @@ export default function HomePage() {
         const fetchData = async () => {
             try {
                 const data = await fetchProducts();
-                setHomeProducts(data || []);
+                setHomeProducts((data || []).sort((a: homeProduct, b: homeProduct) => b.rating - a.rating));
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
