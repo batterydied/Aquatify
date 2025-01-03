@@ -79,7 +79,7 @@ export default function HomePage() {
         const intervalId = setInterval(fetchData, 10000);
     
         return () => clearInterval(intervalId);
-    }, []);
+    }, [orientation]);
     
     useEffect(() => {
         let filtered = homeProducts;
@@ -282,7 +282,7 @@ export default function HomePage() {
 
             <View className="flex-1 items-center">
                 <FlatList
-                    key={orientation} // Make numColumns change trigger a re-render
+                    key={orientation}
                     data={filteredProducts}
                     keyExtractor={(item: homeProduct) => item.productId}
                     renderItem={({ item }) => (
