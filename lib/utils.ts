@@ -43,6 +43,7 @@ export interface review{
   rating: number;
   user: string;
   comment: string;
+  id: number;
 }
 
 export async function fetchProducts() {

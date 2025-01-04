@@ -292,6 +292,7 @@ export default function HomePage() {
                     )}
                     numColumns={itemsPerRow}
                     columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
+                    showsVerticalScrollIndicator={false} 
                 />
             </View>
         </View>
