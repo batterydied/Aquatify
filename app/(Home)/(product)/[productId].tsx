@@ -8,7 +8,7 @@ export default function ProductPage() {
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
     const screenWidth = Dimensions.get('window').width;
-    const imageWidth = screenWidth * 0.8; // Set image width to 80% of screen width
+    const imageWidth = screenWidth * 0.9; // Set image width to 80% of screen width
     const [orientation, setOrientation] = useState('portrait');
     const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -92,7 +92,7 @@ export default function ProductPage() {
                     return (
                         <Animated.View
                             key={index}
-                            className="h-3 w-3 mx-2 bg-black rounded-xl"
+                            className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
                             style={{
                                 opacity: dotOpacity,
                             }}
@@ -102,13 +102,20 @@ export default function ProductPage() {
             </View>
 
             {/* Product Details */}
-            <Text className="mt-16 text-2xl font-bold mb-2">{product.name}</Text>
-            <Text className="text-lg text-gray-600 mb-4">{product.secondaryName}</Text>
-            <Text className="text-xl font-bold mb-4">${product.productTypes[0].price}</Text>
-            <Text className="text-base mb-4">{product.description}</Text>
+            <View className="w-[100%]">
+            <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
+
+            <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
+            <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+
+            <View>
+                <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
+            </View>
+            <View className="h-[1px] bg-gray-600 my-4" />
 
             {/* Reviews Section Header */}
-            <Text className="text-xl font-bold mb-2">Reviews</Text>
+            <Text className="text-xl font-bold mb-2" style={{ fontFamily: "MontserratRegular" }}>Reviews</Text>
+            </View>
         </View>
     );
 
