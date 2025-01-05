@@ -79,7 +79,7 @@ export default function HomePage() {
         const intervalId = setInterval(fetchData, 10000);
     
         return () => clearInterval(intervalId);
-    }, [orientation]);
+    },[]);
     
     useEffect(() => {
         let filtered = homeProducts;

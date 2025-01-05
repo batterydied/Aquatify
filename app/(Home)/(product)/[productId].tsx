@@ -7,11 +7,10 @@ export default function ProductPage() {
     const router = useRouter();
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
-    const screenWidth = Dimensions.get('window').width;
-    const imageWidth = screenWidth * 0.9; // Set image width to 80% of screen width
     const [orientation, setOrientation] = useState('portrait');
     const scrollX = useRef(new Animated.Value(0)).current;
-
+    const screenWidth = Dimensions.get('window').width;
+    let imageWidth = screenWidth * 0.8; // Set image width to 80% of screen width
     useEffect(() => {
         const fetchProductData = async () => {
             const productData = await fetchProductById(productId);
@@ -20,25 +19,18 @@ export default function ProductPage() {
             }
         };
         fetchProductData();
-    }, [productId]);
+    }, [productId, orientation]);
 
     useEffect(() => {
         const updateOrientation = () => {
             const { width, height } = Dimensions.get('window');
-            if (width > height) {
-                setOrientation('landscape');
-            } else {
-                setOrientation('portrait');
-            }
+            console.log(width);
+            console.log(height);
+            setOrientation(width > height ? 'landscape' : 'portrait');
         };
 
-        const subscription = Dimensions.addEventListener('change', updateOrientation);
-
+        // Calculate orientation on mount
         updateOrientation();
-
-        return () => {
-            subscription.remove();
-        };
     }, []);
 
     if (!product) {
@@ -48,57 +40,59 @@ export default function ProductPage() {
             </View>
         );
     }
-
+ 
     const renderHeader = () => (
-        <View className="flex-1 items-center">
+        <View className="flex-col items-center">
             {/* Product Images */}
-            <FlatList
-                data={product.images}
-                renderItem={({ item, index }) => (
-                    <Image
-                        key={index} // This will ensure each image has a unique key
-                        source={{ uri: item.url }}
-                        style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                        className="rounded-lg"
-                    />
-                )}
-                keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled
-                bounces={false}
-                style={{width: imageWidth}}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                    { useNativeDriver: false }
-                )}
-            />
-
-            {/* Custom Animated Scroll Indicator */}
-            <View
-                className="flex-row justify-center mt-4"
-            >
-                {product.images.map((_, index) => {
-                    const dotOpacity = scrollX.interpolate({
-                        inputRange: [
-                            (index - 1) * screenWidth,
-                            index * screenWidth,
-                            (index + 1) * screenWidth,
-                        ],
-                        outputRange: [0.1, 1, 0.1],
-                        extrapolate: 'clamp',
-                    });
-
-                    return (
-                        <Animated.View
-                            key={index}
-                            className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
-                            style={{
-                                opacity: dotOpacity,
-                            }}
+            <View className="flex-1">
+                <FlatList
+                    key={orientation}
+                    data={product.images}
+                    renderItem={({ item, index }) => (
+                        <Image
+                            key={index} // This will ensure each image has a unique key
+                            source={{ uri: item.url }}
+                            style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
+                            className="rounded-lg"
                         />
-                    );
-                })}
+                    )}
+                    keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled
+                    bounces={false}
+                    style={{width: imageWidth}}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                        { useNativeDriver: false }
+                    )}
+                />
+                {/* Custom Animated Scroll Indicator */}
+                <View
+                    className="flex-row justify-center mt-4"
+                >
+                    {product.images.map((_, index) => {
+                        const dotOpacity = scrollX.interpolate({
+                            inputRange: [
+                                (index - 1) * screenWidth,
+                                index * screenWidth,
+                                (index + 1) * screenWidth,
+                            ],
+                            outputRange: [0.1, 1, 0.1],
+                            extrapolate: 'clamp',
+                        });
+
+                        return (
+                            <Animated.View
+                                key={index}
+                                className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
+                                style={{
+                                    opacity: dotOpacity,
+                                }}
+                            />
+                        );
+                    })}
+                </View>
             </View>
 
             {/* Product Details */}
