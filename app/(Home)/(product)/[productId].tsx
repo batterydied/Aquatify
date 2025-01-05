@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, Dimensions, FlatList, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Dimensions, FlatList, Animated, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById, productInterface, review } from '../../../lib/utils'; // Update path to your utility functions
@@ -10,7 +10,7 @@ export default function ProductPage() {
     const [orientation, setOrientation] = useState('portrait');
     const scrollX = useRef(new Animated.Value(0)).current;
     const screenWidth = Dimensions.get('window').width;
-    let imageWidth = screenWidth * 0.8; // Set image width to 80% of screen width
+    let imageWidth = screenWidth > 600 ? screenWidth * 0.5 : screenWidth * 0.8; // Set image width to 80% of screen width
     useEffect(() => {
         const fetchProductData = async () => {
             const productData = await fetchProductById(productId);
@@ -24,8 +24,6 @@ export default function ProductPage() {
     useEffect(() => {
         const updateOrientation = () => {
             const { width, height } = Dimensions.get('window');
-            console.log(width);
-            console.log(height);
             setOrientation(width > height ? 'landscape' : 'portrait');
         };
 
@@ -35,14 +33,21 @@ export default function ProductPage() {
 
     if (!product) {
         return (
-            <View className="flex-1 justify-center items-center">
-                <Text>Loading...</Text>
+            <View className="flex-1 justify-center items-center bg-gray-900">
+                <ActivityIndicator size="large" color="white" className="mb-4" />
+                <Text 
+                    className="text-lg text-white" 
+                    style={{ fontFamily: "MontserratRegular" }}
+                >
+                    Loading...
+                </Text>
             </View>
+
         );
     }
  
     const renderHeader = () => (
-        <View className="flex-col items-center">
+        <View className="flex-1 items-center">
             {/* Product Images */}
             <View className="flex-1">
                 <FlatList
@@ -94,21 +99,14 @@ export default function ProductPage() {
                     })}
                 </View>
             </View>
-
-            {/* Product Details */}
             <View className="w-[100%]">
-            <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
-
-            <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
-            <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
-
-            <View>
-                <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
-            </View>
-            <View className="h-[1px] bg-gray-600 my-4" />
-
-            {/* Reviews Section Header */}
-            <Text className="text-xl font-bold mb-2" style={{ fontFamily: "MontserratRegular" }}>Reviews</Text>
+            {/* Product Details */}
+                <View>
+                    <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
+                    <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
+                    <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+                </View>
+                    <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
             </View>
         </View>
     );
