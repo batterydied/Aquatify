@@ -3,10 +3,10 @@
     "name": "aquatify",
     "slug": "aquatify",
     "version": "1.0.0",
-    "orientation": "portrait",
     "scheme": "aquatify",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "orientation": "portrait",
     "ios": {
       "supportsTablet": true
     },

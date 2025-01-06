@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, Dimensions } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
 import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes, formatReviewsCount } from "@/lib/utils";
 import { useRouter } from "expo-router";
@@ -25,7 +25,7 @@ export default function HomePage() {
         minRating: null,
         categories: [],
     });
-    const [orientation, setOrientation] = useState('portrait');
+    const { width, height } = useWindowDimensions();
     
     const router = useRouter();
 
@@ -126,25 +126,6 @@ export default function HomePage() {
         }
     };
 
-    useEffect(() => {
-        const updateOrientation = () => {
-            const { width, height } = Dimensions.get('window');
-            if (width > height) {
-                setOrientation('landscape');
-            } else {
-                setOrientation('portrait');
-            }
-        };
-
-        const subscription = Dimensions.addEventListener('change', updateOrientation);
-
-        updateOrientation();
-
-        return () => {
-            subscription.remove();
-        };
-    }, []);
-
     if (!fontsLoaded) {
         return (
             <View className="flex-1 justify-center items-center">
@@ -153,11 +134,10 @@ export default function HomePage() {
         );
     }
 
-    const { width: screenWidth } = Dimensions.get('window');
     const itemSpacing = 12;
     const desiredItemWidth = 200;
-    const itemsPerRow = Math.floor(screenWidth / (desiredItemWidth + itemSpacing));
-    const itemWidth = (screenWidth - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
+    const itemsPerRow = Math.floor(width / (desiredItemWidth + itemSpacing));
+    const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
         <View className="flex-1 p-5 bg-c3">
@@ -282,7 +262,7 @@ export default function HomePage() {
 
             <View className="flex-1 items-center">
                 <FlatList
-                    key={orientation}
+                    key={width}
                     data={filteredProducts}
                     keyExtractor={(item: homeProduct) => item.productId}
                     renderItem={({ item }) => (

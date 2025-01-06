@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, Dimensions, FlatList, Animated, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById, productInterface, review } from '../../../lib/utils'; // Update path to your utility functions
@@ -7,30 +7,20 @@ export default function ProductPage() {
     const router = useRouter();
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
-    const [orientation, setOrientation] = useState('portrait');
     const scrollX = useRef(new Animated.Value(0)).current;
-    const screenWidth = Dimensions.get('window').width;
-    let imageWidth = screenWidth > 600 ? screenWidth * 0.5 : screenWidth * 0.8; // Set image width to 80% of screen width
+    const { width, height } = useWindowDimensions();
+    let imageWidth = width > 600 ? width * 0.5 : width * 0.8; // Set image width to 80% of screen width
     useEffect(() => {
         const fetchProductData = async () => {
             const productData = await fetchProductById(productId);
             if (productData) {
                 setProduct(productData);
-            }
+            } 
         };
         fetchProductData();
-    }, [productId, orientation]);
+    }, [productId]);
 
-    useEffect(() => {
-        const updateOrientation = () => {
-            const { width, height } = Dimensions.get('window');
-            setOrientation(width > height ? 'landscape' : 'portrait');
-        };
-
-        // Calculate orientation on mount
-        updateOrientation();
-    }, []);
-
+    // Don't render until dimensions are ready
     if (!product) {
         return (
             <View className="flex-1 justify-center items-center bg-gray-900">
@@ -42,16 +32,16 @@ export default function ProductPage() {
                     Loading...
                 </Text>
             </View>
-
         );
     }
  
     const renderHeader = () => (
-        <View className="flex-1 items-center">
+        
+        <View 
+            className={ width > 600 ? "flex-row" : "flex-1 items-center" }>
             {/* Product Images */}
             <View className="flex-1">
                 <FlatList
-                    key={orientation}
                     data={product.images}
                     renderItem={({ item, index }) => (
                         <Image
@@ -79,9 +69,9 @@ export default function ProductPage() {
                     {product.images.map((_, index) => {
                         const dotOpacity = scrollX.interpolate({
                             inputRange: [
-                                (index - 1) * screenWidth,
-                                index * screenWidth,
-                                (index + 1) * screenWidth,
+                                (index - 1) * width,
+                                index * width,
+                                (index + 1) * width,
                             ],
                             outputRange: [0.1, 1, 0.1],
                             extrapolate: 'clamp',
@@ -102,6 +92,7 @@ export default function ProductPage() {
             <View className="w-[100%]">
             {/* Product Details */}
                 <View>
+                    <Text>{width}</Text>
                     <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
                     <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
                     <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
@@ -122,7 +113,6 @@ export default function ProductPage() {
     return (
         <View className="p-5 bg-c3">
             <FlatList
-                key={orientation}
                 className="mt-16"
                 data={product.reviews}
                 renderItem={renderReview}
