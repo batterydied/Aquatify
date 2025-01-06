@@ -5,10 +5,10 @@ import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
-import useDynamicOrientation from "@/hooks/useDynamicOrientation";
+import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 
 export default function HomePage() {
-    useDynamicOrientation();
+    useLockPortraitOrientation();
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");

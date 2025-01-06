@@ -9,7 +9,8 @@ export default function ProductPage() {
     const [product, setProduct] = useState<productInterface | null>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width, height } = useWindowDimensions();
-    let imageWidth = width > 600 ? width * 0.5 : width * 0.8; // Set image width to 80% of screen width
+    let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
+
     useEffect(() => {
         const fetchProductData = async () => {
             const productData = await fetchProductById(productId);
@@ -39,6 +40,7 @@ export default function ProductPage() {
         
         <View 
             className={ width > 600 ? "flex-row" : "flex-1 items-center" }>
+                <Text>{width}</Text>
             {/* Product Images */}
             <View className="flex-1">
                 <FlatList
