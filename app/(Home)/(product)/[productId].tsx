@@ -39,10 +39,9 @@ export default function ProductPage() {
     const renderHeader = () => (
         
         <View 
-            className={ width > 600 ? "flex-row" : "flex-1 items-center" }>
-                <Text>{width}</Text>
+            className={ width > 600 ? "flex-row justify-evenly" : "flex-column" }>
             {/* Product Images */}
-            <View className="flex-1">
+            <View className="items-center">
                 <FlatList
                     data={product.images}
                     renderItem={({ item, index }) => (
@@ -66,7 +65,7 @@ export default function ProductPage() {
                 />
                 {/* Custom Animated Scroll Indicator */}
                 <View
-                    className="flex-row justify-start mt-4"
+                    className="flex-row justify-center mt-4"
                 >
                     {product.images.map((_, index) => {
                         const dotOpacity = scrollX.interpolate({
@@ -91,14 +90,14 @@ export default function ProductPage() {
                     })}
                 </View>
             </View>
-            <View className="w-[100%]">
+            <View className={width > 600? "w-[50%]" : "w-[100%]"}>
             {/* Product Details */}
-                <View>
-                    <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
-                    <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
-                    <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
-                </View>
-                    <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
+                <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
+                <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+
+                <View className="w-full h-[1px] bg-gray-600 my-3"></View>
+                <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
+                <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
             </View>
         </View>
     );
