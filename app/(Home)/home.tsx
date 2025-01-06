@@ -143,7 +143,6 @@ export default function HomePage() {
 
     return (
         <View className="flex-1 p-5 bg-c3">
-            <Text>{height + " " + width}</Text>
             <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />

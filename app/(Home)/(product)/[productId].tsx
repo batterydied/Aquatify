@@ -64,7 +64,7 @@ export default function ProductPage() {
                 />
                 {/* Custom Animated Scroll Indicator */}
                 <View
-                    className="flex-row justify-center mt-4"
+                    className="flex-row justify-start mt-4"
                 >
                     {product.images.map((_, index) => {
                         const dotOpacity = scrollX.interpolate({
@@ -92,7 +92,6 @@ export default function ProductPage() {
             <View className="w-[100%]">
             {/* Product Details */}
                 <View>
-                    <Text>{width}</Text>
                     <Text className="text-2xl " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
                     <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
                     <Text className="text-xl mb-4" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
@@ -111,7 +110,7 @@ export default function ProductPage() {
     );
 
     return (
-        <View className="p-5 bg-c3">
+        <View className="p-5 bg-c3 flex-1">
             <FlatList
                 className="mt-16"
                 data={product.reviews}
