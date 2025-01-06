@@ -5,8 +5,10 @@ import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
+import useDynamicOrientation from "@/hooks/useDynamicOrientation";
 
 export default function HomePage() {
+    useDynamicOrientation();
     const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -128,7 +130,7 @@ export default function HomePage() {
 
     if (!fontsLoaded) {
         return (
-            <View className="flex-1 justify-center items-center">
+            <View className="flex-1 justify-center items-center bg-white">
                 <ActivityIndicator size="large" color="grey" />
             </View>
         );
@@ -136,11 +138,12 @@ export default function HomePage() {
 
     const itemSpacing = 12;
     const desiredItemWidth = 200;
-    const itemsPerRow = Math.floor(width / (desiredItemWidth + itemSpacing));
+    const itemsPerRow = width / (desiredItemWidth + itemSpacing) >= 2? Math.floor(width / (desiredItemWidth + itemSpacing)) : 2;
     const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
         <View className="flex-1 p-5 bg-c3">
+            <Text>{height + " " + width}</Text>
             <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
@@ -273,6 +276,8 @@ export default function HomePage() {
                     numColumns={itemsPerRow}
                     columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
                     showsVerticalScrollIndicator={false} 
+                    showsHorizontalScrollIndicator={false}
+                    bounces = {false}
                 />
             </View>
         </View>
