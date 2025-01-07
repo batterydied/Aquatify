@@ -2,32 +2,26 @@ import React, { useState } from 'react';
   import { StyleSheet, View, Text } from 'react-native';
   import { Dropdown } from 'react-native-element-dropdown';
   import { FontAwesome } from '@expo/vector-icons';
-  import AntDesign from '@expo/vector-icons/AntDesign';
+  import { useFonts } from 'expo-font';
+  import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+  import { productType } from '@/lib/utils';
 
-  const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
-  ];
-
-  type DropdownItem = {
-    label: string;
-    value: string;
+  type DropdownComponentProps = {
+    data: productType[]
   };
   
-  const DropdownComponent = () => {
-    const [value, setValue] = useState<string>(data[0].value);
+  const DropdownComponent: React.FC<DropdownComponentProps> = ({ data }) => {
+    const [fontsLoaded] = useFonts({
+        MontserratRegular: Montserrat_400Regular,
+        MontserratBold: Montserrat_700Bold,
+    });
+    const [value, setValue] = useState<productType>(data[0]);
 
-    const renderItem = (item: DropdownItem) => {
+    const renderItem = (item: productType) => {
       return (
         <View style={styles.item}>
-          <Text style={styles.textItem}>{item.label}</Text>
-          {item.value === value && (
+          <Text style={styles.textItem}>{item.type}</Text>
+          {item === value && (
             <FontAwesome
                 name="check"
                 size={18}
@@ -46,15 +40,14 @@ import React, { useState } from 'react';
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
         data={data}
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder="Select item"
+        maxHeight={220}
+        labelField="type"
+        valueField="id"
 
         value={value}
 
         onChange={item => {
-          setValue(item.value);
+          setValue(item);
         }}
         renderItem={renderItem}
       />
@@ -65,8 +58,9 @@ import React, { useState } from 'react';
 
   const styles = StyleSheet.create({
     dropdown: {
-      margin: 16,
-      height: 50,
+        marginTop: 10,
+        marginBottom: 10,
+      height: 35,
       backgroundColor: 'white',
       borderRadius: 12,
       padding: 12,
@@ -84,19 +78,22 @@ import React, { useState } from 'react';
       marginRight: 5,
     },
     item: {
-      padding: 17,
+      padding: 12,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
     },
     textItem: {
+        fontFamily: "MontserratRegular",
       flex: 1,
       fontSize: 16,
     },
     placeholderStyle: {
+        fontFamily: "MontserratRegular",
       fontSize: 16,
     },
     selectedTextStyle: {
+        fontFamily: "MontserratRegular",
       fontSize: 16,
     },
     iconStyle: {
@@ -104,6 +101,7 @@ import React, { useState } from 'react';
       height: 20,
     },
     inputSearchStyle: {
+        fontFamily: "MontserratRegular",
       height: 40,
       fontSize: 16,
     },

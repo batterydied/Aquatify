@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndica
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById, productInterface, review, productType } from '../../../lib/utils'; // Update path to your utility functions
-import DropdownComponent from '../../../components/dropdown';
+import ProductDropdownComponent from '../../../components/ProductDropdown';
 
 export default function ProductPage() {
     const router = useRouter();
@@ -23,23 +23,15 @@ export default function ProductPage() {
         fetchProductData();
     }, [productId]);
 
-    // Don't render until dimensions are ready
     if (!product) {
         return (
-            <View className="flex-1 justify-center items-center bg-gray-900">
-                <ActivityIndicator size="large" color="white" className="mb-4" />
-                <Text 
-                    className="text-lg text-white" 
-                    style={{ fontFamily: "MontserratRegular" }}
-                >
-                    Loading...
-                </Text>
+            <View className="flex-1 justify-center items-center bg-white">
+                <ActivityIndicator size="large" color="grey" />
             </View>
         );
     }
  
     const renderHeader = () => (
-        
         <View 
             className={ width > 600 ? "flex-row justify-evenly" : "flex-column" }>
             {/* Product Images */}
@@ -72,13 +64,14 @@ export default function ProductPage() {
                     {product.images.map((_, index) => {
                         const dotOpacity = scrollX.interpolate({
                             inputRange: [
-                                (index - 1) * width,
-                                index * width,
-                                (index + 1) * width,
+                                (index - 1) * width, // Previous page
+                                index * width,       // Current page
+                                (index + 1) * width, // Next page
                             ],
-                            outputRange: [0.1, 1, 0.1],
-                            extrapolate: 'clamp',
+                            outputRange: [0.3, 1, 0.3],
+                            extrapolate: 'clamp', // Ensures values stay in the range [0.3, 1, 0.3]
                         });
+                                            
 
                         return (
                             <Animated.View
@@ -98,8 +91,8 @@ export default function ProductPage() {
                 <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
 
                 <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-                <DropdownComponent />
-                <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
+                <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>{"Price: $" + product.productTypes[0].price}</Text>
+                <ProductDropdownComponent data={product.productTypes}/>
                 <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
             </View>
         </View>
