@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 type DropdownComponentProps = {
   maxQuantity: number;  // Maximum quantity value (e.g., 10)
-  currentQuantity: string | null;  // Currently selected quantity
+  currentQuantity: string;  // Currently selected quantity
   select: (quantity: string) => void;  // Function to handle quantity selection
 };
 

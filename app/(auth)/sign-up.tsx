@@ -130,7 +130,7 @@ export default function SignOutPage() {
                 />
             </View>
             {errorMessage && (
-                <Text className="text-red-500" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
+                <Text className="text-red-700" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
             )}
             <TouchableOpacity
                 className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"

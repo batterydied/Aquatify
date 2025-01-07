@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
             >
                 <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send Reset Code</Text>
             </TouchableOpacity>
-            {error ? <Text className="text-red-500 text-center mt-2">{error}</Text> : null}
+            {error ? <Text className="text-red-700 text-center mt-2">{error}</Text> : null}
             <Text onPress={()=>router.push('/(auth)/sign-in')} style={{fontFamily: "MontserratRegular"}} className="text-gray-500"> Back to sign in</Text>
             </>
         ) : (

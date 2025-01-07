@@ -191,6 +191,7 @@ class ProductController {
           ProductType.create({
             type: type.type,
             price: type.price,
+            quantity: type.quantity,
             productId
           })
         );

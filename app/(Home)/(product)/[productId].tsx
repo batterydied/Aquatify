@@ -12,7 +12,7 @@ export default function ProductPage() {
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width, height } = useWindowDimensions();
     const [selectedType, setSelectedType] = useState<productType | null>(null);
-    const [selectedQuantity, setSelectedQuantity] = useState< string | null >(null);
+    const [selectedQuantity, setSelectedQuantity] = useState< string >("1");
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function ProductPage() {
     }, [product]);
 
     useEffect(()=>{
-            setSelectedQuantity(null);
+            setSelectedQuantity("1");
 
     }, [selectedType]);
 
@@ -114,17 +114,19 @@ export default function ProductPage() {
 
                     <View className="w-full h-[1px] bg-gray-600 my-3"></View>
                 
-                    <Text className="text-lg">{selectedQuantity}</Text>
                     <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>{selectedType && "Price: $" + selectedType.price}</Text>
                     
                     <ProductDropdownComponent value= {selectedType} select={setSelectedType} data={product.productTypes}/>
-                    <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType?.quantity || 0} />
-                    <TouchableOpacity>
-                        <Text>Add to Cart</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text>Buy Now</Text>
-                    </TouchableOpacity>
+                    {(selectedType && selectedType.quantity > 0)? (
+                    <View>
+                        <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType.quantity } />
+                        <TouchableOpacity>
+                            <Text>Add to Cart</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text>Buy Now</Text>
+                        </TouchableOpacity>
+                    </View>) : <Text className="text-red-700 text-lg">Out of Stock</Text>}
                     <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
                 </View>
             </View>
