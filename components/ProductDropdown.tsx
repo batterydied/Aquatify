@@ -7,15 +7,16 @@ import React, { useState } from 'react';
   import { productType } from '@/lib/utils';
 
   type DropdownComponentProps = {
-    data: productType[]
+    data: productType[];
+    value: productType | null;
+    select: (item: productType)=>void;
   };
   
-  const DropdownComponent: React.FC<DropdownComponentProps> = ({ data }) => {
+  const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, select, value }) => {
     const [fontsLoaded] = useFonts({
         MontserratRegular: Montserrat_400Regular,
         MontserratBold: Montserrat_700Bold,
     });
-    const [value, setValue] = useState<productType>(data[0]);
 
     const renderItem = (item: productType) => {
       return (
@@ -47,7 +48,7 @@ import React, { useState } from 'react';
         value={value}
 
         onChange={item => {
-          setValue(item);
+          select(item);
         }}
         renderItem={renderItem}
       />
