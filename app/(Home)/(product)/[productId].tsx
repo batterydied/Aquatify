@@ -10,8 +10,8 @@ export default function ProductPage() {
     const [product, setProduct] = useState<productInterface | null>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width, height } = useWindowDimensions();
+    const [selectedType, setSelectedType] = useState<productType | null>(null)
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
-    const [selectedType, setSelectedType] = useState(product?.productTypes[0] || null);
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -22,6 +22,12 @@ export default function ProductPage() {
         };
         fetchProductData();
     }, [productId]);
+
+    useEffect(() => {
+        if(product){
+            setSelectedType(product.productTypes[0]);
+        }
+    }, [product]);
 
     if (!product) {
         return (
@@ -91,7 +97,7 @@ export default function ProductPage() {
                 <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
 
                 <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-                <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>{"Price: $" + product.productTypes[0].price}</Text>
+                <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>{selectedType && "Price: $" + selectedType.price}</Text>
                 <ProductDropdownComponent data={product.productTypes}/>
                 <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
             </View>
@@ -105,11 +111,6 @@ export default function ProductPage() {
             <Text className="italic">{item.comment}</Text>
         </View>
     );
-
-    const handleTypeChange = (itemValue: productType) => {
-        const selected = product.productTypes.find(type => type.id === itemValue.id) || null;
-        setSelectedType(selected);
-      };
 
     return (
         <View className="p-5 bg-c3 flex-1">
