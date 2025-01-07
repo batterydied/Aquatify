@@ -1,7 +1,8 @@
 import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
-import { fetchProductById, productInterface, review } from '../../../lib/utils'; // Update path to your utility functions
+import { fetchProductById, productInterface, review, productType } from '../../../lib/utils'; // Update path to your utility functions
+import DropdownComponent from '../../../components/dropdown';
 
 export default function ProductPage() {
     const router = useRouter();
@@ -10,6 +11,7 @@ export default function ProductPage() {
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width, height } = useWindowDimensions();
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
+    const [selectedType, setSelectedType] = useState(product?.productTypes[0] || null);
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -96,6 +98,7 @@ export default function ProductPage() {
                 <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
 
                 <View className="w-full h-[1px] bg-gray-600 my-3"></View>
+                <DropdownComponent />
                 <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>${product.productTypes[0].price}</Text>
                 <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
             </View>
@@ -109,6 +112,11 @@ export default function ProductPage() {
             <Text className="italic">{item.comment}</Text>
         </View>
     );
+
+    const handleTypeChange = (itemValue: productType) => {
+        const selected = product.productTypes.find(type => type.id === itemValue.id) || null;
+        setSelectedType(selected);
+      };
 
     return (
         <View className="p-5 bg-c3 flex-1">
