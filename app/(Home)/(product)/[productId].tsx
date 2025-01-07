@@ -3,6 +3,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById, productInterface, review, productType } from '../../../lib/utils'; // Update path to your utility functions
 import ProductDropdownComponent from '../../../components/ProductDropdown';
+import QuantityDropdownComponent from '../../../components/QuantityDropdown';
 
 export default function ProductPage() {
     const router = useRouter();
@@ -10,7 +11,8 @@ export default function ProductPage() {
     const [product, setProduct] = useState<productInterface | null>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width, height } = useWindowDimensions();
-    const [selectedType, setSelectedType] = useState<productType | null>(null)
+    const [selectedType, setSelectedType] = useState<productType | null>(null);
+    const [selectedQuantity, setSelectedQuantity] = useState< string | null >(null);
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     useEffect(() => {
@@ -28,6 +30,11 @@ export default function ProductPage() {
             setSelectedType(product.productTypes[0]);
         }
     }, [product]);
+
+    useEffect(()=>{
+            setSelectedQuantity(null);
+
+    }, [selectedType]);
 
     if (!product) {
         return (
@@ -107,9 +114,17 @@ export default function ProductPage() {
 
                     <View className="w-full h-[1px] bg-gray-600 my-3"></View>
                 
-                    <Text className="text-lg " style={{ fontFamily: "MontserratRegular" }}>{selectedType && "Price: $" + selectedType.price}</Text>
+                    <Text className="text-lg">{selectedQuantity}</Text>
+                    <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>{selectedType && "Price: $" + selectedType.price}</Text>
                     
                     <ProductDropdownComponent value= {selectedType} select={setSelectedType} data={product.productTypes}/>
+                    <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType?.quantity || 0} />
+                    <TouchableOpacity>
+                        <Text>Add to Cart</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Text>Buy Now</Text>
+                    </TouchableOpacity>
                     <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
                 </View>
             </View>
