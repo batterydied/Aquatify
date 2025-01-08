@@ -52,7 +52,19 @@ export default function ProductPage() {
         <View className="mb-4 rounded-md border border-gray-500 p-2">
             <Text className="text-sm">{item.user}</Text>
             <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
-            <Text>{item.rating} Stars</Text>
+            <Text className="flex-row">
+                {Array(item.rating)
+                    .fill(null)
+                    .map((_, index) => (
+                        <FontAwesome
+                            key={index} // Ensure each star has a unique key
+                            name="star"
+                            size={16} // Adjust size as needed
+                            color="gold" // Change color as needed
+                            style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
+                        />
+                    ))}
+            </Text>
             <Text>{item.comment}</Text>
         </View>
     );
@@ -61,7 +73,19 @@ export default function ProductPage() {
         <View>
             <Text className="text-sm">{item.user}</Text>
             <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
-            <Text>{item.rating} Stars</Text>
+            <Text className="flex-row pb-2">
+                {Array(item.rating)
+                    .fill(null)
+                    .map((_, index) => (
+                        <FontAwesome
+                            key={index} // Ensure each star has a unique key
+                            name="star"
+                            size={16}
+                            color="white" // Change color as needed
+                            style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
+                        />
+                    ))}
+            </Text>
             <Text>{item.comment}</Text>
             <View className="w-full h-[1px] bg-gray-600 my-3"></View>
         </View>

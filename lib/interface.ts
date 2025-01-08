@@ -56,4 +56,17 @@ export type filterCriteriaType = {
     [key: string]: string[] | number | null; // Allow dynamic string keys
 };
   
+export type reviewSortOption = {
+    label: string;
+    value: string;
+}
+
+export const reviewSortOptionArray: reviewSortOption[] = [
+    {label: 'Sort by Date (Newest)', value: 'sortByDateNewest'},  // Sort by date, newest first
+    {label: 'Sort by Date (Oldest)', value: 'sortByDateOldest'},   // Sort by date, oldest first
+    {label: 'Sort by Stars (Highest)', value: 'sortByStarsHighest'}, // Sort by stars, highest first
+    {label: 'Sort by Stars (Lowest)', value: 'sortByStarsLowest'}  // Sort by stars, lowest first
+];
+
+
 export const categoryTypes: string[] = ["Livestocks", "Freshwater", "Saltwater", "Invertebrates", "Plants", "Care", "Materials", "Miscellaneous"];
