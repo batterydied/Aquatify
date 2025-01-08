@@ -36,7 +36,7 @@ export default function App() {
   useEffect(() => {
     if (!loading) {
       if (isSignedIn) {
-        router.push('/(home)/home');
+        router.push('/(tabs)/home');
       } else {
         router.push('/(auth)/sign-in');
       }
