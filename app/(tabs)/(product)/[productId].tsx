@@ -61,6 +61,56 @@ export default function ProductPage() {
                 <View
                 className={width > 600 ? "flex-row justify-evenly" : "flex-column"}>
                 {/* Product Images */}
+                    <View className="items-center">
+                        <FlatList
+                            data={product.images}
+                            renderItem={({ item, index }) => (
+                                <Image
+                                    key={index} // This will ensure each image has a unique key
+                                    source={{ uri: item.url }}
+                                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
+                                    className="rounded-lg"
+                                />
+                            )}
+                            keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled
+                            bounces={false}
+                            style={{width: imageWidth}}
+                            onScroll={Animated.event(
+                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                                { useNativeDriver: false }
+                            )}
+                        />
+                        {/* Custom Animated Scroll Indicator */}
+                        <View
+                            className="flex-row justify-center mt-4"
+                        >
+                            {product.images.map((_, index) => {
+                                const dotOpacity = scrollX.interpolate({
+                                    inputRange: [
+                                        (index - 1) * width, // Previous page
+                                        index * width,       // Current page
+                                        (index + 1) * width, // Next page
+                                    ],
+                                    outputRange: [0.3, 1, 0.3],
+                                    extrapolate: 'clamp', // Ensures values stay in the range [0.3, 1, 0.3]
+                                });
+                                                    
+
+                                return (
+                                    <Animated.View
+                                        key={index}
+                                        className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
+                                        style={{
+                                            opacity: dotOpacity,
+                                        }}
+                                    />
+                                );
+                            })}
+                        </View>
+                    </View>
                     <View className={width > 600? "w-[50%]" : "w-[100%]"}>
                     {/* Product Details */}
                         <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
@@ -111,64 +161,6 @@ export default function ProductPage() {
                 className="ml-2" // Adds some margin to the left of the icon
                 />
             </TouchableOpacity>
-            <View className="items-center">
-                <FlatList
-                data={[]}
-                ListHeaderComponent={
-                    <View>
-                        {/* Horizontal FlatList for Product Images */}
-                        <FlatList
-                            data={product.images}
-                            renderItem={({ item, index }) => (
-                                <Image
-                                    key={index} // Ensure each image has a unique key
-                                    source={{ uri: item.url }}
-                                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                                    className="rounded-lg"
-                                />
-                            )}
-                            keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            pagingEnabled
-                            bounces={false}
-                            style={{ width: imageWidth }}
-                            onScroll={Animated.event(
-                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                                { useNativeDriver: false }
-                            )}
-                        />
-                        
-                        {/* Custom Animated Scroll Indicator */}
-                        <View className="flex-row justify-center mt-4">
-                            {product.images.map((_, index) => {
-                                const dotOpacity = scrollX.interpolate({
-                                    inputRange: [
-                                        (index - 1) * width, // Previous page
-                                        index * width,       // Current page
-                                        (index + 1) * width, // Next page
-                                    ],
-                                    outputRange: [0.3, 1, 0.3],
-                                    extrapolate: 'clamp', // Ensures values stay in the range [0.3, 1, 0.3]
-                                });
-                
-                                return (
-                                    <Animated.View
-                                        key={index}
-                                        className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
-                                        style={{
-                                            opacity: dotOpacity,
-                                        }}
-                                    />
-                                );
-                            })}
-                        </View>
-                    </View>
-                }                
-                renderItem={() => <View></View>}
-                />
-
-                    </View>
             <FlatList
             className="mt-16"
             data={sortedAndLimitedReviews}
