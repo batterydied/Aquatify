@@ -46,13 +46,16 @@ export default function ProductPage() {
     }
 
     const renderReview = ({ item }: { item: review }) => (
-        <View className="mb-4">
+        <View className="mb-4 border">
             <Text className="font-semibold">{item.user}</Text>
             <Text className="text-yellow-500">{item.rating} Stars</Text>
             <Text className="italic">{item.comment}</Text>
         </View>
     );
 
+    const sortedAndLimitedReviews = product.reviews
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) // Sort by updatedAt (newest first)
+    .slice(0, 5); // Get the first 5 reviews
     return (
         <View className="p-5 bg-c3 flex-1">
             <TouchableOpacity
@@ -68,7 +71,7 @@ export default function ProductPage() {
             </TouchableOpacity>
             <FlatList
             className="mt-16"
-            data={product.reviews}
+            data={sortedAndLimitedReviews}
             renderItem={renderReview}
             keyExtractor={(item) => item.id.toString()}
             ListHeaderComponent= {
@@ -152,6 +155,11 @@ export default function ProductPage() {
                 </View>
             }
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+                <TouchableOpacity>
+                    <Text>See All Reviews</Text>
+                </TouchableOpacity>
+            }
         />
     </View>
     );

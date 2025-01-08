@@ -44,6 +44,7 @@ export interface review{
   user: string;
   comment: string;
   id: number;
+  updatedAt: string;
 }
 
 export async function fetchProducts() {

@@ -10,6 +10,7 @@ type DropdownComponentProps = {
 };
 
 const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, select, value }) => {
+  const sortedProductTypeById = data.sort((a, b) => a.id - b.id);
   const renderItem = (item: productType) => {
     return (
       <View style={styles.item}>
@@ -32,7 +33,7 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, select, val
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
-      data={data}
+      data={sortedProductTypeById}
       maxHeight={220}
       labelField="type"
       valueField="id"
