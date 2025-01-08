@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
-import { fetchProductById, productInterface, review, productType } from '../../../lib/utils'; // Update path to your utility functions
+import { fetchProductById } from '../../../lib/utils';
+import { productInterface, review, productType } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
 import { FontAwesome } from '@expo/vector-icons';
+import { dateFormatting } from '@/lib/dateFormat';
 
 export default function ProductPage() {
     const router = useRouter();
@@ -46,97 +48,106 @@ export default function ProductPage() {
     }
 
     const renderReview = ({ item }: { item: review }) => (
-        <View className="mb-4 border">
+        <View className="mb-4 rounded-md border border-gray-500 p-2">
             <Text className="font-semibold">{item.user}</Text>
-            <Text className="text-yellow-500">{item.rating} Stars</Text>
-            <Text className="italic">{item.comment}</Text>
+            <Text>{dateFormatting(item.updatedAt)}</Text>
+            <Text>{item.rating} Stars</Text>
+            <Text>{item.comment}</Text>
         </View>
     );
     const renderHeader = ()=>{
         return (
-            <View
-            className={width > 600 ? "flex-row justify-evenly" : "flex-column"}>
-            {/* Product Images */}
-                <View className="items-center">
-                    <FlatList
-                        data={product.images}
-                        renderItem={({ item, index }) => (
-                            <Image
-                                key={index} // This will ensure each image has a unique key
-                                source={{ uri: item.url }}
-                                style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                                className="rounded-lg"
-                            />
-                        )}
-                        keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        pagingEnabled
-                        bounces={false}
-                        style={{width: imageWidth}}
-                        onScroll={Animated.event(
-                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                            { useNativeDriver: false }
-                        )}
-                    />
-                    {/* Custom Animated Scroll Indicator */}
-                    <View
-                        className="flex-row justify-center mt-4"
-                    >
-                        {product.images.map((_, index) => {
-                            const dotOpacity = scrollX.interpolate({
-                                inputRange: [
-                                    (index - 1) * width, // Previous page
-                                    index * width,       // Current page
-                                    (index + 1) * width, // Next page
-                                ],
-                                outputRange: [0.3, 1, 0.3],
-                                extrapolate: 'clamp', // Ensures values stay in the range [0.3, 1, 0.3]
-                            });
-                                                
-
-                            return (
-                                <Animated.View
-                                    key={index}
-                                    className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
-                                    style={{
-                                        opacity: dotOpacity,
-                                    }}
+            <View>
+                <View
+                className={width > 600 ? "flex-row justify-evenly" : "flex-column"}>
+                {/* Product Images */}
+                    <View className="items-center">
+                        <FlatList
+                            data={product.images}
+                            renderItem={({ item, index }) => (
+                                <Image
+                                    key={index} // This will ensure each image has a unique key
+                                    source={{ uri: item.url }}
+                                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
+                                    className="rounded-lg"
                                 />
-                            );
-                        })}
+                            )}
+                            keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled
+                            bounces={false}
+                            style={{width: imageWidth}}
+                            onScroll={Animated.event(
+                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                                { useNativeDriver: false }
+                            )}
+                        />
+                        {/* Custom Animated Scroll Indicator */}
+                        <View
+                            className="flex-row justify-center mt-4"
+                        >
+                            {product.images.map((_, index) => {
+                                const dotOpacity = scrollX.interpolate({
+                                    inputRange: [
+                                        (index - 1) * width, // Previous page
+                                        index * width,       // Current page
+                                        (index + 1) * width, // Next page
+                                    ],
+                                    outputRange: [0.3, 1, 0.3],
+                                    extrapolate: 'clamp', // Ensures values stay in the range [0.3, 1, 0.3]
+                                });
+                                                    
+
+                                return (
+                                    <Animated.View
+                                        key={index}
+                                        className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
+                                        style={{
+                                            opacity: dotOpacity,
+                                        }}
+                                    />
+                                );
+                            })}
+                        </View>
+                    </View>
+                    <View className={width > 600? "w-[50%]" : "w-[100%]"}>
+                    {/* Product Details */}
+                        <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
+                        <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+                        <Text>{'★' + (product.rating % 1 === 0 ? product.rating.toFixed(0) : product.rating.toFixed(1)) + `(${product.reviews.length})` }</Text>
+
+                        <View className="w-full h-[1px] bg-gray-600 my-3"></View>
+
+                        <Text className="text-2xl" style={{ fontFamily: "MontserratBold" }}>{selectedType && "$" + selectedType.price}</Text>
+                        <ProductDropdownComponent value= {selectedType} select={setSelectedType} data={product.productTypes}/>
+                        {(selectedType && selectedType.quantity > 0)? (
+                        <View>
+                            <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType.quantity } />
+                            <View className="flex-column items-center">
+                                <TouchableOpacity className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2">
+                                    <Text className="text-center text-white">Add to cart</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity className="bg-orange-400 w-[95%] p-3 rounded-3xl m-2">
+                                    <Text className="text-center">Buy now</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>) : <Text className="text-red-700 text-lg">Out of stock</Text>}
                     </View>
                 </View>
-                <View className={width > 600? "w-[50%]" : "w-[100%]"}>
-                {/* Product Details */}
-                    <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
-                    <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+                <View className="mt-2">
+                    <Text style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
 
                     <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-                
-                    <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>{selectedType && "Price: $" + selectedType.price}</Text>
-                    
-                    <ProductDropdownComponent value= {selectedType} select={setSelectedType} data={product.productTypes}/>
-                    {(selectedType && selectedType.quantity > 0)? (
-                    <View>
-                        <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType.quantity } />
-                        <View className="flex-column">
-                            <TouchableOpacity className="bg-blue-400 w-full p-3 rounded-3xl m-2">
-                                <Text className="text-center text-white">Add to Cart</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="bg-orange-400 w-full p-3 rounded-3xl m-2">
-                                <Text className="text-center">Buy Now</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>) : <Text className="text-red-700 text-lg">Out of Stock</Text>}
-                    <Text className="text-base" style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
+
+                    <Text className="mb-2">Item reviews</Text>
                 </View>
             </View>
         )
     }
     const sortedAndLimitedReviews = product.reviews
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) // Sort by updatedAt (newest first)
-    .slice(0, 5); // Get the first 5 reviews
+    .sort((a, b) => b.rating - a.rating) // Sort by updatedAt (newest first)
+    .slice(0, 3); // Get the first 3 reviews
     return (
         <View className="p-5 bg-c3 flex-1">
             <TouchableOpacity

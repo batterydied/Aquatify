@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
-import { productType } from '@/lib/utils';
+import { productType } from '@/lib/interface';
 
 type DropdownComponentProps = {
   data: productType[];

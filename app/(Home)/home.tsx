@@ -1,6 +1,8 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
-import { homeProduct, fetchProducts, filterCriteriaType, categoryTypes, formatReviewsCount } from "@/lib/utils";
+import { fetchProducts } from "@/lib/utils";
+import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
+import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
