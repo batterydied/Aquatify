@@ -164,7 +164,6 @@ export default function HomePage() {
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
             >
                 <View className="flex-1 justify-center items-center bg-black/50">
                     <View className="bg-white p-6 rounded-lg w-4/5">

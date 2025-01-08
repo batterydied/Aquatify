@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById } from '../../../lib/utils';
@@ -16,6 +16,7 @@ export default function ProductPage() {
     const { width, height } = useWindowDimensions();
     const [selectedType, setSelectedType] = useState<productType | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState< string >("1");
+    const [showAllReviews, setShowAllReviews] = useState(false);
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     useEffect(() => {
@@ -49,12 +50,23 @@ export default function ProductPage() {
 
     const renderReview = ({ item }: { item: review }) => (
         <View className="mb-4 rounded-md border border-gray-500 p-2">
-            <Text className="font-semibold">{item.user}</Text>
-            <Text>{dateFormatting(item.updatedAt)}</Text>
+            <Text className="text-sm">{item.user}</Text>
+            <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
             <Text>{item.rating} Stars</Text>
             <Text>{item.comment}</Text>
         </View>
     );
+
+    const renderModalReview = ({ item }: { item: review }) => (
+        <View>
+            <Text className="text-sm">{item.user}</Text>
+            <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
+            <Text>{item.rating} Stars</Text>
+            <Text>{item.comment}</Text>
+            <View className="w-full h-[1px] bg-gray-600 my-3"></View>
+        </View>
+    );
+
     const renderHeader = ()=>{
         return (
             <View>
@@ -171,9 +183,37 @@ export default function ProductPage() {
             }
             showsVerticalScrollIndicator={false}
             ListFooterComponent={
-                <TouchableOpacity>
-                    <Text>See All Reviews</Text>
-                </TouchableOpacity>
+                <View>
+                    <TouchableOpacity>
+                    <Text onPress={()=>setShowAllReviews(true)}>See All Reviews</Text>
+                    </TouchableOpacity>
+                    <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={showAllReviews}
+                    >
+                    <TouchableOpacity
+                    className="ml-4 mt-16 mb-0 absolute z-10"
+                    onPress={() => setShowAllReviews(false)}
+                    >
+                        <FontAwesome
+                        name="arrow-left"
+                        size={20}
+                        color="white"
+                        className="ml-2" // Adds some margin to the left of the icon
+                        />
+                    </TouchableOpacity>
+                    <View className="flex-1 justify-center items-center bg-c3">
+                        <FlatList
+                        className="mt-24 w-[95%]"
+                        data={product.reviews}
+                        renderItem={renderModalReview}
+                        keyExtractor={(item) => item.id.toString()}
+                        />
+                    </View>
+                    </Modal>
+                </View>
+                
             }
         />
     </View>
