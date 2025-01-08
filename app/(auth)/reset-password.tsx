@@ -90,8 +90,9 @@ export default function ForgotPasswordPage() {
                 />
             </View>
             <TouchableOpacity
-                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
-                onPress={create}
+            activeOpacity={0.7} 
+            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
+            onPress={create}
             >
                 <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send Reset Code</Text>
             </TouchableOpacity>
@@ -134,8 +135,9 @@ export default function ForgotPasswordPage() {
                 />
             </View>
             <TouchableOpacity
-                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
-                onPress={reset}
+            activeOpacity={0.7} 
+            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
+            onPress={reset}
             >
                 <Text className="text-white text-center">Reset Password</Text>
             </TouchableOpacity>

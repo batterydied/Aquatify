@@ -101,29 +101,29 @@ export default function ProductPage() {
                 {/* Product Images */}
                     <View className="items-center">
                         <FlatList
-                            data={product.images}
-                            renderItem={({ item, index }) => (
-                                <Image
-                                    key={index} // This will ensure each image has a unique key
-                                    source={{ uri: item.url }}
-                                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                                    className="rounded-lg"
-                                />
-                            )}
-                            keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            pagingEnabled
-                            bounces={false}
-                            style={{width: imageWidth}}
-                            onScroll={Animated.event(
-                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                                { useNativeDriver: false }
-                            )}
+                        data={product.images}
+                        renderItem={({ item, index }) => (
+                            <Image
+                                key={index} // This will ensure each image has a unique key
+                                source={{ uri: item.url }}
+                                style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
+                                className="rounded-lg"
+                            />
+                        )}
+                        keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        pagingEnabled
+                        bounces={false}
+                        style={{width: imageWidth}}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                            { useNativeDriver: false }
+                        )}
                         />
                         {/* Custom Animated Scroll Indicator */}
                         <View
-                            className="flex-row justify-center mt-4"
+                        className="flex-row justify-center mt-4"
                         >
                             {product.images.map((_, index) => {
                                 const dotOpacity = scrollX.interpolate({
@@ -158,16 +158,27 @@ export default function ProductPage() {
                         <View className="w-full h-[1px] bg-gray-600 my-3"></View>
 
                         <Text className="text-2xl" style={{ fontFamily: "MontserratBold" }}>{selectedType && "$" + selectedType.price}</Text>
-                        <ProductDropdownComponent value= {selectedType} select={setSelectedType} data={product.productTypes}/>
+                        <ProductDropdownComponent 
+                        value= {selectedType} 
+                        select={setSelectedType} 
+                        data={product.productTypes}/>
                         {(selectedType && selectedType.quantity > 0)? (
                         <View>
-                            <QuantityDropdownComponent currentQuantity= {selectedQuantity} select={setSelectedQuantity} maxQuantity={selectedType.quantity } />
+                            <QuantityDropdownComponent 
+                            currentQuantity= {selectedQuantity} 
+                            select={setSelectedQuantity} 
+                            maxQuantity={selectedType.quantity } />
                             <View className="flex-column items-center">
-                                <TouchableOpacity className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2">
+                                <TouchableOpacity 
+                                activeOpacity={0.7} 
+                                className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2">
                                     <Text className="text-center text-white">Add to cart</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity className="bg-orange-400 w-[95%] p-3 rounded-3xl m-2">
-                                    <Text className="text-center">Buy now</Text>
+                                <TouchableOpacity 
+                                activeOpacity={0.7} 
+                                className="bg-orange-400 w-[95%] p-3 rounded-3xl m-2">
+                                    <Text 
+                                    className="text-center">Buy now</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>) : <Text className="text-red-700 text-lg">Out of stock</Text>}
@@ -207,6 +218,7 @@ export default function ProductPage() {
     return (
         <View className="p-5 bg-c3 flex-1">
             <TouchableOpacity
+            activeOpacity={0.7}
             className="ml-4 mt-16 mb-0 absolute z-10"
             onPress={() => router.back()}
             >
@@ -228,7 +240,8 @@ export default function ProductPage() {
             showsVerticalScrollIndicator={false}
             ListFooterComponent={
                 <View>
-                    <TouchableOpacity>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}>
                     <Text onPress={()=>setShowAllReviews(true)}>See All Reviews</Text>
                     </TouchableOpacity>
                     <Modal
@@ -237,6 +250,7 @@ export default function ProductPage() {
                     visible={showAllReviews}
                     >
                     <TouchableOpacity
+                    activeOpacity={0.7} 
                     className="ml-4 mt-16 mb-0 absolute z-10"
                     onPress={() => setShowAllReviews(false)}
                     >

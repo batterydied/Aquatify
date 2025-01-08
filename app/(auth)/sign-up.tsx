@@ -81,6 +81,7 @@ export default function SignOutPage() {
                 style={{fontFamily: "MontserratRegular"}}
                 />
                 <TouchableOpacity
+                activeOpacity={0.7} 
                 className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
                 onPress={onVerifyPress}>
                     <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Verify</Text>
@@ -96,28 +97,28 @@ export default function SignOutPage() {
             <Image className="w-[300px] h-[300px]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
             <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                 <FontAwesome
-                    name="user"
-                    size={20}
-                    color="gray"
-                    className="ml-2" // Adds some margin to the left of the icon
+                name="user"
+                size={20}
+                color="gray"
+                className="ml-2" // Adds some margin to the left of the icon
                 />
                 <TextInput
-                    className="flex-1 text-black ml-2"
-                    placeholder="Enter your email"
-                    placeholderTextColor="gray"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
-                    style={{ fontFamily: "MontserratRegular" }}
+                className="flex-1 text-black ml-2"
+                placeholder="Enter your email"
+                placeholderTextColor="gray"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={emailAddress}
+                onChangeText={setEmailAddress}
+                style={{ fontFamily: "MontserratRegular" }}
                 />
             </View>
             <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                 <FontAwesome
-                    name="lock"
-                    size={20}
-                    color="gray"
-                    className="ml-2" // Adds some margin to the left of the icon
+                name="lock"
+                size={20}
+                color="gray"
+                className="ml-2" // Adds some margin to the left of the icon
                 />
                     <TextInput
                     className="flex-1 text-black ml-2"
@@ -133,8 +134,9 @@ export default function SignOutPage() {
                 <Text className="text-red-700" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
             )}
             <TouchableOpacity
-                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
-                onPress={onSignUpPress}
+            activeOpacity={0.7} 
+            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
+            onPress={onSignUpPress}
             >
                 <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Continue</Text>
             </TouchableOpacity>

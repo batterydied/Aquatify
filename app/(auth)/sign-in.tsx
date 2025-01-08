@@ -73,68 +73,70 @@ export default function SignInPage() {
                 {/* Email/Password Sign-In */}
                 <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                     <FontAwesome
-                        name="user"
-                        size={20}
-                        color="gray"
-                        className="ml-2" // Adds some margin to the left of the icon
+                    name="user"
+                    size={20}
+                    color="gray"
+                    className="ml-2" // Adds some margin to the left of the icon
                     />
                     <TextInput
-                        className="flex-1 text-black ml-2"
-                        placeholder="Enter your email"
-                        placeholderTextColor="gray"
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                        value={emailAddress}
-                        onChangeText={setEmailAddress}
-                        style={{ fontFamily: "MontserratRegular" }}
+                    className="flex-1 text-black ml-2"
+                    placeholder="Enter your email"
+                    placeholderTextColor="gray"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={emailAddress}
+                    onChangeText={setEmailAddress}
+                    style={{ fontFamily: "MontserratRegular" }}
                     />
                 </View>
                 <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
                     <FontAwesome
-                        name="lock"
-                        size={20}
-                        color="gray"
-                        className="ml-2" // Adds some margin to the left of the icon
+                    name="lock"
+                    size={20}
+                    color="gray"
+                    className="ml-2" // Adds some margin to the left of the icon
                     />
                      <TextInput
-                        className="flex-1 text-black ml-2"
-                        placeholderTextColor="gray"
-                        placeholder="Enter your password"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                        style={{ fontFamily: 'MontserratRegular' }}
+                    className="flex-1 text-black ml-2"
+                    placeholderTextColor="gray"
+                    placeholder="Enter your password"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    style={{ fontFamily: 'MontserratRegular' }}
                     />
                 </View>
                 <TouchableOpacity
-                    className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
-                    onPress={handleEmailPasswordSignIn}
+                activeOpacity={0.7} 
+                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
+                onPress={handleEmailPasswordSignIn}
                 >
                     <Text className="text-white text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
                         Sign In
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="bg-c4 w-[80%] flex justify-center items-center p-2 rounded-xl"
-                    onPress={handleGoogleSignIn}
+                activeOpacity={0.7} 
+                className="bg-c4 w-[80%] flex justify-center items-center p-2 rounded-xl"
+                onPress={handleGoogleSignIn}
                 >
                     <Text className="text-black text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
                         Sign In With Google
                     </Text>
                 </TouchableOpacity>
                 <Text
-                    className="w-full m-1 text-center text-gray-500"
-                    style={{ fontFamily: 'MontserratRegular' }}
-                    onPress={() => router.push('/reset-password')}
+                className="w-full m-1 text-center text-gray-500"
+                style={{ fontFamily: 'MontserratRegular' }}
+                onPress={() => router.push('/reset-password')}
                 >
                     Forgot your password?
                 </Text>
                 <Text className="m-1 text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
                     Don’t have an account?{' '}
                     <Text
-                        className="t-c3"
-                        style={{ fontFamily: 'MontserratRegular' }}
-                        onPress={() => router.push('/(auth)/sign-up')}
+                    className="t-c3"
+                    style={{ fontFamily: 'MontserratRegular' }}
+                    onPress={() => router.push('/(auth)/sign-up')}
                     >
                         Sign up
                     </Text>

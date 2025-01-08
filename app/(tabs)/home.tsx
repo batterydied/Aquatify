@@ -49,7 +49,7 @@ export default function HomePage() {
 
     const renderItem = ({ item }: { item: homeProduct }) => (
         <View className="flex-1 mx-1 mb-1">
-            <TouchableOpacity onPress={() => goToProductPage(item.productId)}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
                 <Image
                     source={{ uri: item.images
                         ?.sort((a, b) => (a.id || 0) - (b.id || 0))[0]?.url }}
@@ -146,7 +146,7 @@ export default function HomePage() {
     return (
         <View className="flex-1 p-5 bg-c3">
             <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
                 </TouchableOpacity>
                 <TextInput
@@ -223,7 +223,10 @@ export default function HomePage() {
                         <Text style={{ fontFamily: "MontserratBold" }}>Categories:</Text>
                         <View className="mb-4">
                             {categoryTypes.map((category)=>(
-                                <TouchableOpacity key={category}><Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
+                                <TouchableOpacity 
+                                activeOpacity={0.7} 
+                                key={category}>
+                                    <Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
                                         const index = currFilterCriteria.categories.indexOf(category);
                                         if(index === -1){
                                             setCurrFilterCriteria({
@@ -242,19 +245,22 @@ export default function HomePage() {
                             ))}
                         </View>
                         <View className="flex-row w-full">
-                            <TouchableOpacity className="w-[40%]"
-                                onPress={() => resetFilter()}
+                            <TouchableOpacity activeOpacity={0.7} className="w-[40%]"
+                            onPress={() => resetFilter()}
                             >
                                 <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
                             </TouchableOpacity>
                             <View className="w-[60%] flex-row justify-end">
                                 <TouchableOpacity
-                                    onPress={() => setModalVisible(false)}
-                                    className="mr-4"
+                                activeOpacity={0.7} 
+                                onPress={() => setModalVisible(false)}
+                                className="mr-4"
                                 >
                                     <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={()=>applyFilters(currFilterCriteria)}>
+                                <TouchableOpacity
+                                activeOpacity={0.7}  
+                                onPress={()=>applyFilters(currFilterCriteria)}>
                                     <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
                                 </TouchableOpacity>
                             </View>
