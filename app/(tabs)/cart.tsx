@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import { cartItem } from "@/lib/cartPageInterface";
 import { useState, useCallback } from "react";
 import { fetchAllCartItems } from "@/lib/utils";
@@ -24,20 +24,19 @@ export default function CartPage() {
   );
 
   return (
-    <View className="flex-1 p-5 items-center">
-      <View className="mt-16">
-        <TouchableOpacity onPress={fetchData}>
-          <Text className="text-blue-500 underline">Refresh Cart</Text>
-        </TouchableOpacity>
-        <Text className="text-red-500 mt-4">Hello from Cart</Text>
-        {cartItems.length > 0 ? (
-          cartItems.map((item) => (
+    <View className="flex-1 p-5 items-center bg-c3">
+      {cartItems.length > 0 ? (
+        <View className="mt-16">
+        {cartItems.map((item) => (
             <Text key={item.id} className="mt-2">${item.id}</Text>
-          ))
-        ) : (
-          <Text className="mt-4">No items in the cart</Text>
-        )}
-      </View>
+          ))}
+        </View>):
+        <View className="mt-16 flex-1 justify-center items-center">
+          <Image className="w-[300px] h-[300px]" source={require('../../assets/images/basket.png')} />
+          <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>Your cart is empty!</Text>
+        </View>
+      }
+
     </View>
   );
 }
