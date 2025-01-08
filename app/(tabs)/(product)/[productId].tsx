@@ -2,9 +2,10 @@ import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndica
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { fetchProductById } from '../../../lib/utils';
-import { productInterface, review, productType } from '../../../lib/interface';
+import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
+import ReviewFilterDropdown from '../../../components/ReviewFilterDropdwon';
 import { FontAwesome } from '@expo/vector-icons';
 import { dateFormatting } from '@/lib/dateFormat';
 
@@ -13,10 +14,11 @@ export default function ProductPage() {
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const { width, height } = useWindowDimensions();
+    const { width } = useWindowDimensions();
     const [selectedType, setSelectedType] = useState<productType | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState< string >("1");
     const [showAllReviews, setShowAllReviews] = useState(false);
+    const [showAllReviewsFilter, setShowAllReviewsFilter] = useState<reviewSortOption>({label: 'Sort by Stars (Highest)', value: 'sortByStarsHighest'})
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     useEffect(() => {
@@ -60,7 +62,7 @@ export default function ProductPage() {
                             key={index} // Ensure each star has a unique key
                             name="star"
                             size={16} // Adjust size as needed
-                            color="gold" // Change color as needed
+                            color="white" // Change color as needed
                             style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
                         />
                     ))}
@@ -181,6 +183,24 @@ export default function ProductPage() {
             </View>
         )
     }
+    const reviewFilter = (reviews: review[])=>{
+        switch (showAllReviewsFilter.value) {
+            case 'sortByDateNewest':
+                return reviews.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    
+            case 'sortByDateOldest':
+                return reviews.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
+    
+            case 'sortByStarsHighest':
+                return reviews.sort((a, b) => b.rating - a.rating);
+    
+            case 'sortByStarsLowest':
+                return reviews.sort((a, b) => a.rating - b.rating);
+    
+            default:
+                return reviews;
+        }
+    }
     const sortedAndLimitedReviews = product.reviews
     .sort((a, b) => b.rating - a.rating) // Sort by updatedAt (newest first)
     .slice(0, 3); // Get the first 3 reviews
@@ -227,13 +247,18 @@ export default function ProductPage() {
                         className="ml-2" // Adds some margin to the left of the icon
                         />
                     </TouchableOpacity>
-                    <View className="flex-1 justify-center items-center bg-c3">
-                        <FlatList
-                        className="mt-24 w-[95%]"
-                        data={product.reviews}
-                        renderItem={renderModalReview}
-                        keyExtractor={(item) => item.id.toString()}
-                        />
+                    <View className="flex-1 items-center bg-c3">
+                        <View
+                        className="mt-24 w-[95%] h-[85%]"
+                        >
+                            <ReviewFilterDropdown sortOption={showAllReviewsFilter} select={setShowAllReviewsFilter} />
+                            <FlatList
+                            data={reviewFilter(product.reviews)}
+                            renderItem={renderModalReview}
+                            keyExtractor={(item) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            />
+                        </View>
                     </View>
                     </Modal>
                 </View>
