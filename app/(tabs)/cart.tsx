@@ -1,17 +1,25 @@
 import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions } from "react-native";
 import { useState, useCallback } from "react";
-import { fetchAllCartItems, updateCartQuantity } from "@/lib/utils";
+import { updateCartQuantity, fetchAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
 import { getProductType, calculatePriceWithQuantity } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
+import { useUserData } from '@/contexts/UserContext';
+import { Redirect } from 'expo-router'; 
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const { userData } = useUserData();
   const { width } = useWindowDimensions();
+
+  if (!userData) {
+    return <Redirect href="/sign-in" />;
+  }
+
   const fetchData = async () => {
     try {
-      const data = await fetchAllCartItems();
+      const data = await fetchAllCartItemsByUser(userData.id);
       setCartItems(data || []);
     } catch (error) {
       console.error("Error fetching cart:", error);

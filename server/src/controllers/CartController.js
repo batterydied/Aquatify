@@ -59,17 +59,10 @@ class CartController {
             ],
           },
         ],
-        logging: console.log, // Optional for debugging SQL queries
       });
-  
-      if (cartItems.length === 0) {
-        return res.status(404).json({ message: "No cart items found for this user." });
-      }
-  
       return res.status(200).json(cartItems);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Failed to fetch cart items for the user." });
+      return res.status(404).json({ message: "Failed to fetch cart items for the user." });
     }
   }
   

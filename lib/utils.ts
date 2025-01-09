@@ -8,18 +8,20 @@ const BASE_URL = "http://" + getIP();
 export let userId: string = '';
 
 export async function fetchUserData(email: string) {
-    try {
-      const response = await fetch(`${BASE_URL}:3000/api/user/fetch/${email}`); // Make the request
-      if (!response.ok) { // Check for response status
-        throw new Error(`Status: ${response.status}`);
-      }
-      const data = await response.json(); // Parse the response JSON
-      return data;
-    } catch (error) {
-      console.error('Error fetching user data:', error); // Log any errors
-      return null;
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/user/fetch/${email}`); // Make the request
+    
+    if (!response.ok) { // Check for other response statuses
+      throw new Error(`Status: ${response.status}`);
     }
+    
+    const data = await response.json(); // Parse the response JSON
+    return data;
+  } catch (error) {
+    return null;
+  }
 }
+
 
 export async function fetchProducts() {
   try {
