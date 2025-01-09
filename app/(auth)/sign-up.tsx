@@ -140,16 +140,20 @@ export default function SignOutPage() {
             >
                 <Text className="text-white" style={{fontFamily:"MontserratRegular"}}>Continue</Text>
             </TouchableOpacity>
-            <Text className="m-2 text-center w-full" style={{fontFamily: "MontserratRegular"}}>
-                Have an account? {''}
-                <Text
-                className="t-c3"
-                style={{fontFamily: "MontserratRegular"}}
-                onPress={() => router.push('/(auth)/sign-in')}
-                >
-                Sign in
-                </Text>
-            </Text>
+            <TouchableOpacity
+            onPress={() => router.push('/(auth)/sign-in')}
+            activeOpacity={0.7}
+            >
+              <Text className="m-2 text-center w-full" style={{fontFamily: "MontserratRegular"}}>
+                  Have an account? {''}
+                  <Text
+                  className="t-c3"
+                  style={{fontFamily: "MontserratRegular"}}
+                  >
+                  Sign in
+                  </Text>
+              </Text>
+            </TouchableOpacity>
         </View>
     </TouchableWithoutFeedback>
   )

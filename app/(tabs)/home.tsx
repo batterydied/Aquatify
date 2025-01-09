@@ -225,23 +225,25 @@ export default function HomePage() {
                             {categoryTypes.map((category)=>(
                                 <TouchableOpacity 
                                 activeOpacity={0.7} 
-                                key={category}>
-                                    <Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"} onPress={()=>{
-                                        const index = currFilterCriteria.categories.indexOf(category);
-                                        if(index === -1){
-                                            setCurrFilterCriteria({
+                                key={category}
+                                onPress={()=>{
+                                    const index = currFilterCriteria.categories.indexOf(category);
+                                    if(index === -1){
+                                        setCurrFilterCriteria({
+                                        ...currFilterCriteria,
+                                        categories: [...currFilterCriteria.categories, category]
+                                        })
+                                    }else{
+                                        const newCategories = currFilterCriteria.categories;
+                                        newCategories.splice(index, 1);
+                                        setCurrFilterCriteria({
                                             ...currFilterCriteria,
-                                            categories: [...currFilterCriteria.categories, category]
-                                            })
-                                        }else{
-                                            const newCategories = currFilterCriteria.categories;
-                                            newCategories.splice(index, 1);
-                                            setCurrFilterCriteria({
-                                                ...currFilterCriteria,
-                                                categories: newCategories,
-                                            })
-                                        }
-                                    }}>{category}</Text></TouchableOpacity>
+                                            categories: newCategories,
+                                        })
+                                    }
+                                }}
+                                >
+                                    <Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"}>{category}</Text></TouchableOpacity>
                             ))}
                         </View>
                         <View className="flex-row w-full">

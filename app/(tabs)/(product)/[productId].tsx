@@ -246,8 +246,10 @@ export default function ProductPage() {
             ListFooterComponent={
                 <View>
                     <TouchableOpacity 
-                    activeOpacity={0.7}>
-                    <Text onPress={()=>setShowAllReviews(true)}>See All Reviews</Text>
+                    activeOpacity={0.7}
+                    onPress={()=>setShowAllReviews(true)}
+                    >
+                        <Text>See All Reviews</Text>
                     </TouchableOpacity>
                     <Modal
                     animationType="slide"

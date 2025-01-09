@@ -124,23 +124,30 @@ export default function SignInPage() {
                         Sign In With Google
                     </Text>
                 </TouchableOpacity>
-                <Text
-                className="w-full m-1 text-center text-gray-500"
-                style={{ fontFamily: 'MontserratRegular' }}
+                <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={() => router.push('/reset-password')}
                 >
-                    Forgot your password?
-                </Text>
-                <Text className="m-1 text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
-                    Don’t have an account?{' '}
                     <Text
-                    className="t-c3"
+                    className="w-full m-1 text-center text-gray-500"
                     style={{ fontFamily: 'MontserratRegular' }}
-                    onPress={() => router.push('/(auth)/sign-up')}
                     >
-                        Sign up
+                        Forgot your password?
                     </Text>
-                </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => router.push('/(auth)/sign-up')}>
+                    <Text className="m-1 text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
+                        Don’t have an account?{' '}
+                        <Text
+                        className="t-c3"
+                        style={{ fontFamily: 'MontserratRegular' }}
+                        >
+                            Sign up
+                        </Text>
+                    </Text>
+                </TouchableOpacity>
             </View>
         </TouchableWithoutFeedback>
     );
