@@ -153,6 +153,11 @@ export default function ProductPage() {
                     {/* Product Details */}
                         <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>{product.secondaryName}</Text>
                         <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>{product.name}</Text>
+                        <TouchableOpacity
+                        activeOpacity={0.7} 
+                        >
+                            <Text className="text-xl text-blue-800" style={{ fontFamily: "MontserratRegular" }}>{"Visit the " + product.sellerName + " store"}</Text>
+                        </TouchableOpacity>
                         <Text>{'★' + (product.rating % 1 === 0 ? product.rating.toFixed(0) : product.rating.toFixed(1)) + `(${product.reviews.length})` }</Text>
 
                         <View className="w-full h-[1px] bg-gray-600 my-3"></View>
