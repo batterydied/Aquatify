@@ -66,3 +66,7 @@ export function getProductType(id: number, productTypes: productType[]){
     (productType) => productType.id === id 
   ) || null;
 }
+
+export function calculatePriceWithQuantity(quantity: number, price: number){
+  return (price * quantity).toFixed(2);
+}

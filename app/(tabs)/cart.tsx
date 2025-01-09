@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { fetchAllCartItems } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity } from "@/lib/utils";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
@@ -78,6 +78,7 @@ export default function CartPage() {
                 >
                   {`(${getProductType(item.productTypeId, item.Product.productTypes)?.type})`}
                 </Text>
+                <Text>{'quantity: ' + item.quantity}</Text>
                 <Text 
                 className="text-green-600"
                 style={
@@ -86,7 +87,7 @@ export default function CartPage() {
                     fontFamily: "MontserratRegular",
                   }
                 }
-                >{'$' }</Text>
+                >{'$' + calculatePriceWithQuantity(item.quantity, getProductType(item.productTypeId, item.Product.productTypes)!.price) }</Text>
               </View>
               ) : 
               <Text>
