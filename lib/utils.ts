@@ -1,3 +1,5 @@
+import { productType } from "./interface";
+
 function getIP(){
   return "192.168.1.23";
 }
@@ -57,4 +59,10 @@ export async function fetchAllCartItems(){
     console.error('Error fetching user data:', error); // Log any errors
     return null;
   }
+}
+
+export function getProductType(id: number, productTypes: productType[]){
+  return productTypes.find(
+    (productType) => productType.id === id 
+  ) || null;
 }

@@ -29,7 +29,7 @@ export default function HomePage() {
         minRating: null,
         categories: [],
     });
-    const { width, height } = useWindowDimensions();
+    const { width } = useWindowDimensions();
     
     const router = useRouter();
 

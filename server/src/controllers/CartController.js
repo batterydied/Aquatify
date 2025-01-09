@@ -19,7 +19,11 @@ class CartController {
               {
                 model: ProductType,
                 as: "productTypes",
-              }
+              },
+              {
+                model: Image,
+                as: "images",
+              },
             ],
             logging: console.log,
           }

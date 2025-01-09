@@ -73,8 +73,8 @@ export const categoryTypes: string[] = ["Livestocks", "Freshwater", "Saltwater",
 
 export interface cartItem{
     id: string;
-    productId: string;
-    productTypeId: string;
+    productTypeId: number;
     quantity: number;
     isSaved: boolean;
+    Product: productInterface;
 }
