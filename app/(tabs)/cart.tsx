@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { cartItem } from "@/lib/cartPageInterface";
+import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import { useState, useCallback } from "react";
 import { fetchAllCartItems } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
+import { fetchProductById } from "@/lib/utils";
+import { productInterface, cartItem } from "@/lib/interface";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
@@ -23,13 +24,24 @@ export default function CartPage() {
     }, [])
   );
 
+  const renderCartItem = ({ item }: { item: cartItem }) => {
+    let product: productInterface | null = null;
+    
+    return (<View>
+      <Text>{item.id}</Text>
+    </View>)
+  };
+  
+
   return (
     <View className="flex-1 p-5 items-center bg-c3">
       {cartItems.length > 0 ? (
         <View className="mt-16">
-        {cartItems.map((item) => (
-            <Text key={item.id} className="mt-2">${item.id}</Text>
-          ))}
+          <FlatList 
+          data={cartItems}
+          keyExtractor={(item: cartItem) => item.id}
+          renderItem={renderCartItem}
+          />
         </View>):
         <View className="mt-16 flex-1 justify-center items-center">
           <Image className="w-[300px] h-[300px]" source={require('../../assets/images/basket.png')} />

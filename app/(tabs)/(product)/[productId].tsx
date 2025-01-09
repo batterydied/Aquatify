@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { fetchProductById } from '../../../lib/utils';
-import { productInterface, review, productType, reviewSortOption } from '../../../lib/productPageInterface';
+import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
 import ReviewFilterDropdown from '../../../components/ReviewFilterDropdwon';
@@ -21,17 +21,14 @@ export default function ProductPage() {
     const [showAllReviewsFilter, setShowAllReviewsFilter] = useState<reviewSortOption>({label: 'Sort by Stars (Highest)', value: 'sortByStarsHighest'})
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
-    const fetchProductData = async () => {
-        const productData = await fetchProductById(productId);
-        if (productData) {
-            setProduct(productData);
-        } 
-    };
-
     useEffect(() => {
-        useCallback(() => {
-            fetchProductData();
-          }, [])
+        const fetchProductData = async () => {
+            const productData = await fetchProductById(productId);
+            if (productData) {
+                setProduct(productData);
+            } 
+        };
+        fetchProductData();
     }, [productId]);
 
     useEffect(() => {
@@ -42,6 +39,7 @@ export default function ProductPage() {
 
     useEffect(()=>{
             setSelectedQuantity("1");
+
     }, [selectedType]);
 
     if (!product) {

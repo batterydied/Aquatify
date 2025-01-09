@@ -70,3 +70,11 @@ export const reviewSortOptionArray: reviewSortOption[] = [
 
 
 export const categoryTypes: string[] = ["Livestocks", "Freshwater", "Saltwater", "Invertebrates", "Plants", "Care", "Materials", "Miscellaneous"];
+
+export interface cartItem{
+    id: string;
+    productId: string;
+    productTypeId: string;
+    quantity: number;
+    isSaved: boolean;
+}

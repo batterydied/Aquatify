@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
-import { reviewSortOptionArray, reviewSortOption } from '@/lib/productPageInterface';
+import { reviewSortOptionArray, reviewSortOption } from '@/lib/interface';
 
 type DropdownComponentProps = {
     sortOption: reviewSortOption

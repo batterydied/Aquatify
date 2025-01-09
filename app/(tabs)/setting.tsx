@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import SignOutButton from '../../components/sign-out';
 import { Redirect } from 'expo-router';  // Correct usage of Redirect
 import { fetchUserData } from '../../lib/utils';
-import { User } from '@/lib/productPageInterface';
+import { User } from '@/lib/interface';
 
 
 export default function SettingPage() {
