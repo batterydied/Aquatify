@@ -30,6 +30,7 @@ export interface review{
 
 export interface productInterface{
     name: string;
+    productId: string;
     secondaryName: string;
     sellerId: string;
     sellerName: string;

@@ -114,9 +114,13 @@ export default function CartPage() {
               </Text>}
             </View>
           </View>
-          {productType && <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={updateCurrentCartItem}/>}
-          <View>
-            <View className="flex-row">
+          <View className="flex-row items-center">
+            {productType && (
+              <View className="w-[30%] mr-4">
+                <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={updateCurrentCartItem}/>
+              </View>
+              )}
+  
               <TouchableOpacity>
                 <Text
                 style={
@@ -141,7 +145,6 @@ export default function CartPage() {
               </TouchableOpacity>)}
             </View>
           </View>
-        </View>
       </View>
     )
   }

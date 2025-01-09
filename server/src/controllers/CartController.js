@@ -89,12 +89,16 @@ class CartController {
   
       // Check if the item already exists in the cart
       const existingItem = await Cart.findOne({
-        where: { productId, productTypeId, isSaved: false },
+        where: { productId, productTypeId, isSaved: false, userId },
       });
   
       if (existingItem) {
         // If item exists, update quantity
-        existingItem.quantity += quantity;
+        let updatedQuantity = existingItem.quantity + quantity;
+        if(updatedQuantity > productType.quantity){
+          updatedQuantity = productType.quantity
+        }
+        existingItem.quantity = updatedQuantity;
         await existingItem.save();
         return res.status(200).json({ message: "Cart item updated.", item: existingItem });
       }

@@ -1,15 +1,18 @@
 import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
-import { fetchProductById } from '../../../lib/utils';
+import { fetchProductById, addItemToCart } from '../../../lib/utils';
 import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
 import ReviewFilterDropdown from '../../../components/ReviewFilterDropdwon';
 import { FontAwesome } from '@expo/vector-icons';
 import { dateFormatting } from '@/lib/dateFormat';
+import { useUserData } from '@/contexts/UserContext';
+import { Redirect } from 'expo-router'; 
 
 export default function ProductPage() {
+    const { userData } = useUserData();
     const router = useRouter();
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
@@ -42,6 +45,10 @@ export default function ProductPage() {
 
     }, [selectedType]);
 
+    if (!userData) {
+        return <Redirect href="/sign-in" />;
+    }
+
     if (!product) {
         return (
             <View className="flex-1 justify-center items-center bg-gray-200">
@@ -49,7 +56,7 @@ export default function ProductPage() {
             </View>
         );
     }
-
+    
     const renderReview = ({ item }: { item: review }) => (
         <View className="mb-4 rounded-md border border-gray-500 p-2">
             <Text className="text-sm">{item.user}</Text>
@@ -93,6 +100,16 @@ export default function ProductPage() {
         </View>
     );
 
+    const handleAddItemToCart = ()=>{
+        const productId = product.productId;
+        const productTypeId = selectedType?.id;
+        if(!productTypeId){
+            return
+        }
+        const quantity = parseFloat(selectedQuantity);
+        const userId = userData.id;
+        addItemToCart(productId, productTypeId, quantity, userId);
+    }
     const renderHeader = ()=>{
         return (
             <View>
@@ -176,7 +193,9 @@ export default function ProductPage() {
                             <View className="flex-column items-center">
                                 <TouchableOpacity 
                                 activeOpacity={0.7} 
-                                className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2">
+                                className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2"
+                                onPress={handleAddItemToCart}
+                                >
                                     <Text className="text-center text-white">Add to cart</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity 

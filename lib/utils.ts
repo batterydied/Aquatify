@@ -108,3 +108,23 @@ export async function updateCartQuantity(quantity: number, cartId: string) {
     return null;
   }
 }
+
+export async function addItemToCart(productId: string, productTypeId: number, quantity: number, userId: string){
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ productId, productTypeId, quantity, userId }),
+    });
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error adding item to cart: ', error);
+    return null;
+  }
+}

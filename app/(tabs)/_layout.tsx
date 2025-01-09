@@ -19,11 +19,11 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen 
-      name="favorites" 
+      name="saved" 
       options={{
         title: '',
         tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="heart" size={size * 0.8} color={color}/> 
+            <FontAwesome name="bookmark" size={size * 0.8} color={color}/> 
           ),
       }}
       />
