@@ -37,12 +37,48 @@ class CartController {
     }
   }
 
+  static async getAllCartItemsByUser(req, res) {
+    try {
+      const { userId } = req.params; // Extract userId from request parameters
+  
+      // Fetch cart items belonging to the specific user
+      const cartItems = await Cart.findAll({
+        where: { userId, isSaved: false }, // Filter by userId and unsaved cart items
+        include: [
+          {
+            model: Product,
+            include: [
+              {
+                model: ProductType,
+                as: "productTypes",
+              },
+              {
+                model: Image,
+                as: "images",
+              },
+            ],
+          },
+        ],
+        logging: console.log, // Optional for debugging SQL queries
+      });
+  
+      if (cartItems.length === 0) {
+        return res.status(404).json({ message: "No cart items found for this user." });
+      }
+  
+      return res.status(200).json(cartItems);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Failed to fetch cart items for the user." });
+    }
+  }
+  
   /**
    * Add a new item to the cart.
    */
   static async addCartItem(req, res) {
     try {
-      const { productId, productTypeId, quantity = 1 } = req.body;
+      const { productId, productTypeId, quantity = 1, userId } = req.body;
   
       // Check if the product exists
       const product = await Product.findByPk(productId);
@@ -73,6 +109,7 @@ class CartController {
       // Create a new cart item
       const newCartItem = await Cart.create({
         productId,
+        userId,
         productTypeId,
         quantity,
         isSaved: false,

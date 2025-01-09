@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions } from "react-native";
 import { useState, useCallback } from "react";
-import { fetchAllCartItems } from "@/lib/utils";
+import { fetchAllCartItems, updateCartQuantity } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
 import { getProductType, calculatePriceWithQuantity } from "@/lib/utils";
+import QuantityDropdownComponent from "@/components/QuantityDropdown";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
@@ -25,9 +26,14 @@ export default function CartPage() {
   );
   
   const renderItem = ({item}: {item: cartItem})=>{
+    const productType = getProductType(item.productTypeId, item.Product.productTypes)
+    const updateCurrentCartItem = async (quantity: string)=>{
+      await updateCartQuantity(parseFloat(quantity), item.id);
+      await fetchData();
+    }
     return (
-      <View className="w-full bg-c2 rounded-lg">
-        <View className="p-2">
+      <View className="w-full bg-c3 rounded-lg">
+        <View className="p-4">
           <Text 
           className="mb-2"
           style={
@@ -66,7 +72,7 @@ export default function CartPage() {
                 }
               }
               >{item.Product.secondaryName}</Text>
-              {getProductType(item.productTypeId, item.Product.productTypes) ? (
+              {productType ? (
               <View>
                 <Text
                 style={
@@ -76,28 +82,57 @@ export default function CartPage() {
                   }
                 }
                 >
-                  {`(${getProductType(item.productTypeId, item.Product.productTypes)?.type})`}
+                  {`(${productType.type})`}
                 </Text>
-                <Text>{'quantity: ' + item.quantity}</Text>
                 <Text 
-                className="text-green-600"
+                className="text-green-800"
                 style={
                   {
                     fontSize: width * .04,
-                    fontFamily: "MontserratRegular",
+                    fontFamily: "MontserratBold",
                   }
                 }
-                >{'$' + calculatePriceWithQuantity(item.quantity, getProductType(item.productTypeId, item.Product.productTypes)!.price) }</Text>
+                >{'$' + calculatePriceWithQuantity(item.quantity, productType.price) }</Text>
               </View>
               ) : 
-              <Text>
+              <Text
+              style={
+                {
+                  fontSize: width * .025,
+                  fontFamily: "MontserratRegular",
+                }
+              }>
                 Item unavailable, please remove from cart.
               </Text>}
             </View>
           </View>
-
-          <Text>Placeholder</Text>
-
+          {productType && <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={updateCurrentCartItem}/>}
+          <View>
+            <View className="flex-row">
+              <TouchableOpacity>
+                <Text
+                style={
+                  {
+                    fontSize: width * .025,
+                    fontFamily: "MontserratRegular",
+                  }
+                }>
+                  Remove
+                </Text>
+              </TouchableOpacity>
+              {productType && (
+              <TouchableOpacity className="ml-4">
+                <Text style={
+                {
+                  fontSize: width * .025,
+                  fontFamily: "MontserratRegular",
+                }
+                }>
+                  Save for later
+                </Text>
+              </TouchableOpacity>)}
+            </View>
+          </View>
         </View>
       </View>
     )
@@ -105,10 +140,11 @@ export default function CartPage() {
   
 
   return (
-    <View className="flex-1 p-5 items-center bg-c3">
+    <View className="flex-1 p-5 items-center bg-gray-200">
       {cartItems.length > 0 ? (
         <View className="mt-16 w-full">
           <FlatList 
+          bounces={false}
           data={cartItems}
           keyExtractor={(item: cartItem) => item.id}
           renderItem={renderItem}

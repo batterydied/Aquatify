@@ -44,8 +44,8 @@ export default function ProductPage() {
 
     if (!product) {
         return (
-            <View className="flex-1 justify-center items-center bg-white">
-                <ActivityIndicator size="large" color="grey" />
+            <View className="flex-1 justify-center items-center bg-gray-200">
+                <ActivityIndicator size="large" color="gray" />
             </View>
         );
     }
@@ -62,7 +62,7 @@ export default function ProductPage() {
                             key={index} // Ensure each star has a unique key
                             name="star"
                             size={16} // Adjust size as needed
-                            color="white" // Change color as needed
+                            color="gold" // Change color as needed
                             style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
                         />
                     ))}
@@ -83,7 +83,7 @@ export default function ProductPage() {
                             key={index} // Ensure each star has a unique key
                             name="star"
                             size={16}
-                            color="white" // Change color as needed
+                            color="gold" // Change color as needed
                             style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
                         />
                     ))}
@@ -221,7 +221,7 @@ export default function ProductPage() {
     .sort((a, b) => b.rating - a.rating) // Sort by updatedAt (newest first)
     .slice(0, 3); // Get the first 3 reviews
     return (
-        <View className="p-5 bg-c3 flex-1">
+        <View className="p-5 bg-gray-200 flex-1">
             <TouchableOpacity
             activeOpacity={0.7}
             className="ml-4 mt-16 mb-0 absolute z-10"
@@ -230,7 +230,7 @@ export default function ProductPage() {
                 <FontAwesome
                 name="arrow-left"
                 size={20}
-                color="white"
+                color="gray"
                 className="ml-2" // Adds some margin to the left of the icon
                 />
             </TouchableOpacity>
@@ -249,7 +249,9 @@ export default function ProductPage() {
                     activeOpacity={0.7}
                     onPress={()=>setShowAllReviews(true)}
                     >
-                        <Text>See All Reviews</Text>
+                        <Text className="text-blue-800">
+                            See All Reviews
+                        </Text>
                     </TouchableOpacity>
                     <Modal
                     animationType="slide"
@@ -264,11 +266,11 @@ export default function ProductPage() {
                         <FontAwesome
                         name="arrow-left"
                         size={20}
-                        color="white"
+                        color="gray"
                         className="ml-2" // Adds some margin to the left of the icon
                         />
                     </TouchableOpacity>
-                    <View className="flex-1 items-center bg-c3">
+                    <View className="flex-1 items-center bg-gray-200">
                         <View
                         className="mt-24 w-[95%] h-[85%]"
                         >

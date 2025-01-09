@@ -48,6 +48,7 @@ const Product = sequelize.define("Product", {
 const Review = sequelize.define("Review", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   user: { type: DataTypes.STRING, allowNull: false },
+  userId: { type: DataTypes.UUID, allowNull: false},
   rating: { type: DataTypes.FLOAT, allowNull: false },
   comment: { type: DataTypes.TEXT, allowNull: true },
   date: { type: DataTypes.DATE, allowNull: false },

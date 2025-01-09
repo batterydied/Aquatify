@@ -18,6 +18,8 @@ class CartRoutes {
     // Fetch all cart items (not saved)
     this.router.get("/", CartController.getCartItems);
 
+    this.router.get("/user/:userId", CartController.getAllCartItemsByUser);
+
     // Add a route to clear all cart items
     this.router.delete("/", CartController.clearCart);
 

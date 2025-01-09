@@ -70,3 +70,23 @@ export function getProductType(id: number, productTypes: productType[]){
 export function calculatePriceWithQuantity(quantity: number, price: number){
   return (price * quantity).toFixed(2);
 }
+
+export async function updateCartQuantity(quantity: number, cartId: string) {
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart/${cartId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ quantity }),
+    });
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating cart quantity:', error);
+    return null;
+  }
+}

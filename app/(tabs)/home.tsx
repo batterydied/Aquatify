@@ -144,7 +144,7 @@ export default function HomePage() {
     const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
-        <View className="flex-1 p-5 bg-c3">
+        <View className="flex-1 p-5 bg-gray-200">
             <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
                 <TouchableOpacity activeOpacity={0.7} onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />

@@ -70,6 +70,7 @@ class ProductController {
         const reviewPromises = reviews.map(review => 
           Review.create({ 
             user: review.user, 
+            userId: review.userId,
             rating: review.rating, 
             comment: review.comment, 
             date: new Date(), // You can adjust this based on your actual review data
@@ -165,6 +166,7 @@ class ProductController {
               // If review with given ID doesn't exist, create it
               await Review.create({
                 user: review.user,
+                userId: review.userId,
                 rating: review.rating,
                 comment: review.comment,
                 date: review.date || new Date(),
@@ -175,6 +177,7 @@ class ProductController {
             // If no ID, create a new review
             await Review.create({
               user: review.user,
+              userId: review.userId,
               rating: review.rating,
               comment: review.comment,
               date: review.date || new Date(),
