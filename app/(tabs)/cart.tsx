@@ -24,13 +24,21 @@ export default function CartPage() {
     }, [])
   );
 
-  const renderCartItem = ({ item }: { item: cartItem }) => {
-    let product: productInterface | null = null;
-    
-    return (<View>
-      <Text>{item.id}</Text>
-    </View>)
-  };
+const renderCartItem = async ({ item }: { item: cartItem }) => {
+  try {
+    const data = await fetchProductById(item.productId);
+    console.log(data.name);
+    return (
+      <View>
+        <Text>{data.name}</Text>
+      </View>
+    );
+  } catch (error) {
+    console.error('Error fetching product:', error);
+  }
+  return <View><Text>hi</Text></View>;
+};
+  
   
 
   return (
