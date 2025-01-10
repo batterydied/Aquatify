@@ -147,3 +147,22 @@ export async function deleteItemFromCart(cartId: string){
     return null;
   }
 }
+
+export async function deleteAllItemFromCart(){
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error deleting item from cart: ', error);
+    return null;
+  }
+}

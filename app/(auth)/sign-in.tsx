@@ -71,7 +71,7 @@ export default function SignInPage() {
             <View className="flex-1 justify-center items-center p-6">
                 <Image className="w-[300px] h-[300px]" source={require('../../assets/images/aquatify-logo-no-bg.png')} />
                 {/* Email/Password Sign-In */}
-                <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <View className="flex-row items-center border-gray-300 border-[1px] rounded-full w-[80%] mb-4 p-2">
                     <FontAwesome
                     name="user"
                     size={20}
@@ -89,7 +89,7 @@ export default function SignInPage() {
                     style={{ fontFamily: "MontserratRegular" }}
                     />
                 </View>
-                <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+                <View className="flex-row items-center border-gray-300 border-[1px] rounded-full w-[80%] mb-4 p-2">
                     <FontAwesome
                     name="lock"
                     size={20}
@@ -108,7 +108,7 @@ export default function SignInPage() {
                 </View>
                 <TouchableOpacity
                 activeOpacity={0.7} 
-                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl"
+                className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-full"
                 onPress={handleEmailPasswordSignIn}
                 >
                     <Text className="text-white text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
@@ -117,7 +117,7 @@ export default function SignInPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                 activeOpacity={0.7} 
-                className="bg-c4 w-[80%] flex justify-center items-center p-2 rounded-xl"
+                className="bg-c4 w-[80%] flex justify-center items-center p-2 rounded-full"
                 onPress={handleGoogleSignIn}
                 >
                     <Text className="text-black text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>

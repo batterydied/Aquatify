@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
         {!successfulCreation ? (
             <>
             {/* Email/Password Sign-In */}
-            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-full w-[80%] mb-4 p-2">
                 <FontAwesome
                     name="envelope"
                     size={20}
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
             </View>
             <TouchableOpacity
             activeOpacity={0.7} 
-            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
+            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-full" 
             onPress={create}
             >
                 <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send Reset Code</Text>
@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
             </>
         ) : (
             <>
-            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-full w-[80%] mb-4 p-2">
                     <FontAwesome
                         name="lock"
                         size={20}
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
                         style={{ fontFamily: 'MontserratRegular' }}
                     />
             </View>
-            <View className="flex-row items-center border-gray-300 border-[1px] rounded-2xl w-[80%] mb-4 p-2">
+            <View className="flex-row items-center border-gray-300 border-[1px] rounded-full w-[80%] mb-4 p-2">
                 <FontAwesome
                         name="key"
                         size={14}
@@ -141,7 +141,7 @@ export default function ForgotPasswordPage() {
             </View>
             <TouchableOpacity
             activeOpacity={0.7} 
-            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-xl" 
+            className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-full" 
             onPress={reset}
             >
                 <Text className="text-white text-center">Reset Password</Text>

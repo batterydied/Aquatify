@@ -15,13 +15,13 @@ export default function ProductPage() {
     const { userData } = useUserData();
     const router = useRouter();
     const { productId } = useLocalSearchParams<{ productId: string }>();
-    const [product, setProduct] = useState<productInterface | null>(null);
+    const [ product, setProduct ] = useState<productInterface | null>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width } = useWindowDimensions();
-    const [selectedType, setSelectedType] = useState<productType | null>(null);
-    const [selectedQuantity, setSelectedQuantity] = useState< string >("1");
-    const [showAllReviews, setShowAllReviews] = useState(false);
-    const [showAllReviewsFilter, setShowAllReviewsFilter] = useState<reviewSortOption>({label: 'Sort by Stars (Highest)', value: 'sortByStarsHighest'})
+    const [ selectedType, setSelectedType ] = useState<productType | null>(null);
+    const [ selectedQuantity, setSelectedQuantity ] = useState< string >("1");
+    const [ showAllReviews, setShowAllReviews ] = useState(false);
+    const [ showAllReviewsFilter, setShowAllReviewsFilter ] = useState<reviewSortOption>({label: 'Sort by Stars (Highest)', value: 'sortByStarsHighest'})
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     useEffect(() => {

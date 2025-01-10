@@ -11,13 +11,13 @@ import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 
 export default function HomePage() {
     useLockPortraitOrientation();
-    const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [searchInput, setSearchInput] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [filterError, setFilterError] = useState(false);
-    const [filterCriteria, setFilterCriteria] = useState<filterCriteriaType>({
+    const [ homeProducts, setHomeProducts ] = useState<homeProduct[]>([]);
+    const [ filteredProducts, setFilteredProducts ] = useState<homeProduct[]>([]);
+    const [ searchQuery, setSearchQuery ] = useState<string>("");
+    const [ searchInput, setSearchInput ] = useState<string>("");
+    const [ modalVisible, setModalVisible ] = useState(false);
+    const [ filterError, setFilterError ] = useState(false);
+    const [ filterCriteria, setFilterCriteria ] = useState<filterCriteriaType>({
         minPrice: null,
         maxPrice: null,
         minRating: null,
@@ -148,7 +148,7 @@ export default function HomePage() {
 
     return (
         <View className="flex-1 p-5 bg-gray-200">
-            <View className="flex-row items-center mt-16 rounded-md bg-white px-3 mb-4">
+            <View className="flex-row items-center mt-16 rounded-full bg-white px-3 mb-4">
                 <TouchableOpacity activeOpacity={0.7} onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
                 </TouchableOpacity>

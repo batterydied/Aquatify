@@ -3,15 +3,16 @@ import { useState, useCallback } from "react";
 import { updateCartQuantity, fetchAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType, calculatePriceWithQuantity, deleteItemFromCart } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect } from 'expo-router'; 
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const [ cartItems, setCartItems ] = useState<cartItem[]>([]);
   const { userData } = useUserData();
   const { width } = useWindowDimensions();
+  const [ subtotal, setSubtotal ] = useState<number>(0);
 
   if (!userData) {
     return <Redirect href="/sign-in" />;
@@ -33,6 +34,10 @@ export default function CartPage() {
     }, [])
   );
   
+  const handleDeleteAllItemFromCart = async ()=>{
+    await deleteAllItemFromCart();
+    await fetchData();
+  }
   const renderItem = ({item}: {item: cartItem})=>{
     const productType = getProductType(item.productTypeId, item.Product.productTypes)
     const handleQuantityUpdate = async (quantity: string)=>{
@@ -170,34 +175,37 @@ export default function CartPage() {
             }
             >Subtotal:</Text>
             <View className="w-full flex items-center">
-            <TouchableOpacity
-            className="bg-orange-400 p-3 rounded-full w-[95%] m-2">
-              <Text
-              className="text-center"
-              style={
-                {
-                  fontSize: width * .035,
-                  fontFamily: "MontserratRegular",
-                }
-              }
+              <TouchableOpacity
+              className="bg-orange-400 p-3 rounded-full w-[95%] m-2"
               >
-                Proceed to checkout
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-            className="bg-red-700 p-3 rounded-full w-[95%] m-2">
-              <Text
-              className="text-center text-white"
-              style={
-                {
-                  fontSize: width * .035,
-                  fontFamily: "MontserratRegular",
+                <Text
+                className="text-center"
+                style={
+                  {
+                    fontSize: width * .035,
+                    fontFamily: "MontserratRegular",
+                  }
                 }
-              }
+                >
+                  Proceed to checkout
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+              className="bg-red-700 p-3 rounded-full w-[95%] m-2"
+              onPress={handleDeleteAllItemFromCart}
               >
-                Empty cart
-              </Text>
-            </TouchableOpacity>
+                <Text
+                className="text-center text-white"
+                style={
+                  {
+                    fontSize: width * .035,
+                    fontFamily: "MontserratRegular",
+                  }
+                }
+                >
+                  Empty cart
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <FlatList 
