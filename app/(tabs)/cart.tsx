@@ -160,6 +160,44 @@ export default function CartPage() {
     <View className="flex-1 p-5 items-center bg-gray-200">
       {cartItems.length > 0 ? (
         <View className="mt-16 w-full">
+          <View className="mb-2">
+            <Text
+            style={
+              {
+                fontSize: width * .04,
+                fontFamily: "MontserratRegular",
+              }
+            }
+            >Subtotal:</Text>
+            <TouchableOpacity
+            className="bg-orange-400 p-2 rounded-3xl w-[95%] m-2">
+              <Text
+              className="text-center"
+              style={
+                {
+                  fontSize: width * .04,
+                  fontFamily: "MontserratRegular",
+                }
+              }
+              >
+                Proceed to checkout
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            className="bg-gray-400 p-2 rounded-3xl w-[95%] m-2">
+              <Text
+              className="text-center"
+              style={
+                {
+                  fontSize: width * .04,
+                  fontFamily: "MontserratRegular",
+                }
+              }
+              >
+                Empty cart
+              </Text>
+            </TouchableOpacity>
+          </View>
           <FlatList 
           bounces={false}
           data={cartItems}
