@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { updateCartQuantity, fetchAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType, calculatePriceWithQuantity } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity, deleteItemFromCart } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect } from 'expo-router'; 
@@ -35,12 +35,16 @@ export default function CartPage() {
   
   const renderItem = ({item}: {item: cartItem})=>{
     const productType = getProductType(item.productTypeId, item.Product.productTypes)
-    const updateCurrentCartItem = async (quantity: string)=>{
+    const handleQuantityUpdate = async (quantity: string)=>{
       await updateCartQuantity(parseFloat(quantity), item.id);
       await fetchData();
     }
+    const handleDeletingItem = async (cartId: string)=>{
+      await deleteItemFromCart(cartId);
+      await fetchData();
+    }
     return (
-      <View className="w-full bg-c3 rounded-lg">
+      <View className="w-full bg-c3 rounded-lg my-2">
         <View className="p-4">
           <Text 
           className="mb-2"
@@ -117,11 +121,13 @@ export default function CartPage() {
           <View className="flex-row items-center">
             {productType && (
               <View className="w-[30%] mr-4">
-                <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={updateCurrentCartItem}/>
+                <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={handleQuantityUpdate}/>
               </View>
               )}
   
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress= {()=>handleDeletingItem(item.id)}
+              >
                 <Text
                 style={
                   {
