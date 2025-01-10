@@ -169,13 +169,14 @@ export default function CartPage() {
               }
             }
             >Subtotal:</Text>
+            <View className="w-full flex items-center">
             <TouchableOpacity
-            className="bg-orange-400 p-2 rounded-3xl w-[95%] m-2">
+            className="bg-orange-400 p-3 rounded-full w-[95%] m-2">
               <Text
               className="text-center"
               style={
                 {
-                  fontSize: width * .04,
+                  fontSize: width * .035,
                   fontFamily: "MontserratRegular",
                 }
               }
@@ -184,12 +185,12 @@ export default function CartPage() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-            className="bg-gray-400 p-2 rounded-3xl w-[95%] m-2">
+            className="bg-red-700 p-3 rounded-full w-[95%] m-2">
               <Text
-              className="text-center"
+              className="text-center text-white"
               style={
                 {
-                  fontSize: width * .04,
+                  fontSize: width * .035,
                   fontFamily: "MontserratRegular",
                 }
               }
@@ -197,6 +198,7 @@ export default function CartPage() {
                 Empty cart
               </Text>
             </TouchableOpacity>
+            </View>
           </View>
           <FlatList 
           bounces={false}

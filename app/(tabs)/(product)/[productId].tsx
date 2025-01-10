@@ -193,14 +193,14 @@ export default function ProductPage() {
                             <View className="flex-column items-center">
                                 <TouchableOpacity 
                                 activeOpacity={0.7} 
-                                className="bg-blue-400 w-[95%] p-3 rounded-3xl m-2"
+                                className="bg-blue-400 w-[95%] p-3 rounded-full m-2"
                                 onPress={handleAddItemToCart}
                                 >
                                     <Text className="text-center text-white">Add to cart</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                 activeOpacity={0.7} 
-                                className="bg-orange-400 w-[95%] p-3 rounded-3xl m-2">
+                                className="bg-orange-400 w-[95%] p-3 rounded-full m-2">
                                     <Text 
                                     className="text-center">Buy now</Text>
                                 </TouchableOpacity>
