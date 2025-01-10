@@ -38,7 +38,8 @@ export default function CartPage() {
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => {
       const productType = getProductType(item.productTypeId, item.Product.productTypes);
-      const price = calculatePriceWithQuantity(item.quantity, productType?.price || 0);
+      const quantity = (productType && productType.quantity != 0) ? item.quantity : 0;
+      const price = calculatePriceWithQuantity(quantity, productType?.price || 0);
       return sum + price;
     }, 0);
     setSubtotal(total);
@@ -59,7 +60,8 @@ export default function CartPage() {
       await deleteItemFromCart(cartId);
       await fetchData();
     };
-    const price = calculatePriceWithQuantity(item.quantity, productType?.price || 0);
+
+    const price = (productType && productType.quantity != 0) ? calculatePriceWithQuantity(item.quantity, productType.price || 0) : 0;
 
     return (
       <View className="w-full bg-c3 rounded-lg my-2">
@@ -100,7 +102,7 @@ export default function CartPage() {
               >
                 {item.Product.secondaryName}
               </Text>
-              {productType ? (
+              {productType && productType.quantity != 0 ? (
                 <View>
                   <Text
                     style={{
@@ -122,10 +124,11 @@ export default function CartPage() {
                 </View>
               ) : (
                 <Text
-                  style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
-                  }}
+                className="text-red-700 w-[90%]"
+                style={{
+                  fontSize: width * 0.03,
+                  fontFamily: "MontserratBold",
+                }}
                 >
                   Item unavailable, please remove from cart.
                 </Text>
