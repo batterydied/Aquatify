@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { updateCartQuantity, fetchAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect } from 'expo-router'; 
@@ -77,7 +77,7 @@ export default function CartPage() {
           </Text>
           <View className="flex-row mb-2">
             <Image
-              source={{ uri: item.Product.images[0].url }}
+              source={{ uri: sortImageById(item.Product.images)[0].url }}
               className="rounded-md mr-2"
               style={{
                 width: width * 0.2,

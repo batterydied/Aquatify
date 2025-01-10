@@ -1,4 +1,4 @@
-import { productType } from "./interface";
+import { productType, image } from "./interface";
 
 function getIP(){
   return "192.168.1.23";
@@ -165,4 +165,12 @@ export async function deleteAllItemFromCart(){
     console.error('Error deleting item from cart: ', error);
     return null;
   }
+}
+
+export function sortImageById(images: image[]): image[] {
+  if (!Array.isArray(images)) {
+    throw new Error("Invalid input: images must be an array.");
+  }
+
+  return images.sort((a, b) => a.id - b.id);
 }

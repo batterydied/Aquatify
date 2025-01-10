@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
-import { fetchProductById, addItemToCart } from '../../../lib/utils';
+import { fetchProductById, addItemToCart, sortImageById } from '../../../lib/utils';
 import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
@@ -111,6 +111,7 @@ export default function ProductPage() {
         addItemToCart(productId, productTypeId, quantity, userId);
     }
     const renderHeader = ()=>{
+        const images = sortImageById(product.images)
         return (
             <View>
                 <View
@@ -118,7 +119,7 @@ export default function ProductPage() {
                 {/* Product Images */}
                     <View className="items-center">
                         <FlatList
-                        data={product.images}
+                        data={images}
                         renderItem={({ item, index }) => (
                             <Image
                                 key={index} // This will ensure each image has a unique key

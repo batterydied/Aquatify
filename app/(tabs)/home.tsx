@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
-import { fetchProducts } from "@/lib/utils";
+import { fetchProducts, sortImageById } from "@/lib/utils";
 import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useRouter } from "expo-router";
@@ -47,12 +47,13 @@ export default function HomePage() {
         })
     }
 
-    const renderItem = ({ item }: { item: homeProduct }) => (
+    const renderItem = ({ item }: { item: homeProduct }) => {
+        const images = sortImageById(item.images);
+        return(
         <View className="flex-1 mx-1">
             <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
                 <Image
-                    source={{ uri: item.images
-                        ?.sort((a, b) => (a.id || 0) - (b.id || 0))[0]?.url }}
+                    source={{ uri: images[0].url }}
                     className="h-[85%] w-full rounded-lg"
                     resizeMode="cover"
                 />
@@ -66,7 +67,8 @@ export default function HomePage() {
                 </View>
             </TouchableOpacity>
         </View>
-    );
+        )
+    };
 
     const goToProductPage = (productId: string) => {
         router.push(`/(tabs)/(product)/${productId}`);
