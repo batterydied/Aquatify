@@ -86,7 +86,7 @@ export function getProductType(id: number, productTypes: productType[]){
 }
 
 export function calculatePriceWithQuantity(quantity: number, price: number){
-  return (price * quantity).toFixed(2);
+  return Number((price * quantity).toFixed(2));
 }
 
 export async function updateCartQuantity(quantity: number, cartId: string) {

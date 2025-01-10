@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { updateCartQuantity, fetchAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
@@ -10,9 +10,9 @@ import { Redirect } from 'expo-router';
 
 export default function CartPage() {
   const [ cartItems, setCartItems ] = useState<cartItem[]>([]);
+  const [ subtotal, setSubtotal ] = useState<number>(0);
   const { userData } = useUserData();
   const { width } = useWindowDimensions();
-  const [ subtotal, setSubtotal ] = useState<number>(0);
 
   if (!userData) {
     return <Redirect href="/sign-in" />;
@@ -33,133 +33,143 @@ export default function CartPage() {
       fetchData();
     }, [])
   );
-  
-  const handleDeleteAllItemFromCart = async ()=>{
+
+  // Recalculate the subtotal whenever cartItems change
+  useEffect(() => {
+    const total = cartItems.reduce((sum, item) => {
+      const productType = getProductType(item.productTypeId, item.Product.productTypes);
+      const price = calculatePriceWithQuantity(item.quantity, productType?.price || 0);
+      return sum + price;
+    }, 0);
+    setSubtotal(total);
+  }, [cartItems]);
+
+  const handleDeleteAllItemFromCart = async () => {
     await deleteAllItemFromCart();
     await fetchData();
-  }
-  const renderItem = ({item}: {item: cartItem})=>{
-    const productType = getProductType(item.productTypeId, item.Product.productTypes)
-    const handleQuantityUpdate = async (quantity: string)=>{
+  };
+
+  const renderItem = ({ item }: { item: cartItem }) => {
+    const productType = getProductType(item.productTypeId, item.Product.productTypes);
+    const handleQuantityUpdate = async (quantity: string) => {
       await updateCartQuantity(parseFloat(quantity), item.id);
       await fetchData();
-    }
-    const handleDeletingItem = async (cartId: string)=>{
+    };
+    const handleDeletingItem = async (cartId: string) => {
       await deleteItemFromCart(cartId);
       await fetchData();
-    }
+    };
+    const price = calculatePriceWithQuantity(item.quantity, productType?.price || 0);
+
     return (
       <View className="w-full bg-c3 rounded-lg my-2">
         <View className="p-4">
-          <Text 
-          className="mb-2"
-          style={
-            {
-              fontSize: width * .025,
+          <Text
+            className="mb-2"
+            style={{
+              fontSize: width * 0.025,
               fontFamily: "MontserratRegular",
-            }
-          }
-          >{item.Product.sellerName}</Text>
+            }}
+          >
+            {item.Product.sellerName}
+          </Text>
           <View className="flex-row mb-2">
-            <Image 
-            source={{uri: item.Product.images[0].url}} 
-            className="rounded-md mr-2"
-            style={
-              {
-                width: width * .2,
-                height: width* .2,
-              }
-            }
-            ></Image>
+            <Image
+              source={{ uri: item.Product.images[0].url }}
+              className="rounded-md mr-2"
+              style={{
+                width: width * 0.2,
+                height: width * 0.2,
+              }}
+            />
             <View>
               <Text
-              style={
-                {
-                  fontSize: width * .025,
+                style={{
+                  fontSize: width * 0.025,
                   fontFamily: "MontserratRegular",
-                }
-              }
-              >{item.Product.name}</Text>
-              <Text 
-              className="text-gray-800"
-              style={
-                {
-                  fontSize: width * .025,
-                  fontFamily: "MontserratRegular",
-                }
-              }
-              >{item.Product.secondaryName}</Text>
-              {productType ? (
-              <View>
-                <Text
-                style={
-                  {
-                    fontSize: width * .025,
-                    fontFamily: "MontserratRegular",
-                  }
-                }
-                >
-                  {`(${productType.type})`}
-                </Text>
-                <Text 
-                className="text-green-800"
-                style={
-                  {
-                    fontSize: width * .04,
-                    fontFamily: "MontserratBold",
-                  }
-                }
-                >{'$' + calculatePriceWithQuantity(item.quantity, productType.price) }</Text>
-              </View>
-              ) : 
+                }}
+              >
+                {item.Product.name}
+              </Text>
               <Text
-              style={
-                {
-                  fontSize: width * .025,
+                className="text-gray-800"
+                style={{
+                  fontSize: width * 0.025,
                   fontFamily: "MontserratRegular",
-                }
-              }>
-                Item unavailable, please remove from cart.
-              </Text>}
+                }}
+              >
+                {item.Product.secondaryName}
+              </Text>
+              {productType ? (
+                <View>
+                  <Text
+                    style={{
+                      fontSize: width * 0.025,
+                      fontFamily: "MontserratRegular",
+                    }}
+                  >
+                    {`(${productType.type})`}
+                  </Text>
+                  <Text
+                    className="text-green-800"
+                    style={{
+                      fontSize: width * 0.04,
+                      fontFamily: "MontserratBold",
+                    }}
+                  >
+                    {"$" + price.toFixed(2)}
+                  </Text>
+                </View>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: width * 0.025,
+                    fontFamily: "MontserratRegular",
+                  }}
+                >
+                  Item unavailable, please remove from cart.
+                </Text>
+              )}
             </View>
           </View>
           <View className="flex-row items-center">
             {productType && (
               <View className="w-[30%] mr-4">
-                <QuantityDropdownComponent maxQuantity={productType.quantity} currentQuantity={item.quantity.toString()} select={handleQuantityUpdate}/>
+                <QuantityDropdownComponent
+                  maxQuantity={productType.quantity}
+                  currentQuantity={item.quantity.toString()}
+                  select={handleQuantityUpdate}
+                />
               </View>
-              )}
-  
-              <TouchableOpacity
-              onPress= {()=>handleDeletingItem(item.id)}
-              >
-                <Text
-                style={
-                  {
-                    fontSize: width * .025,
-                    fontFamily: "MontserratRegular",
-                  }
-                }>
-                  Remove
-                </Text>
-              </TouchableOpacity>
-              {productType && (
-              <TouchableOpacity className="ml-4">
-                <Text style={
-                {
-                  fontSize: width * .025,
+            )}
+
+            <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
+              <Text
+                style={{
+                  fontSize: width * 0.025,
                   fontFamily: "MontserratRegular",
-                }
-                }>
+                }}
+              >
+                Remove
+              </Text>
+            </TouchableOpacity>
+            {productType && (
+              <TouchableOpacity className="ml-4">
+                <Text
+                  style={{
+                    fontSize: width * 0.025,
+                    fontFamily: "MontserratRegular",
+                  }}
+                >
                   Save for later
                 </Text>
-              </TouchableOpacity>)}
-            </View>
+              </TouchableOpacity>
+            )}
           </View>
+        </View>
       </View>
-    )
-  }
-  
+    );
+  };
 
   return (
     <View className="flex-1 p-5 items-center bg-gray-200">
@@ -167,60 +177,59 @@ export default function CartPage() {
         <View className="mt-16 w-full">
           <View className="mb-2">
             <Text
-            style={
-              {
-                fontSize: width * .04,
+              style={{
+                fontSize: width * 0.04,
                 fontFamily: "MontserratRegular",
-              }
-            }
-            >Subtotal:</Text>
+              }}
+            >
+              {"Subtotal: $" + subtotal.toFixed(2)}
+            </Text>
             <View className="w-full flex items-center">
-              <TouchableOpacity
-              className="bg-orange-400 p-3 rounded-full w-[95%] m-2"
-              >
+              <TouchableOpacity className="bg-orange-400 p-3 rounded-full w-[95%] m-2">
                 <Text
-                className="text-center"
-                style={
-                  {
-                    fontSize: width * .035,
+                  className="text-center"
+                  style={{
+                    fontSize: width * 0.035,
                     fontFamily: "MontserratRegular",
-                  }
-                }
+                  }}
                 >
                   Proceed to checkout
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-              className="bg-red-700 p-3 rounded-full w-[95%] m-2"
-              onPress={handleDeleteAllItemFromCart}
+                className="bg-red-700 p-3 rounded-full w-[95%] m-2"
+                onPress={handleDeleteAllItemFromCart}
               >
                 <Text
-                className="text-center text-white"
-                style={
-                  {
-                    fontSize: width * .035,
+                  className="text-center text-white"
+                  style={{
+                    fontSize: width * 0.035,
                     fontFamily: "MontserratRegular",
-                  }
-                }
+                  }}
                 >
                   Empty cart
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
-          <FlatList 
-          bounces={false}
-          data={cartItems}
-          keyExtractor={(item: cartItem) => item.id}
-          renderItem={renderItem}
+          <FlatList
+            bounces={false}
+            data={cartItems}
+            keyExtractor={(item: cartItem) => item.id}
+            renderItem={renderItem}
           />
-        </View>):
-        <View className="mt-16 flex-1 justify-center items-center">
-          <Image className="w-[300px] h-[300px]" source={require('../../assets/images/basket.png')} />
-          <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>Your cart is empty!</Text>
         </View>
-      }
-
+      ) : (
+        <View className="mt-16 flex-1 justify-center items-center">
+          <Image
+            className="w-[300px] h-[300px]"
+            source={require("../../assets/images/basket.png")}
+          />
+          <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
+            Your cart is empty!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
