@@ -219,6 +219,56 @@ class ProductController {
     }
   }
   
+  static async updateProductTypes(req, res) {
+    try {
+      const { productId } = req.params;
+      const { productTypes } = req.body;
+  
+      if (!productTypes || !Array.isArray(productTypes)) {
+        return res.status(400).json({ error: "Invalid productTypes format. It must be an array." });
+      }
+  
+      const productExists = await Product.findOne({ where: { productId } });
+      if (!productExists) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+  
+      for (const type of productTypes) {
+        if (type.id) {
+          // Update existing productType
+          const existingProductType = await ProductType.findOne({ where: { id: type.id, productId } });
+          if (existingProductType) {
+            await existingProductType.update({
+              type: type.type !== undefined ? type.type : existingProductType.type,
+              price: type.price !== undefined ? type.price : existingProductType.price,
+              quantity: type.quantity !== undefined ? type.quantity : existingProductType.quantity,
+            });
+          } else {
+            return res.status(404).json({ error: `ProductType with ID ${type.id} not found for the given product.` });
+          }
+        } else {
+          // Create a new productType if no ID is provided
+          await ProductType.create({
+            type: type.type,
+            price: type.price,
+            quantity: type.quantity,
+            productId,
+          });
+        }
+      }
+  
+      // Fetch the updated product types for response
+      const updatedProductTypes = await ProductType.findAll({ where: { productId } });
+  
+      res.status(200).json({
+        status: "ProductTypes updated successfully",
+        productTypes: updatedProductTypes,
+      });
+    } catch (error) {
+      console.error("Error updating productTypes:", error);
+      res.status(500).json({ error: "Failed to update productTypes." });
+    }
+  }  
   
   // Delete a product by ID
   static async deleteProduct(req, res) {

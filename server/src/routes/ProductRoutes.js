@@ -18,6 +18,8 @@
         // Add a new product
         this.router.post("/", ProductController.addProduct);
     
+        this.router.put("/productType/:productId", ProductController.updateProductTypes);
+
         // Update an existing product
         this.router.put("/:productId", ProductController.updateProduct);
             
