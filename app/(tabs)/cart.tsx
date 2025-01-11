@@ -38,7 +38,10 @@ export default function CartPage() {
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => {
       const productType = getProductType(item.productTypeId, item.Product.productTypes);
-      const quantity = (productType && productType.quantity != 0) ? item.quantity : 0;
+      const quantity = (productType && productType.quantity != 0) ? (productType.quantity > item.quantity ? item.quantity : productType.quantity) : 0;
+      if((productType && productType.quantity != 0) && productType.quantity < item.quantity){
+        updateCartQuantity(productType.quantity, item.id);
+      }
       const price = calculatePriceWithQuantity(quantity, productType?.price || 0);
       return sum + price;
     }, 0);
@@ -124,23 +127,24 @@ export default function CartPage() {
                 </View>
               ) : (
                 <Text
-                className="text-red-700 w-[90%]"
+                className="text-red-700 w-[85%]"
                 style={{
                   fontSize: width * 0.03,
                   fontFamily: "MontserratBold",
                 }}
                 >
-                  Item unavailable, please remove from cart.
+                  Item unavailable, please remove from the cart.
                 </Text>
               )}
             </View>
           </View>
-          <View className="flex-row items-center">
+          {productType && productType.quantity > 0 ? (
+            <View className="flex-row items-center">
             {productType && (
               <View className="w-[30%] mr-4">
                 <QuantityDropdownComponent
                   maxQuantity={productType.quantity}
-                  currentQuantity={item.quantity.toString()}
+                  currentQuantity={productType.quantity > item.quantity ? item.quantity.toString() : productType.quantity.toString()}
                   select={handleQuantityUpdate}
                 />
               </View>
@@ -169,6 +173,18 @@ export default function CartPage() {
               </TouchableOpacity>
             )}
           </View>
+          ):(
+          <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
+            <Text
+              style={{
+                fontSize: width * 0.025,
+                fontFamily: "MontserratRegular",
+              }}
+            >
+              Remove
+            </Text>
+          </TouchableOpacity>)
+          }
         </View>
       </View>
     );
