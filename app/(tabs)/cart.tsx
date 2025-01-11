@@ -109,7 +109,7 @@ export default function CartPage() {
               >
                 {item.Product.secondaryName}
               </Text>
-              {productType && productType.quantity != 0 ? (
+              {productType && productType.quantity != 0 && (
                 <View>
                   <Text
                     style={{
@@ -129,16 +129,6 @@ export default function CartPage() {
                     {"$" + price.toFixed(2)}
                   </Text>
                 </View>
-              ) : (
-                <Text
-                className="text-red-700 w-[85%]"
-                style={{
-                  fontSize: width * 0.03,
-                  fontFamily: "MontserratBold",
-                }}
-                >
-                  Item unavailable, please remove from the cart.
-                </Text>
               )}
             </View>
           </View>
