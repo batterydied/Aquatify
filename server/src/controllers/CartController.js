@@ -262,25 +262,29 @@ class CartController {
     try {
       const { id } = req.params;
       const { quantity } = req.body;
-
-      if (quantity <= 0) {
-        return res.status(400).json({ message: "Quantity must be greater than zero." });
-      }
-
+  
+      // Check if the cart item exists
       const cartItem = await Cart.findByPk(id);
       if (!cartItem) {
         return res.status(404).json({ message: "Cart item not found." });
       }
-
+  
+      // If quantity is less than or equal to 0, delete the cart item
+      if (quantity <= 0) {
+        await cartItem.destroy();
+        return res.status(200).json({ message: "Cart item deleted due to invalid quantity." });
+      }
+  
+      // Otherwise, update the cart item
       cartItem.quantity = quantity;
       await cartItem.save();
-
+  
       return res.status(200).json({ message: "Cart item updated.", item: cartItem });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Failed to update cart item." });
     }
   }
-}
+}  
 
 export default CartController;

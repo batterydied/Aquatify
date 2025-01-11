@@ -38,15 +38,19 @@ export default function CartPage() {
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => {
       const productType = getProductType(item.productTypeId, item.Product.productTypes);
-      const quantity = (productType && productType.quantity != 0) ? (productType.quantity > item.quantity ? item.quantity : productType.quantity) : 0;
-      if((productType && productType.quantity != 0) && productType.quantity < item.quantity){
-        updateCartQuantity(productType.quantity, item.id);
+      const availableQuantity = Math.min(productType?.quantity || 0, item.quantity);
+      
+      // Update cart quantity if the selected quantity exceeds availability
+      if (availableQuantity < item.quantity) {
+        updateCartQuantity(availableQuantity, item.id);
       }
-      const price = calculatePriceWithQuantity(quantity, productType?.price || 0);
+  
+      const price = calculatePriceWithQuantity(availableQuantity, productType?.price || 0);
       return sum + price;
     }, 0);
+  
     setSubtotal(total);
-  }, [cartItems]);
+  }, [cartItems]);  
 
   const handleDeleteAllItemFromCart = async () => {
     await deleteAllItemFromCart(userData.id);
