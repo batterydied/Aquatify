@@ -157,6 +157,31 @@ class CartController {
     }
   }
 
+  static async clearCartById(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      if (!userId) {
+        return res.status(400).json({ message: "userId is required." });
+      }
+  
+      // Remove all non-saved items from the cart for the given userId
+      const deletedCount = await Cart.destroy({
+        where: {
+          userId,
+          isSaved: false,
+        },
+      });
+  
+      return res.status(200).json({
+        message: `Cleared ${deletedCount} item(s) from the cart.`,
+      });
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+      return res.status(500).json({ message: "Failed to clear the cart." });
+    }
+  }
+  
   /**
    * Get all saved-for-later items in the cart.
    */

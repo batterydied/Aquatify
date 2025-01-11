@@ -148,9 +148,9 @@ export async function deleteItemFromCart(cartId: string){
   }
 }
 
-export async function deleteAllItemFromCart(){
+export async function deleteAllItemFromCart(userId: string){
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart`, {
+    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -173,4 +173,8 @@ export function sortImageById(images: image[]): image[] {
   }
 
   return images.sort((a, b) => a.id - b.id);
+}
+
+export function getAllSavedItems(){
+
 }

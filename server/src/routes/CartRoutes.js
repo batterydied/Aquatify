@@ -26,6 +26,8 @@ class CartRoutes {
     // Add a new item to the cart
     this.router.post("/", CartController.addCartItem);
 
+    this.router.delete("/user/:userId", CartController.clearCartById);
+
     // Remove a specific item from the cart
     this.router.delete("/:id", CartController.removeCartItem);
 

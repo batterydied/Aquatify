@@ -46,7 +46,7 @@ export default function CartPage() {
   }, [cartItems]);
 
   const handleDeleteAllItemFromCart = async () => {
-    await deleteAllItemFromCart();
+    await deleteAllItemFromCart(userData.id);
     await fetchData();
   };
 
