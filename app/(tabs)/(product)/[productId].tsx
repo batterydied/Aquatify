@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndica
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useFocusEffect } from "@react-navigation/native";
-import { fetchProductById, addItemToCart, sortImageById } from '../../../lib/utils';
+import { getProductById, addItemToCart, sortImageById } from '../../../lib/utils';
 import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
 import ProductDropdownComponent from '../../../components/ProductDropdown';
 import QuantityDropdownComponent from '../../../components/QuantityDropdown';
@@ -26,7 +26,7 @@ export default function ProductPage() {
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
 
     const fetchProductData = async () => {
-        const productData = await fetchProductById(productId);
+        const productData = await getProductById(productId);
         if (productData) {
             setProduct(productData);
         } 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-expo';
-import { fetchUserData } from '@/lib/utils';
+import { getUserData } from '@/lib/utils';
 import { User } from '@/lib/interface';
 
 interface UserContextType {
@@ -19,7 +19,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const fetchData = async () => {
             try {
-                const data = await fetchUserData(user.emailAddresses[0].emailAddress);
+                const data = await getUserData(user.emailAddresses[0].emailAddress);
                 setUserData(data);
             } catch (error) {
                 console.error('Error fetching user data:', error);

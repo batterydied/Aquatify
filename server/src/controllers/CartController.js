@@ -209,6 +209,30 @@ class CartController {
     }
   }
 
+  static async getSavedItemsByUserId(req, res) {
+    try {
+      const { userId } = req.params; // Extract userId from request parameters
+      const savedItems = await Cart.findAll({
+        where: { userId, isSaved: true },
+        include: {
+          model: Product,
+          include: [
+            { model: ProductType, as: "productTypes"},
+            { model: Image, as: "images" }
+          ]
+        },
+      });
+
+      if (savedItems.length === 0) {
+        return res.status(404).json({ message: "No saved items found." });
+      }
+
+      return res.status(200).json(savedItems);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Failed to fetch saved items." });
+    }
+  }
   /**
    * Save a cart item for later.
    */

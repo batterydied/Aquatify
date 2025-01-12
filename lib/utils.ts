@@ -7,7 +7,7 @@ const BASE_URL = "http://" + getIP();
 
 export let userId: string = '';
 
-export async function fetchUserData(email: string) {
+export async function getUserData(email: string) {
   try {
     const response = await fetch(`${BASE_URL}:3000/api/user/fetch/${email}`); // Make the request
     
@@ -23,7 +23,7 @@ export async function fetchUserData(email: string) {
 }
 
 
-export async function fetchProducts() {
+export async function getProducts() {
   try {
     const response = await fetch(`${BASE_URL}:3000/api/product`); // Make the request
     if (!response.ok) { // Check for response status
@@ -37,7 +37,7 @@ export async function fetchProducts() {
   }
 }
 
-export async function fetchProductById(productId: string){
+export async function getProductById(productId: string){
   try {
     const response = await fetch(`${BASE_URL}:3000/api/product/${productId}`); // Make the request
     if (!response.ok) { // Check for response status
@@ -51,7 +51,7 @@ export async function fetchProductById(productId: string){
   }
 }
 
-export async function fetchAllCartItems(){
+export async function getAllCartItems(){
   try {
     const response = await fetch(`${BASE_URL}:3000/api/cart`); // Make the request
     if (!response.ok) { // Check for response status
@@ -65,7 +65,7 @@ export async function fetchAllCartItems(){
   }
 }
 
-export async function fetchAllCartItemsByUser(userId: string){
+export async function getAllCartItemsByUser(userId: string){
   try {
     const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`); // Make the request
     if (!response.ok) { // Check for response status
@@ -150,12 +150,7 @@ export async function deleteItemFromCart(cartId: string){
 
 export async function deleteAllItemFromCart(userId: string){
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`);
     if (!response.ok) {
       throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
     }
@@ -175,6 +170,21 @@ export function sortImageById(images: image[]): image[] {
   return images.sort((a, b) => a.id - b.id);
 }
 
-export function getAllSavedItems(){
-
+export async function getAllSavedItemsByUserId(userId: string){
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart/saved/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error retrieving saved item from cart: ', error);
+    return null;
+  }
 }

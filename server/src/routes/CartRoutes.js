@@ -34,6 +34,8 @@ class CartRoutes {
     // Fetch all saved-for-later items
     this.router.get("/saved", CartController.getSavedItems);
 
+    this.router.get("/saved/user/:userId", CartController.getSavedItemsByUserId);
+
     // Save a specific cart item for later
     this.router.post("/save/:id", CartController.saveForLater);
 

@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
-import { fetchProducts, sortImageById } from "@/lib/utils";
+import { getProducts, sortImageById } from "@/lib/utils";
 import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useRouter } from "expo-router";
@@ -77,7 +77,7 @@ export default function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchProducts();
+                const data = await getProducts();
                 setHomeProducts((data || []).sort((a: homeProduct, b: homeProduct) => b.rating - a.rating));
             } catch (error) {
                 console.error("Error fetching products:", error);
