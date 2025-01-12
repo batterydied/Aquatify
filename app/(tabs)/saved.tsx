@@ -1,13 +1,14 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Image, useWindowDimensions } from "react-native";
 import { cartItem } from "@/lib/interface";
 import { useCallback, useState } from "react";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router, useFocusEffect } from "expo-router";
-import { getAllSavedItemsByUserId } from "@/lib/utils";
+import { getAllSavedItemsByUserId, sortImageById } from "@/lib/utils";
 
 export default function SavedPage(){
     const [ savedItems, setSavedItems ] = useState<cartItem[]>([]);
     const { userData } = useUserData();
+    const { width } = useWindowDimensions();
 
     if (!userData) {
         return <Redirect href="/sign-in" />;
@@ -36,16 +37,51 @@ export default function SavedPage(){
     const renderItem = ({item}:{item: cartItem})=>{
       return (
         <TouchableOpacity 
-              onPress={()=>goToProductPage(item.Product.productId)}
-              activeOpacity={0.7}
+        onPress={()=>goToProductPage(item.Product.productId)}
+        activeOpacity={0.7}
+        >
+          <View className="w-full bg-c3 rounded-lg my-2">
+            <View className="p-4">
+              <Text
+              className="mb-2"
+              style={{
+                fontSize: width * 0.025,
+                fontFamily: "MontserratRegular",
+              }}
               >
-                <View className="w-full bg-c3 rounded-lg my-2">
-                  <View className="p-4">
-                    <Text>
-                      {item.Product.name}
-                    </Text>
-                  </View>
+                {item.Product.sellerName}
+              </Text>
+              <View className="flex-row mb-2">
+                <Image
+                  source={{ uri: sortImageById(item.Product.images)[0].url }}
+                  className="rounded-md mr-2"
+                  style={{
+                    width: width * 0.2,
+                    height: width * 0.2,
+                  }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      fontSize: width * 0.025,
+                      fontFamily: "MontserratRegular",
+                    }}
+                  >
+                    {item.Product.name}
+                  </Text>
+                  <Text
+                    className="text-gray-800"
+                    style={{
+                      fontSize: width * 0.025,
+                      fontFamily: "MontserratRegular",
+                    }}
+                  >
+                    {item.Product.secondaryName}
+                  </Text>
                 </View>
+              </View>
+            </View>
+          </View>
         </TouchableOpacity>
       )
     }

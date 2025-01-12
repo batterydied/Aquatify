@@ -170,21 +170,18 @@ export function sortImageById(images: image[]): image[] {
   return images.sort((a, b) => a.id - b.id);
 }
 
-export async function getAllSavedItemsByUserId(userId: string){
+export async function getAllSavedItemsByUserId(userId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/saved/user/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
+    const response = await fetch(`${BASE_URL}:3000/api/cart/saved/user/${userId}`);
+    if (response.status === 404) {
+      return null;
     }
-    const data = await response.json();
-    return data;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch saved items: ${response.statusText}`);
+    }
+    return await response.json();
   } catch (error) {
-    console.error('Error retrieving saved item from cart: ', error);
+    console.error('Error fetching saved items from cart:', error);
     return null;
   }
 }
