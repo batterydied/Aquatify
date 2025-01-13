@@ -262,23 +262,65 @@ class CartController {
   static async moveToCart(req, res) {
     try {
       const { id } = req.params;
-
-      const cartItem = await Cart.findByPk(id);
-      if (!cartItem) {
-        return res.status(404).json({ message: "Cart item not found." });
+  
+      // Find the cart item by its ID
+      const cartItem = await Cart.findOne({
+        where: {
+          id,         // Find by ID
+          isSaved: true // Ensure it is a saved item
+        }
+      });
+      
+      if(!cartItem){
+        return res.status(404).json({ message: "Can not find saved item to move back to cart." });
       }
-
-      // Move item back to the cart
-      cartItem.isSaved = false;
-      await cartItem.save();
-
-      return res.status(200).json({ message: "Item moved back to cart.", item: cartItem });
+      // Check if a similar item exists in the active cart
+      const existingItem = await Cart.findOne({
+        where: {
+          productTypeId: cartItem.productTypeId,
+          userId: cartItem.userId,
+          productId: cartItem.productId,
+          isSaved: false, // Ensure the item is in the active cart
+        },
+      });
+  
+      if (existingItem) {
+        // Fetch product type to check the maximum available quantity
+        const productType = await ProductType.findOne({
+          where: {
+            id: existingItem.productTypeId,
+            productId: existingItem.productId,
+          },
+        });
+  
+        // Calculate the updated quantity ensuring it doesn't exceed the stock
+        const maxStock = productType?.quantity || 0;
+        existingItem.quantity = Math.min(existingItem.quantity + cartItem.quantity, maxStock);
+        await existingItem.save();
+  
+        // Remove the original saved item
+        await cartItem.destroy();
+  
+        return res.status(200).json({
+          message: "Item quantity updated in cart.",
+          item: existingItem,
+        });
+      } else {
+        // If no matching item exists, move the current item back to the cart
+        cartItem.isSaved = false;
+        await cartItem.save();
+  
+        return res.status(200).json({
+          message: "Item moved back to cart.",
+          item: cartItem,
+        });
+      }
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Failed to move item back to cart." });
     }
   }
-
+  
   /**
    * Update the quantity of a specific cart item.
    */
