@@ -3,7 +3,7 @@ import { cartItem } from "@/lib/interface";
 import { useCallback, useState } from "react";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router, useFocusEffect } from "expo-router";
-import { getAllSavedItemsByUserId, sortImageById } from "@/lib/utils";
+import { deleteItemFromCart, getAllSavedItemsByUserId, sortImageById, moveItem } from "@/lib/utils";
 
 export default function SavedPage(){
     const [ savedItems, setSavedItems ] = useState<cartItem[]>([]);
@@ -33,6 +33,16 @@ export default function SavedPage(){
     const goToProductPage = (productId: string) => {
         router.push(`/(tabs)/(product)/${productId}`);
     };
+
+    const handleDeletingItem = async (cartId: string) => {
+          await deleteItemFromCart(cartId);
+          await fetchData();
+    };
+    
+    const handleMoveItem = async (cartId: string) => {
+        await moveItem(cartId);
+        await fetchData();
+      }
 
     const renderItem = ({item}:{item: cartItem})=>{
       return (
@@ -78,7 +88,38 @@ export default function SavedPage(){
                   >
                     {item.Product.secondaryName}
                   </Text>
+                  <Text
+                    className="text-gray-800"
+                    style={{
+                      fontSize: width * 0.025,
+                      fontFamily: "MontserratRegular",
+                    }}
+                  >
+                    {item.Product.price}
+                  </Text>
                 </View>
+              </View>
+              <View className="flex-row">
+                <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
+                    <Text
+                    style={{
+                      fontSize: width * 0.025,
+                      fontFamily: "MontserratRegular",
+                    }}
+                    >
+                      Remove
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress= {() => handleMoveItem(item.id)} className="ml-4">
+                  <Text
+                  style={{
+                    fontSize: width * 0.025,
+                    fontFamily: "MontserratRegular",
+                  }}
+                  >
+                    Move back to cart
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -88,7 +129,7 @@ export default function SavedPage(){
 
     return (
         <View className="flex-1 p-5 items-center bg-gray-200">
-          <View className="mt-16">
+          <View className="mt-16 w-full">
             <FlatList
             bounces={false}
             data={savedItems}

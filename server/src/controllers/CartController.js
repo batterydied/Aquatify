@@ -239,23 +239,63 @@ class CartController {
   static async saveForLater(req, res) {
     try {
       const { id } = req.params;
-
+  
+      // Find the cart item by its ID
       const cartItem = await Cart.findByPk(id);
       if (!cartItem) {
         return res.status(404).json({ message: "Cart item not found." });
       }
-
-      // Update the item to be saved for later
-      cartItem.isSaved = true;
-      await cartItem.save();
-
-      return res.status(200).json({ message: "Item saved for later.", item: cartItem });
+  
+      // Check if an identical item is already saved for later
+      const existingSavedItem = await Cart.findOne({
+        where: {
+          productId: cartItem.productId,
+          productTypeId: cartItem.productTypeId,
+          isSaved: true, // Ensure it is a saved item
+          userId: cartItem.userId, // Ensure it belongs to the same user
+        },
+      });
+  
+      if (existingSavedItem) {
+        // Fetch product type to check the maximum available quantity
+        const productType = await ProductType.findOne({
+          where: {
+            id: existingSavedItem.productTypeId,
+            productId: existingSavedItem.productId,
+          },
+        });
+  
+        // Update the quantity of the existing saved item
+        const maxStock = productType?.quantity || 0;
+        existingSavedItem.quantity = Math.min(
+          existingSavedItem.quantity + cartItem.quantity,
+          maxStock
+        );
+        await existingSavedItem.save();
+  
+        // Remove the original cart item
+        await cartItem.destroy();
+  
+        return res.status(200).json({
+          message: "Item quantity updated in saved list.",
+          item: existingSavedItem,
+        });
+      } else {
+        // Update the item to be saved for later
+        cartItem.isSaved = true;
+        await cartItem.save();
+  
+        return res.status(200).json({
+          message: "Item saved for later.",
+          item: cartItem,
+        });
+      }
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Failed to save item for later." });
     }
   }
-
+  
   /**
    * Move a saved item back to the cart.
    */

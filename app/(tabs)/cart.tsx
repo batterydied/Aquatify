@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { updateCartQuantity, getAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById, saveItem } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router } from 'expo-router'; 
@@ -60,6 +60,11 @@ export default function CartPage() {
     await deleteAllItemFromCart(userData.id);
     await fetchData();
   };
+
+  const handleSaveItem = async (cartId: string) => {
+    await saveItem(cartId);
+    await fetchData();
+  }
 
   const renderItem = ({ item }: { item: cartItem }) => {
     const productType = getProductType(item.productTypeId, item.Product.productTypes);
@@ -163,7 +168,7 @@ export default function CartPage() {
                 </Text>
               </TouchableOpacity>
               {productType && (
-                <TouchableOpacity className="ml-4">
+                <TouchableOpacity onPress= {() => handleSaveItem(item.id)} className="ml-4">
                   <Text
                     style={{
                       fontSize: width * 0.025,

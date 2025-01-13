@@ -39,6 +39,7 @@ export interface productInterface{
     images: image[];
     reviews: review[];
     productTypes: productType[];
+    price: number;
 }
   
 export interface productType{

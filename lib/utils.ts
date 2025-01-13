@@ -177,11 +177,53 @@ export async function getAllSavedItemsByUserId(userId: string) {
       return null;
     }
     if (!response.ok) {
-      throw new Error(`Failed to fetch saved items: ${response.statusText}`);
+      throw new Error(`${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
     console.error('Error fetching saved items from cart:', error);
+    return null;
+  }
+}
+
+export async function saveItem(cartId: string){
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart/save/${cartId}`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.status === 404) {
+      return null;
+    }
+    if (!response.ok) {
+      throw new Error(`${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error saving items:', error);
+    return null;
+  }
+}
+
+export async function moveItem(cartId: string){
+  try {
+    const response = await fetch(`${BASE_URL}:3000/api/cart/move/${cartId}`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.status === 404) {
+      return null;
+    }
+    if (!response.ok) {
+      throw new Error(`${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error moving items back to cart:', error);
     return null;
   }
 }
