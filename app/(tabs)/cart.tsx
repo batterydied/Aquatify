@@ -139,7 +139,7 @@ export default function CartPage() {
                         fontFamily: "MontserratBold",
                       }}
                     >
-                      {"$" + price.toFixed(2)}
+                      {`$${price.toFixed(2)}`}
                     </Text>
                   </View>
                 )}

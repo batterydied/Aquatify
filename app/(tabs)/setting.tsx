@@ -14,7 +14,10 @@ export default function SettingPage() {
     return (
         <View className="flex-1 justify-center items-center">
             <Text style={{ fontFamily: "MontserratRegular" }}>
-                Hello, {userData.email}
+                Hello, {userData.name}
+            </Text>
+            <Text style={{ fontFamily: "MontserratRegular" }}>
+                Email: {userData.email}
             </Text>
             <Text style={{ fontFamily: "MontserratRegular" }}>
                 ID: {userData.id}

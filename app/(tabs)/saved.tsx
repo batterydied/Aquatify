@@ -3,7 +3,7 @@ import { cartItem } from "@/lib/interface";
 import { useCallback, useState } from "react";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router, useFocusEffect } from "expo-router";
-import { deleteItemFromCart, getAllSavedItemsByUserId, sortImageById, moveItem } from "@/lib/utils";
+import { deleteItemFromCart, getAllSavedItemsByUserId, sortImageById, moveItem, getProductType } from "@/lib/utils";
 
 export default function SavedPage(){
     const [ savedItems, setSavedItems ] = useState<cartItem[]>([]);
@@ -45,6 +45,7 @@ export default function SavedPage(){
       }
 
     const renderItem = ({item}:{item: cartItem})=>{
+      const productType = getProductType(item.productTypeId, item.Product.productTypes);
       return (
         <TouchableOpacity 
         onPress={()=>goToProductPage(item.Product.productId)}
@@ -89,13 +90,21 @@ export default function SavedPage(){
                     {item.Product.secondaryName}
                   </Text>
                   <Text
-                    className="text-gray-800"
                     style={{
                       fontSize: width * 0.025,
                       fontFamily: "MontserratRegular",
                     }}
                   >
-                    {item.Product.price}
+                    {`(${productType?.type})`}
+                  </Text>
+                  <Text
+                    className="text-green-800"
+                    style={{
+                      fontSize: width * 0.04,
+                      fontFamily: "MontserratBold",
+                    }}
+                  >
+                    {`$${productType?.price}`}
                   </Text>
                 </View>
               </View>
@@ -129,6 +138,7 @@ export default function SavedPage(){
 
     return (
         <View className="flex-1 p-5 items-center bg-gray-200">
+          {savedItems.length > 0 ?
           <View className="mt-16 w-full">
             <FlatList
             bounces={false}
@@ -137,6 +147,13 @@ export default function SavedPage(){
             renderItem={renderItem}
             />
           </View>
+          :
+          <View className="flex-1 justify-center">
+            <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
+              You have no saved items!
+            </Text>
+          </View>
+          }
         </View>
       );      
 }

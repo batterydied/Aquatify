@@ -55,15 +55,20 @@ class UserController {
   static async createUser(req, res) {
     try {
       const { name, email } = req.body;
-      const newUser = await User.create({ name, email });
+  
+      // If name is not provided, use the email prefix (before @)
+      const userName = name || email.split('@')[0];
+  
+      // Create the user
+      const newUser = await User.create({ name: userName, email });
       return res.status(201).json(newUser);
     } catch (error) {
-      if (error.name === 'SequelizeUniqueConstraintError'){
-        return res.status(500).json({ error: "This user already exist." });
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        return res.status(500).json({ error: "This user already exists." });
       }
       return res.status(500).json({ error: "An error occurred while creating the user." });
     }
-  }
+  }  
 
   // Update an existing user
   static async updateUser(req, res) {

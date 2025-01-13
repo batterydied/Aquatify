@@ -79,9 +79,9 @@ export async function getAllCartItemsByUser(userId: string){
   }
 }
 
-export function getProductType(id: number, productTypes: productType[]){
+export function getProductType(productTypeId: number, productTypes: productType[]){
   return productTypes.find(
-    (productType) => productType.id === id 
+    (productType) => productType.id === productTypeId 
   ) || null;
 }
 
@@ -150,7 +150,12 @@ export async function deleteItemFromCart(cartId: string){
 
 export async function deleteAllItemFromCart(userId: string){
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`);
+    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (!response.ok) {
       throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
     }
