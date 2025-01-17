@@ -20,7 +20,7 @@ const User = sequelize.define("User", {
       isEmail: true,
     },
   },
-  avatar: {
+  avatarFilePath: {
     type: DataTypes.STRING,
     allowNull: true,
   },

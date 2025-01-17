@@ -74,14 +74,23 @@ class UserController {
   static async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { name, email, password } = req.body;
+      const { name, email } = req.body;
 
       const user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ message: "User not found." });
       }
 
-      await user.update({ name, email, password });
+      const updatedFields = {};
+
+      if (name !== undefined) updatedFields.name = name;
+      if (email !== undefined) updatedFields.email = email;
+      if (avatarFilePath !== undefined) updatedFields.avatarFilePath = avatarFilePath;
+
+      if (Object.keys(updatedFields).length > 0) {
+        await user.update(updatedFields);
+      }
+
       return res.json(user);
     } catch (error) {
       return res.status(500).json({ error: "An error occurred while updating the user." });
