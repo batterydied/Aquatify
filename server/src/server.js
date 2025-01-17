@@ -19,6 +19,7 @@ import AuthRoutes from "./routes/AuthRoutes.js";
 import UserRoutes from './routes/UserRoutes.js';
 import CartRoutes from './routes/CartRoutes.js';
 import ProductRoutes from './routes/ProductRoutes.js';
+import FileRoutes from './routes/FileRoutes.js';
 //import OrderRoutes from './routes/OrderRoutes.js';
  
 dotenv.config();
@@ -63,6 +64,11 @@ class Server{
         next();
     }, CartRoutes);
 
+    this.app.use('/api/file', (req, res, next) => {
+      console.log(`Route hit: ${req.method} ${req.url}`);
+      next();
+  }, FileRoutes);
+
     // this.app.use('/api/order', (req, res, next) => {
     //     console.log(`Route hit: ${req.method} ${req.url}`);
     //     next();
@@ -81,7 +87,7 @@ class Server{
     this.app.use(handleGlobalError);
   }
 
-  start(port = Number(process.env.PORT) || 3000) {
+  start(port = process.env.PORT || 3000) {
     this.app.listen(port, () => {
       console.log(`Server started on port ${port}`);
     });
