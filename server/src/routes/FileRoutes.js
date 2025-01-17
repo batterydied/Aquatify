@@ -35,6 +35,7 @@ class FileRoutes {
   initializeRoutes() {
     this.router.get("/", FileController.retrieveAllFiles);
     this.router.post("/upload", upload.single("file"), FileController.upload);
+    this.router.post("/upload/avatar/", upload.single("file"), FileController.uploadAvatar);
     this.router.get("/:filename", FileController.retrieveFile);
   }
 

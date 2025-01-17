@@ -21,6 +21,7 @@ export default function SettingPage() {
             }} 
             resizeMode="cover"
             source={userData.avatarFilePath ? ({uri: `localhost:3000/api/file/${userData.avatarFilePath}`}) : (require('../../assets/images/default-avatar-icon.png'))}/>
+            
             <Text style={{ fontFamily: "MontserratRegular" }}>
                 Hello, {userData.name}
             </Text>

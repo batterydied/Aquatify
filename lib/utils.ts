@@ -232,3 +232,31 @@ export async function moveItem(cartId: string){
     return null;
   }
 }
+
+export async function uploadAvatar(file: string, previousFilePath: string | null = null) {
+  const formData = new FormData();
+  formData.append("file", file);
+  if (previousFilePath) {
+    formData.append("previousFilePath", previousFilePath);
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}:3000/upload/avatar/`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error uploading avatar:", error);
+    return null;
+  }
+}

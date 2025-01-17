@@ -36,6 +36,48 @@ class FileController {
           },
         });
     }
+
+    static async uploadAvatar(req, res) {
+        try {
+          const previousAvatarPath = req.body.previousAvatarPath; // Path to the previously associated avatar
+          
+          // Check if a file is uploaded
+          if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+          }
+    
+          // If there's a previous avatar, attempt to delete it
+          if (previousAvatarPath) {
+            const filePath = path.join(process.cwd(), previousAvatarPath); // Get the absolute path
+            fs.access(filePath, fs.constants.F_OK, (err) => {
+              if (!err) {
+                fs.unlink(filePath, (unlinkErr) => {
+                  if (unlinkErr) {
+                    console.error(`Failed to delete file: ${filePath}`, unlinkErr);
+                  } else {
+                    console.log(`Deleted previous avatar: ${filePath}`);
+                  }
+                });
+              }
+            });
+          }
+    
+          // Respond with the new file information
+          res.status(200).json({
+            message: "Avatar uploaded successfully",
+            file: {
+              originalName: req.file.originalname,
+              filename: req.file.filename,
+              path: req.file.path,
+              size: req.file.size,
+            },
+          });
+        } catch (error) {
+          console.error("Error during avatar upload:", error);
+          res.status(500).json({ error: "An error occurred during avatar upload." });
+        }
+    }
+
     static retrieveFile(req, res){
         const filePath = path.join(__dirname, "../uploads", req.params.filename);
 
