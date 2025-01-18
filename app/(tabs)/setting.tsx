@@ -5,6 +5,7 @@ import { useUserData } from '@/contexts/UserContext';
 import { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { uploadAvatar } from '@/lib/utils';
 
 export default function SettingPage() {
     const { userData, setUserData } = useUserData();
@@ -73,10 +74,11 @@ export default function SettingPage() {
 
     const saveImage = async (image: string)=>{
         try{
+            await uploadAvatar(null, image);
             setImage(image);
             setIsEditingProfilePicture(false);
         }catch(error){
-
+            console.log(error);
         }
     }
     return (

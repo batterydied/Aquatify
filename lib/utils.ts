@@ -1,180 +1,117 @@
 import { productType, image } from "./interface";
-import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
 
-// Define the UploadResponse type
-type UploadResponse = {
-  message: string;
-  file: {
-    originalName: string;
-    filename: string;
-    path: string;
-    size: number;
-  } | null;
-};
-
-function getIP(){
+function getIP() {
   return "192.168.1.23";
 }
+
 const BASE_URL = "http://" + getIP();
 
 export let userId: string = '';
 
 export async function getUserData(email: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/user/fetch/${email}`); // Make the request
-    
-    if (!response.ok) { // Check for other response statuses
-      throw new Error(`Status: ${response.status}`);
-    }
-    
-    const data = await response.json(); // Parse the response JSON
-    return data;
+    const response = await axios.get(`${BASE_URL}:3000/api/user/fetch/${email}`);
+    return response.data;
   } catch (error) {
+    console.error('Error fetching user data:', error);
     return null;
   }
 }
-
 
 export async function getProducts() {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/product`); // Make the request
-    if (!response.ok) { // Check for response status
-      throw new Error(`Status: ${response.status}`);
-    }
-    const data = await response.json(); // Parse the response JSON
-    return data;
+    const response = await axios.get(`${BASE_URL}:3000/api/product`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error); // Log any errors
+    console.error('Error fetching products:', error);
     return null;
   }
 }
 
-export async function getProductById(productId: string){
+export async function getProductById(productId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/product/${productId}`); // Make the request
-    if (!response.ok) { // Check for response status
-      throw new Error(`Status: ${response.status}`);
-    }
-    const data = await response.json(); // Parse the response JSON
-    return data;
+    const response = await axios.get(`${BASE_URL}:3000/api/product/${productId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error); // Log any errors
+    console.error('Error fetching product by ID:', error);
     return null;
   }
 }
 
-export async function getAllCartItems(){
+export async function getAllCartItems() {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart`); // Make the request
-    if (!response.ok) { // Check for response status
-      throw new Error(`Status: ${response.status}`);
-    }
-    const data = await response.json(); // Parse the response JSON
-    return data;
+    const response = await axios.get(`${BASE_URL}:3000/api/cart`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error); // Log any errors
+    console.error('Error fetching cart items:', error);
     return null;
   }
 }
 
-export async function getAllCartItemsByUser(userId: string){
+export async function getAllCartItemsByUser(userId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`); // Make the request
-    if (!response.ok) { // Check for response status
-      throw new Error(`Status: ${response.status}`);
-    }
-    const data = await response.json(); // Parse the response JSON
-    return data;
+    const response = await axios.get(`${BASE_URL}:3000/api/cart/user/${userId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error); // Log any errors
+    console.error('Error fetching user cart items:', error);
     return null;
   }
 }
 
-export function getProductType(productTypeId: number, productTypes: productType[]){
+export function getProductType(productTypeId: number, productTypes: productType[]) {
   return productTypes.find(
-    (productType) => productType.id === productTypeId 
+    (productType) => productType.id === productTypeId
   ) || null;
 }
 
-export function calculatePriceWithQuantity(quantity: number, price: number){
+export function calculatePriceWithQuantity(quantity: number, price: number) {
   return Number((price * quantity).toFixed(2));
 }
 
 export async function updateCartQuantity(quantity: number, cartId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/${cartId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ quantity }),
+    const response = await axios.put(`${BASE_URL}:3000/api/cart/${cartId}`, {
+      quantity,
     });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error updating cart quantity:', error);
     return null;
   }
 }
 
-export async function addItemToCart(productId: string, productTypeId: number, quantity: number, userId: string){
+export async function addItemToCart(productId: string, productTypeId: number, quantity: number, userId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ productId, productTypeId, quantity, userId }),
+    const response = await axios.post(`${BASE_URL}:3000/api/cart`, {
+      productId,
+      productTypeId,
+      quantity,
+      userId,
     });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
-    console.error('Error adding item to cart: ', error);
+    console.error('Error adding item to cart:', error);
     return null;
   }
 }
 
-export async function deleteItemFromCart(cartId: string){
+export async function deleteItemFromCart(cartId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/${cartId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    const response = await axios.delete(`${BASE_URL}:3000/api/cart/${cartId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error deleting item from cart: ', error);
+    console.error('Error deleting item from cart:', error);
     return null;
   }
 }
 
-export async function deleteAllItemFromCart(userId: string){
+export async function deleteAllItemFromCart(userId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/user/${userId}`,{
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}, Message: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    const response = await axios.delete(`${BASE_URL}:3000/api/cart/user/${userId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error deleting item from cart: ', error);
+    console.error('Error deleting all items from cart:', error);
     return null;
   }
 }
@@ -183,123 +120,49 @@ export function sortImageById(images: image[]): image[] {
   if (!Array.isArray(images)) {
     throw new Error("Invalid input: images must be an array.");
   }
-
   return images.sort((a, b) => a.id - b.id);
 }
 
 export async function getAllSavedItemsByUserId(userId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/saved/user/${userId}`);
-    if (response.status === 404) {
-      return null;
-    }
-    if (!response.ok) {
-      throw new Error(`${response.statusText}`);
-    }
-    return await response.json();
+    const response = await axios.get(`${BASE_URL}:3000/api/cart/saved/user/${userId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching saved items from cart:', error);
     return null;
   }
 }
 
-export async function saveItem(cartId: string){
+export async function saveItem(cartId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/save/${cartId}`,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.status === 404) {
-      return null;
-    }
-    if (!response.ok) {
-      throw new Error(`${response.statusText}`);
-    }
-    return await response.json();
+    const response = await axios.post(`${BASE_URL}:3000/api/cart/save/${cartId}`);
+    return response.data;
   } catch (error) {
-    console.error('Error saving items:', error);
     return null;
   }
 }
 
-export async function moveItem(cartId: string){
+export async function moveItem(cartId: string) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/api/cart/move/${cartId}`,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await axios.post(`${BASE_URL}:3000/api/cart/move/${cartId}`);
     if (response.status === 404) {
       return null;
     }
-    if (!response.ok) {
-      throw new Error(`${response.statusText}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('Error moving items back to cart:', error);
     return null;
   }
 }
 
-export async function uploadAvatar(previousFilePath: string | null = null) {
+export async function uploadAvatar(previousUri: string | null, uri: string) {
   try {
-    // Launch image picker
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [1, 1],  // For square cropping
-      quality: 1,
-    });
-
-    if (result.canceled || !result.assets || result.assets.length === 0) {
-      console.warn("Image selection was canceled.");
-      return null;
-    }
-
-    console.log(result);
-    console.log("Selected image");
-
-    // Check if a valid asset exists
-    if (!result.assets || result.assets.length === 0) {
-      console.warn("No valid image asset found.");
-      return null;
-    }
-
-    // Convert the URI to file Blob (binary data)
-    const response = await fetch(result.assets[0].uri);
-    const blob = await response.blob();  // Converts URI to Blob
-
-    // Prepare FormData
     const formData = new FormData();
-    const fileName = result.assets[0].fileName || undefined
-    formData.append("file", blob, fileName);  // Append the actual file (Blob)
+    formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
 
-    // If there is a previous file path, append it
-    if (previousFilePath !== null && previousFilePath !== undefined) {
-      formData.append("previousFilePath", previousFilePath);
-    }
-
-    // Upload file to server
-    const uploadResponse = await fetch("http://localhost:3000/upload/avatar/", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    if (!uploadResponse.ok) {
-      throw new Error(`Failed to upload avatar: ${uploadResponse.statusText}`);
-    }
-
-    const data = await uploadResponse.json();
-    return data;
+    const response = await axios.post(`${BASE_URL}:3000/api/file/upload`, formData);
+    return response.data;
   } catch (error) {
-    console.error("Error selecting or uploading avatar:", error);
+    console.error("Error uploading avatar:", error);
     return null;
   }
 }
