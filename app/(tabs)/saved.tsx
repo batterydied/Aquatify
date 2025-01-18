@@ -149,6 +149,14 @@ export default function SavedPage(){
           </View>
           :
           <View className="flex-1 justify-center">
+            <Image
+            className="absolute -bottom-10 left-0"
+            source={require("../../assets/images/black-cat.png")}
+            style={{
+              width: width * .5,
+              height: width * .5
+            }}
+            />
             <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
               You have no saved items!
             </Text>

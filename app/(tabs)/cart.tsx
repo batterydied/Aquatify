@@ -253,8 +253,11 @@ export default function CartPage() {
       ) : (
         <View className="mt-16 flex-1 justify-center items-center">
           <Image
-            className="w-[300px] h-[300px]"
             source={require("../../assets/images/basket.png")}
+            style={{
+              width: width * .6,
+              height: width * .6
+            }}
           />
           <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
             Your cart is empty!

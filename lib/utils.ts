@@ -1,4 +1,16 @@
 import { productType, image } from "./interface";
+import * as ImagePicker from 'expo-image-picker';
+
+// Define the UploadResponse type
+type UploadResponse = {
+  message: string;
+  file: {
+    originalName: string;
+    filename: string;
+    path: string;
+    size: number;
+  } | null;
+};
 
 function getIP(){
   return "192.168.1.23";
@@ -233,30 +245,61 @@ export async function moveItem(cartId: string){
   }
 }
 
-export async function uploadAvatar(file: string, previousFilePath: string | null = null) {
-  const formData = new FormData();
-  formData.append("file", file);
-  if (previousFilePath) {
-    formData.append("previousFilePath", previousFilePath);
-  }
-
+export async function uploadAvatar(previousFilePath: string | null = null) {
   try {
-    const response = await fetch(`${BASE_URL}:3000/upload/avatar/`, {
-      method: "POST",
-      body: formData,
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],  // For square cropping
+      quality: 1,
     });
 
-    if (response.status === 404) {
+    if (result.canceled || !result.assets || result.assets.length === 0) {
+      console.warn("Image selection was canceled.");
       return null;
     }
 
-    if (!response.ok) {
-      throw new Error(`${response.statusText}`);
+    console.log(result);
+    console.log("Selected image");
+
+    // Check if a valid asset exists
+    if (!result.assets || result.assets.length === 0) {
+      console.warn("No valid image asset found.");
+      return null;
     }
 
-    return await response.json();
+    // Convert the URI to file Blob (binary data)
+    const response = await fetch(result.assets[0].uri);
+    const blob = await response.blob();  // Converts URI to Blob
+
+    // Prepare FormData
+    const formData = new FormData();
+    const fileName = result.assets[0].fileName || undefined
+    formData.append("file", blob, fileName);  // Append the actual file (Blob)
+
+    // If there is a previous file path, append it
+    if (previousFilePath !== null && previousFilePath !== undefined) {
+      formData.append("previousFilePath", previousFilePath);
+    }
+
+    // Upload file to server
+    const uploadResponse = await fetch("http://localhost:3000/upload/avatar/", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error(`Failed to upload avatar: ${uploadResponse.statusText}`);
+    }
+
+    const data = await uploadResponse.json();
+    return data;
   } catch (error) {
-    console.error("Error uploading avatar:", error);
+    console.error("Error selecting or uploading avatar:", error);
     return null;
   }
 }
