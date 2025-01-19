@@ -83,91 +83,100 @@ export default function SettingPage() {
     }
     return (
         <View className="flex-1 justify-center items-center bg-gray-200">
-            <View className="m-3 relative">
-                <Image
-                    className="rounded-full border-2 border-gray-400"
-                    style={{
-                        width: imageWidth,
-                        height: imageWidth,
-                    }}
-                    resizeMode="cover"
-                    source={
-                        /*userData.avatarFilePath*/ image
-                            ? { /*uri: `http://localhost:3000/api/file/${userData.avatarFilePath}`*/uri:image }
-                            : require('../../assets/images/default-avatar-icon.png')
-                    }
-                />
-                <TouchableOpacity
-                    className="absolute"
-                    style={{
-                        top: imageWidth - 35, // Adjust distance from the bottom of the image
-                        left: imageWidth - 35, // Adjust distance from the right of the image
-                    }}
-                    activeOpacity={0.7}
-                    onPress={() => setIsEditingProfilePicture(true)}
-                >
-                    <View className="bg-gray-100 p-2 rounded-full">
-                        <FontAwesome name="camera" size={20} color="gray" />
-                    </View>
-                </TouchableOpacity>
-            </View>
-
-            <Modal animationType="slide" visible={isEditingProfilePicture} transparent={true}>
-                <TouchableWithoutFeedback onPress={() => setIsEditingProfilePicture(false)}>
-                    <View className="flex-1 justify-center items-center bg-black/50">
-                        <View className="bg-white flex-col justify-center items-center p-4 rounded-md">
-                            <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>Profile photo</Text>
-                            <View className="flex-row">
-                                <TouchableOpacity onPress={()=>uploadImage("camera")}>
-                                    <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                        <FontAwesome name="camera" size={20} color="gray" />
-                                        <Text style={{ fontFamily: "MontserratRegular" }}>Camera</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={()=>uploadImage("gallery")}>
-                                    <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                        <FontAwesome name="image" size={20} color="gray" />
-                                        <Text style={{ fontFamily: "MontserratRegular" }}>Gallery</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                        <FontAwesome name="trash" size={20} color="gray" />
-                                        <Text style={{ fontFamily: "MontserratRegular" }}>Remove</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setIsEditingProfile(true)}>
-                <View className="bg-gray-600 p-2 rounded-lg my-2">
-                    <Text className="text-white">Edit profile</Text>
+            <Image
+                className="rounded-full border-2 border-gray-400"
+                style={{
+                    width: imageWidth,
+                    height: imageWidth,
+                }}
+                resizeMode="cover"
+                source={
+                    /*userData.avatarFilePath*/ image
+                        ? { /*uri: `http://localhost:3000/api/file/${userData.avatarFilePath}`*/uri:image }
+                        : require('../../assets/images/default-avatar-icon.png')
+                }
+             />
+            <TouchableOpacity activeOpacity={0.7} onPress={()=>setIsEditingProfile(true)} className="m-4 bg-white p-2 rounded-lg">
+                <View>
+                    <Text style={{fontFamily: "MontserratRegular"}} className="text-lg">
+                        Edit profile
+                    </Text>
                 </View>
             </TouchableOpacity>
-            <Text style={{ fontFamily: 'MontserratRegular' }}>Hello, {userData.name}</Text>
-            <Text style={{ fontFamily: 'MontserratRegular' }}>Email: {userData.email}</Text>
-            <Text style={{ fontFamily: 'MontserratRegular' }}>ID: {userData.id}</Text>
             <SignOutButton />
             <Modal animationType="slide" visible={isEditingProfile}>
-                <View className="p-5 bg-gray-200 flex-1">
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="ml-4 mt-16 mb-0 absolute z-10"
-                        onPress={() => setIsEditingProfile(false)}
-                    >
-                        <FontAwesome name="arrow-left" size={20} color="gray" />
-                    </TouchableOpacity>
-                    <View className="flex-1 items-center mt-16">
+                <View className="flex-1 bg-gray-200 justify-center items-center">
+                    <View className="m-3 relative">
+                        <Image
+                            className="rounded-full border-2 border-gray-400"
+                            style={{
+                                width: imageWidth,
+                                height: imageWidth,
+                            }}
+                            resizeMode="cover"
+                            source={
+                                /*userData.avatarFilePath*/ image
+                                    ? { /*uri: `http://localhost:3000/api/file/${userData.avatarFilePath}`*/uri:image }
+                                    : require('../../assets/images/default-avatar-icon.png')
+                            }
+                        />
                         <TouchableOpacity
+                            className="absolute"
+                            style={{
+                                top: imageWidth - 35, // Adjust distance from the bottom of the image
+                                left: imageWidth - 35, // Adjust distance from the right of the image
+                            }}
                             activeOpacity={0.7}
+                            onPress={() => setIsEditingProfilePicture(true)}
                         >
-                            <View className="bg-blue-600 p-2 rounded-lg my-2">
-                                <Text className="text-white">Edit profile picture</Text>
+                            <View className="bg-gray-100 p-2 rounded-full">
+                                <FontAwesome name="camera" size={20} color="gray" />
                             </View>
                         </TouchableOpacity>
                     </View>
+                    <TouchableOpacity>
+                        <View className="rounded-lg m-2">
+                            <Text className="text-blue-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
+                                Save changes
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setIsEditingProfile(false)}>
+                        <View className= "rounded-lg m-2">
+                            <Text className="text-red-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
+                                Discard changes
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Modal animationType="slide" visible={isEditingProfilePicture} transparent={true}>
+                        <TouchableWithoutFeedback onPress={() => setIsEditingProfilePicture(false)}>
+                            <View className="flex-1 justify-center items-center bg-black/50">
+                                <View className="bg-white flex-col justify-center items-center p-4 rounded-md">
+                                    <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>Profile photo</Text>
+                                    <View className="flex-row">
+                                        <TouchableOpacity onPress={()=>uploadImage("camera")}>
+                                            <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
+                                                <FontAwesome name="camera" size={20} color="gray" />
+                                                <Text style={{ fontFamily: "MontserratRegular" }}>Camera</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={()=>uploadImage("gallery")}>
+                                            <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
+                                                <FontAwesome name="image" size={20} color="gray" />
+                                                <Text style={{ fontFamily: "MontserratRegular" }}>Gallery</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity>
+                                            <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
+                                                <FontAwesome name="trash" size={20} color="gray" />
+                                                <Text style={{ fontFamily: "MontserratRegular" }}>Remove</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
                 </View>
             </Modal>
         </View>

@@ -1,6 +1,6 @@
 import React from 'react'; // Add this import
 import { useClerk } from '@clerk/clerk-expo'; // Import useClerk from @clerk/clerk-expo
-import { Button } from 'react-native'; // Basic React Native components
+import { TouchableOpacity, View, ViewStyle, Text } from 'react-native'; // Basic React Native components
 import { useRouter } from 'expo-router'; // Import useRouter for navigation
 
 export default function SignOutButton() {
@@ -17,6 +17,12 @@ export default function SignOutButton() {
   };
 
   return (
-      <Button title="Sign Out" onPress={handleSignOut} />
+    <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7}>
+      <View className="p-2 bg-white rounded-lg">
+        <Text className="text-red-600 text-lg" style={{fontFamily: "MontserratRegular"}}>
+          Sign out
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 }
