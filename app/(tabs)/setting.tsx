@@ -2,7 +2,7 @@ import { Text, View, Image, useWindowDimensions, TouchableOpacity, Modal, Toucha
 import SignOutButton from '../../components/sign-out';
 import { Redirect } from 'expo-router';
 import { useUserData } from '@/contexts/UserContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadAvatar } from '@/lib/utils';
@@ -10,77 +10,76 @@ import { uploadAvatar } from '@/lib/utils';
 export default function SettingPage() {
     const { userData, setUserData } = useUserData();
     const { width } = useWindowDimensions();
-    const [isEditingProfile, setIsEditingProfile] = useState(false);
-    const [isEditingProfilePicture, setIsEditingProfilePicture] = useState(false);
+    const [isEditingProfile, setEditingProfile] = useState(false);
+    const [isEditingProfilePicture, setEditingProfilePicture] = useState(false);
     const imageWidth = width * 0.25;
-    const [ image, setImage ] = useState<string | null>(null);
+
+    // New state to track original image URI
+    const [originalImage, setOriginalImage] = useState<string | null>(null);
+    const [image, setImage] = useState<string | null>(null);
 
     // Redirect if user is not logged in
     if (!userData) {
         return <Redirect href="/sign-in" />;
     }
 
-    if (userData.avatarFilePath){
-        setImage(userData.avatarFilePath);
-    }
+    useEffect(() => {
+        if (userData.avatarFileURI) {
+            setImage(userData.avatarFileURI);
+            setOriginalImage(userData.avatarFileURI); // Set original image initially
+        }
+    }, [userData.avatarFileURI]);
 
     const uploadImage = async (mode: string) => {
-      try {
-        let result: ImagePicker.ImagePickerResult;
-    
-        if (mode === 'gallery') {
-          // Request media library permissions
-          const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (!permission.granted) {
-            alert('Permission to access the gallery is required!');
-            return;
-          }
-    
-          // Launch image library
-          result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ["images"],
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-          });
-        } else {
-          // Request camera permissions
-          const permission = await ImagePicker.requestCameraPermissionsAsync();
-          if (!permission.granted) {
-            alert('Permission to access the camera is required!');
-            return;
-          }
-    
-          // Launch camera
-          result = await ImagePicker.launchCameraAsync({
-            cameraType: ImagePicker.CameraType.front,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-          });
-        }
-    
-        // Check if the operation was canceled
-        if (!result.canceled) {
-          console.log(result);
-          await saveImage(result.assets[0].uri); // Save the image URI
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Error uploading image');
-      }
-    };
-    
+        try {
+            let result: ImagePicker.ImagePickerResult;
 
-    const saveImage = async (image: string)=>{
-        try{
-            await uploadAvatar(null, image);
-            setImage(image);
-            setIsEditingProfilePicture(false);
-        }catch(error){
-            console.log(error);
+            if (mode === 'gallery') {
+                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the gallery is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ["images"],
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            } else {
+                const permission = await ImagePicker.requestCameraPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the camera is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchCameraAsync({
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            }
+
+            if (!result.canceled) {
+                saveImage(result.assets[0].uri); // Save the new image URI
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error uploading image');
         }
-    }
+    };
+
+    const saveImage = (image: string) => {
+        setImage(image);
+        setEditingProfilePicture(false);
+    };
+
+    const discardChanges = () => {
+        setImage(originalImage); // Reset to the original image
+        setEditingProfile(false); // Close the modal
+    };
+
     return (
         <View className="flex-1 justify-center items-center bg-gray-200">
             <Image
@@ -91,14 +90,14 @@ export default function SettingPage() {
                 }}
                 resizeMode="cover"
                 source={
-                    /*userData.avatarFilePath*/ image
-                        ? { /*uri: `http://localhost:3000/api/file/${userData.avatarFilePath}`*/uri:image }
+                    image
+                        ? { uri: image }
                         : require('../../assets/images/default-avatar-icon.png')
                 }
-             />
-            <TouchableOpacity activeOpacity={0.7} onPress={()=>setIsEditingProfile(true)} className="m-4 bg-white p-2 rounded-lg">
+            />
+            <TouchableOpacity activeOpacity={0.7} onPress={() => setEditingProfile(true)} className="m-4 bg-white p-2 rounded-lg">
                 <View>
-                    <Text style={{fontFamily: "MontserratRegular"}} className="text-lg">
+                    <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg">
                         Edit profile
                     </Text>
                 </View>
@@ -115,61 +114,60 @@ export default function SettingPage() {
                             }}
                             resizeMode="cover"
                             source={
-                                /*userData.avatarFilePath*/ image
-                                    ? { /*uri: `http://localhost:3000/api/file/${userData.avatarFilePath}`*/uri:image }
+                                image
+                                    ? { uri: image }
                                     : require('../../assets/images/default-avatar-icon.png')
                             }
                         />
                         <TouchableOpacity
                             className="absolute"
                             style={{
-                                top: imageWidth - 35, // Adjust distance from the bottom of the image
-                                left: imageWidth - 35, // Adjust distance from the right of the image
+                                top: imageWidth - 35,
+                                left: imageWidth - 35,
                             }}
                             activeOpacity={0.7}
-                            onPress={() => setIsEditingProfilePicture(true)}
+                            onPress={() => setEditingProfilePicture(true)}
                         >
                             <View className="bg-gray-100 p-2 rounded-full">
                                 <FontAwesome name="camera" size={20} color="gray" />
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                        uploadAvatar(null, image, userData.id);
+                        setOriginalImage(image); // Update original image upon save
+                        setEditingProfile(false);
+                    }}>
                         <View className="rounded-lg m-2">
-                            <Text className="text-blue-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
+                            <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
                                 Save changes
                             </Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setIsEditingProfile(false)}>
-                        <View className= "rounded-lg m-2">
-                            <Text className="text-red-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
+                    <TouchableOpacity onPress={discardChanges}>
+                        <View className="rounded-lg m-2">
+                            <Text className="text-red-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
                                 Discard changes
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    {/* Modal for editing profile picture */}
                     <Modal animationType="slide" visible={isEditingProfilePicture} transparent={true}>
-                        <TouchableWithoutFeedback onPress={() => setIsEditingProfilePicture(false)}>
+                        <TouchableWithoutFeedback onPress={() => setEditingProfilePicture(false)}>
                             <View className="flex-1 justify-center items-center bg-black/50">
                                 <View className="bg-white flex-col justify-center items-center p-4 rounded-md">
                                     <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>Profile photo</Text>
                                     <View className="flex-row">
-                                        <TouchableOpacity onPress={()=>uploadImage("camera")}>
+                                        <TouchableOpacity onPress={() => uploadImage("camera")}>
                                             <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
                                                 <FontAwesome name="camera" size={20} color="gray" />
                                                 <Text style={{ fontFamily: "MontserratRegular" }}>Camera</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={()=>uploadImage("gallery")}>
+                                        <TouchableOpacity onPress={() => uploadImage("gallery")}>
                                             <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
                                                 <FontAwesome name="image" size={20} color="gray" />
                                                 <Text style={{ fontFamily: "MontserratRegular" }}>Gallery</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                            <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                                <FontAwesome name="trash" size={20} color="gray" />
-                                                <Text style={{ fontFamily: "MontserratRegular" }}>Remove</Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>

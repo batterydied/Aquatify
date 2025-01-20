@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from "url";
 import fs from "fs";
+import axios from "axios";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,13 +40,14 @@ class FileController {
 
     static async uploadAvatar(req, res) {
         try {
+          const { id } = req.params;
           const previousAvatarPath = req.body.previousAvatarPath; // Path to the previously associated avatar
-          
+      
           // Check if a file is uploaded
           if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
           }
-    
+      
           // If there's a previous avatar, attempt to delete it
           if (previousAvatarPath) {
             const filePath = path.join(process.cwd(), previousAvatarPath); // Get the absolute path
@@ -61,13 +63,22 @@ class FileController {
               }
             });
           }
-    
+      
+          // Construct the full URI for the uploaded file
+          const fileURI = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      
+          // Update the user's avatarFileURI in the database
+          await axios.put(`http://192.168.1.23:3000/api/user/${id}`, {
+            avatarFileURI: fileURI,
+          });
+      
           // Respond with the new file information
           res.status(200).json({
             message: "Avatar uploaded successfully",
             file: {
               originalName: req.file.originalname,
               filename: req.file.filename,
+              uri: fileURI,
               path: req.file.path,
               size: req.file.size,
             },
@@ -76,7 +87,8 @@ class FileController {
           console.error("Error during avatar upload:", error);
           res.status(500).json({ error: "An error occurred during avatar upload." });
         }
-    }
+      }
+      
 
     static retrieveFile(req, res){
         const filePath = path.join(__dirname, "../uploads", req.params.filename);

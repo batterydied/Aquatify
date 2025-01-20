@@ -32,6 +32,7 @@ class Server{
   }
 
   configureMiddleware(){
+    this.app.use('/uploads', express.static(path.join(__dirname, './uploads')));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cors({

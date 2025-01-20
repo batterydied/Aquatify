@@ -74,7 +74,7 @@ class UserController {
   static async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { name, email } = req.body;
+      const { name, email, avatarFileURI} = req.body;
 
       const user = await User.findByPk(id);
       if (!user) {
@@ -85,7 +85,7 @@ class UserController {
 
       if (name !== undefined) updatedFields.name = name;
       if (email !== undefined) updatedFields.email = email;
-      if (avatarFilePath !== undefined) updatedFields.avatarFilePath = avatarFilePath;
+      if (avatarFileURI !== undefined) updatedFields.avatarFileURI = avatarFileURI;
 
       if (Object.keys(updatedFields).length > 0) {
         await user.update(updatedFields);
@@ -169,8 +169,21 @@ class UserController {
       }
     }
   }
-  
 
+  static async deleteAvatar(req, res){
+    try {
+      const { id } = req.params;
+
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      await user.update({avatarFileURI: null});
+      return res.status(200).json({ message: "User avatar deleted successfully." });
+    } catch (error) {
+      return res.status(500).json({ error: "An error occurred while deleting the user avatar." });
+    }
+  }
 }
 
 export default UserController;

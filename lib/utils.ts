@@ -5,13 +5,13 @@ function getIP() {
   return "192.168.1.23";
 }
 
-const BASE_URL = "http://" + getIP();
+export const BASE_URL = "http://" + getIP() + ":3000";
 
 export let userId: string = '';
 
 export async function getUserData(email: string) {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/user/fetch/${email}`);
+    const response = await axios.get(`${BASE_URL}/api/user/fetch/${email}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -21,7 +21,7 @@ export async function getUserData(email: string) {
 
 export async function getProducts() {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/product`);
+    const response = await axios.get(`${BASE_URL}/api/product`);
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -31,7 +31,7 @@ export async function getProducts() {
 
 export async function getProductById(productId: string) {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/product/${productId}`);
+    const response = await axios.get(`${BASE_URL}/api/product/${productId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching product by ID:', error);
@@ -41,7 +41,7 @@ export async function getProductById(productId: string) {
 
 export async function getAllCartItems() {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/cart`);
+    const response = await axios.get(`${BASE_URL}/api/cart`);
     return response.data;
   } catch (error) {
     console.error('Error fetching cart items:', error);
@@ -51,7 +51,7 @@ export async function getAllCartItems() {
 
 export async function getAllCartItemsByUser(userId: string) {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/cart/user/${userId}`);
+    const response = await axios.get(`${BASE_URL}/api/cart/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user cart items:', error);
@@ -71,7 +71,7 @@ export function calculatePriceWithQuantity(quantity: number, price: number) {
 
 export async function updateCartQuantity(quantity: number, cartId: string) {
   try {
-    const response = await axios.put(`${BASE_URL}:3000/api/cart/${cartId}`, {
+    const response = await axios.put(`${BASE_URL}/api/cart/${cartId}`, {
       quantity,
     });
     return response.data;
@@ -83,7 +83,7 @@ export async function updateCartQuantity(quantity: number, cartId: string) {
 
 export async function addItemToCart(productId: string, productTypeId: number, quantity: number, userId: string) {
   try {
-    const response = await axios.post(`${BASE_URL}:3000/api/cart`, {
+    const response = await axios.post(`${BASE_URL}/api/cart`, {
       productId,
       productTypeId,
       quantity,
@@ -98,7 +98,7 @@ export async function addItemToCart(productId: string, productTypeId: number, qu
 
 export async function deleteItemFromCart(cartId: string) {
   try {
-    const response = await axios.delete(`${BASE_URL}:3000/api/cart/${cartId}`);
+    const response = await axios.delete(`${BASE_URL}/api/cart/${cartId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting item from cart:', error);
@@ -108,7 +108,7 @@ export async function deleteItemFromCart(cartId: string) {
 
 export async function deleteAllItemFromCart(userId: string) {
   try {
-    const response = await axios.delete(`${BASE_URL}:3000/api/cart/user/${userId}`);
+    const response = await axios.delete(`${BASE_URL}/api/cart/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting all items from cart:', error);
@@ -125,7 +125,7 @@ export function sortImageById(images: image[]): image[] {
 
 export async function getAllSavedItemsByUserId(userId: string) {
   try {
-    const response = await axios.get(`${BASE_URL}:3000/api/cart/saved/user/${userId}`);
+    const response = await axios.get(`${BASE_URL}/api/cart/saved/user/${userId}`);
     return response.data;
   } catch (error) {
     return null;
@@ -134,7 +134,7 @@ export async function getAllSavedItemsByUserId(userId: string) {
 
 export async function saveItem(cartId: string) {
   try {
-    const response = await axios.post(`${BASE_URL}:3000/api/cart/save/${cartId}`);
+    const response = await axios.post(`${BASE_URL}/api/cart/save/${cartId}`);
     return response.data;
   } catch (error) {
     return null;
@@ -143,7 +143,7 @@ export async function saveItem(cartId: string) {
 
 export async function moveItem(cartId: string) {
   try {
-    const response = await axios.post(`${BASE_URL}:3000/api/cart/move/${cartId}`);
+    const response = await axios.post(`${BASE_URL}/api/cart/move/${cartId}`);
     if (response.status === 404) {
       return null;
     }
@@ -154,15 +154,28 @@ export async function moveItem(cartId: string) {
   }
 }
 
-export async function uploadAvatar(previousUri: string | null, uri: string) {
+export async function uploadAvatar(previousUri: string | null, uri: string | null, id: string) {
+  if(!uri){
+    return null;
+  }
   try {
     const formData = new FormData();
     formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
 
-    const response = await axios.post(`${BASE_URL}:3000/api/file/upload`, formData);
+    const response = await axios.post(`${BASE_URL}/api/file/upload/avatar/${id}`, formData);
     return response.data;
   } catch (error) {
     console.error("Error uploading avatar:", error);
+    return null;
+  }
+}
+
+export async function deleteAvatar(id: string){
+  try{
+    const response = await axios.post(`${BASE_URL}/api/file/delete/avatar/${id}`);
+    return response.data;
+  }catch(error){
+    console.error("Error deleting avatar:", error);
     return null;
   }
 }
