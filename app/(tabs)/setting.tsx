@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadAvatar } from '@/lib/utils';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingPage() {
     const { userData, setUserData } = useUserData();
@@ -70,6 +71,10 @@ export default function SettingPage() {
         }
     };
 
+    const removeImage = () => {
+        setImage(null);
+    }
+
     const saveImage = (image: string) => {
         setImage(image);
         setEditingProfilePicture(false);
@@ -81,7 +86,7 @@ export default function SettingPage() {
     };
 
     return (
-        <View className="flex-1 justify-center items-center bg-gray-200">
+        <SafeAreaView className="flex-1 bg-gray-200 items-center">
             <Image
                 className="rounded-full border-2 border-gray-400"
                 style={{
@@ -158,16 +163,22 @@ export default function SettingPage() {
                                 <View className="bg-white flex-col justify-center items-center p-4 rounded-md">
                                     <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>Profile photo</Text>
                                     <View className="flex-row">
-                                        <TouchableOpacity onPress={() => uploadImage("camera")}>
+                                        <TouchableOpacity onPress={() => uploadImage("camera")} className="w-[25%]">
                                             <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
                                                 <FontAwesome name="camera" size={20} color="gray" />
                                                 <Text style={{ fontFamily: "MontserratRegular" }}>Camera</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => uploadImage("gallery")}>
+                                        <TouchableOpacity onPress={() => uploadImage("gallery")} className="w-[25%]">
                                             <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
                                                 <FontAwesome name="image" size={20} color="gray" />
                                                 <Text style={{ fontFamily: "MontserratRegular" }}>Gallery</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={removeImage} className="w-[25%]">
+                                            <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
+                                                <FontAwesome name="trash" size={20} color="gray" />
+                                                <Text style={{ fontFamily: "MontserratRegular" }}>Remove</Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -177,6 +188,6 @@ export default function SettingPage() {
                     </Modal>
                 </View>
             </Modal>
-        </View>
+        </SafeAreaView>
     );
 }

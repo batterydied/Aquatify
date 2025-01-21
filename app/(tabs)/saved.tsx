@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router, useFocusEffect } from "expo-router";
 import { deleteItemFromCart, getAllSavedItemsByUserId, sortImageById, moveItem, getProductType } from "@/lib/utils";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SavedPage(){
     const [ savedItems, setSavedItems ] = useState<cartItem[]>([]);
@@ -137,9 +138,9 @@ export default function SavedPage(){
     }
 
     return (
-        <View className="flex-1 p-5 items-center bg-gray-200">
+        <SafeAreaView className="flex-1 p-5 items-center bg-gray-200">
           {savedItems.length > 0 ?
-          <View className="mt-16 w-full">
+          <View className="w-full">
             <FlatList
             bounces={false}
             data={savedItems}
@@ -162,6 +163,6 @@ export default function SavedPage(){
             </Text>
           </View>
           }
-        </View>
+        </SafeAreaView>
       );      
 }

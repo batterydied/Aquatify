@@ -7,6 +7,7 @@ import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteA
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect, router } from 'expo-router'; 
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CartPage() {
   const [ cartItems, setCartItems ] = useState<cartItem[]>([]);
@@ -199,9 +200,9 @@ export default function CartPage() {
   };
 
   return (
-    <View className="flex-1 p-5 items-center bg-gray-200">
+    <SafeAreaView className="flex-1 p-5 items-center bg-gray-200">
       {cartItems.length > 0 ? (
-        <View className="mt-16 w-full">
+        <View className="w-full">
           <View className="mb-2">
             <Text
               style={{
@@ -264,6 +265,6 @@ export default function CartPage() {
           </Text>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

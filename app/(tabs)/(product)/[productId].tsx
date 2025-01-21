@@ -11,6 +11,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { dateFormatting } from '@/lib/dateFormat';
 import { useUserData } from '@/contexts/UserContext';
 import { Redirect } from 'expo-router'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProductPage() {
     const { userData } = useUserData();
@@ -245,7 +246,7 @@ export default function ProductPage() {
     .sort((a, b) => b.rating - a.rating) // Sort by updatedAt (newest first)
     .slice(0, 3); // Get the first 3 reviews
     return (
-        <View className="p-5 bg-gray-200 flex-1">
+        <SafeAreaView className="p-5 bg-gray-200 flex-1">
             <TouchableOpacity
             activeOpacity={0.7}
             className="ml-4 mt-16 mb-0 absolute z-10"
@@ -259,7 +260,6 @@ export default function ProductPage() {
                 />
             </TouchableOpacity>
             <FlatList
-            className="mt-16"
             data={sortedAndLimitedReviews}
             renderItem={renderReview}
             keyExtractor={(item) => item.id.toString()}
@@ -312,6 +312,6 @@ export default function ProductPage() {
                 
             }
         />
-    </View>
+    </SafeAreaView>
     );
 }

@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLockPortraitOrientation } from "@/hooks/useOrientation";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
     useLockPortraitOrientation();
@@ -149,8 +150,8 @@ export default function HomePage() {
     const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
-        <View className="flex-1 p-5 bg-gray-200">
-            <View className="flex-row items-center mt-16 rounded-full bg-white px-3 mb-4">
+        <SafeAreaView className="flex-1 p-5 bg-gray-200">
+            <View className="flex-row items-center rounded-full bg-white px-3 mb-4">
                 <TouchableOpacity activeOpacity={0.7} onPress={() => setModalVisible(true)}>
                     <FontAwesome name="list" size={20} color="gray" />
                 </TouchableOpacity>
@@ -293,6 +294,6 @@ export default function HomePage() {
                     bounces = {false}
                 />
             </View>
-        </View>
+        </SafeAreaView>
     );
 }

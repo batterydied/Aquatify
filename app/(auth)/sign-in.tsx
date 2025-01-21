@@ -112,7 +112,7 @@ export default function SignInPage() {
                 onPress={handleEmailPasswordSignIn}
                 >
                     <Text className="text-white text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
-                        Sign In
+                        Sign in
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -121,7 +121,7 @@ export default function SignInPage() {
                 onPress={handleGoogleSignIn}
                 >
                     <Text className="text-black text-center w-full" style={{ fontFamily: 'MontserratRegular' }}>
-                        Sign In With Google
+                        Sign in with Google
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity

@@ -2,6 +2,7 @@ import React from 'react'; // Add this import
 import { useClerk } from '@clerk/clerk-expo'; // Import useClerk from @clerk/clerk-expo
 import { TouchableOpacity, View, ViewStyle, Text } from 'react-native'; // Basic React Native components
 import { useRouter } from 'expo-router'; // Import useRouter for navigation
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function SignOutButton() {
   const { signOut } = useClerk(); // Access signOut function from Clerk
@@ -18,7 +19,8 @@ export default function SignOutButton() {
 
   return (
     <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7}>
-      <View className="p-2 bg-white rounded-lg">
+      <View className="p-2 bg-white rounded-lg flex-row justify-center items-center">
+        <FontAwesome name="sign-out" size={20} color="gray" className="mr-2"/>
         <Text className="text-red-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
           Sign out
         </Text>

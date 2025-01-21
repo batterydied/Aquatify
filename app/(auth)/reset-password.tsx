@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
             className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-full" 
             onPress={create}
             >
-                <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send Reset Code</Text>
+                <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send reset code</Text>
             </TouchableOpacity>
             {error ? <Text className="text-red-700 text-center mt-2">{error}</Text> : null}
             <TouchableOpacity
