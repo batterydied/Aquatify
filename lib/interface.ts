@@ -23,6 +23,7 @@ export interface image{
 export interface review{
     rating: number;
     user: string;
+    userId: string;
     comment: string;
     id: number;
     updatedAt: string;

@@ -1,7 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity, Image, useWindowDimensions } from "react-native";
 import { cartItem } from "@/lib/interface";
 import { useCallback, useState } from "react";
-import { useUserData } from '@/contexts/UserContext';
+import { useUserData } from "@/contexts/UserContext";
 import { Redirect, router, useFocusEffect } from "expo-router";
 import { deleteItemFromCart, getAllSavedItemsByUserId, sortImageById, moveItem, getProductType } from "@/lib/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -151,7 +151,7 @@ export default function SavedPage(){
           :
           <View className="flex-1 justify-center">
             <Image
-            className="absolute -bottom-10 left-0"
+            className="absolute -bottom-20 left-0"
             source={require("../../assets/images/black-cat.png")}
             style={{
               width: width * .5,

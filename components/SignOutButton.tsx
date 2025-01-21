@@ -19,9 +19,9 @@ export default function SignOutButton() {
 
   return (
     <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7}>
-      <View className="p-2 bg-white rounded-lg flex-row justify-center items-center">
+      <View className="p-2 bg-white rounded-3xl flex-row justify-center items-center">
         <FontAwesome name="sign-out" size={20} color="gray" className="mr-2"/>
-        <Text className="text-red-500 text-lg" style={{fontFamily: "MontserratRegular"}}>
+        <Text className="text-red-500 text-lg" style={{fontFamily: "MontserratBold"}}>
           Sign out
         </Text>
       </View>

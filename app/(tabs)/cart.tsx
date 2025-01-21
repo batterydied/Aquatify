@@ -5,8 +5,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
 import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById, saveItem } from "@/lib/utils";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
-import { useUserData } from '@/contexts/UserContext';
-import { Redirect, router } from 'expo-router'; 
+import { useUserData } from "@/contexts/UserContext";
+import { Redirect, router } from "expo-router"; 
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CartPage() {

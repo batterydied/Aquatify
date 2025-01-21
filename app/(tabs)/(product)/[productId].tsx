@@ -1,17 +1,17 @@
-import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, Animated, ActivityIndicator, useWindowDimensions, Modal } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { getProductById, addItemToCart, sortImageById } from '../../../lib/utils';
-import { productInterface, review, productType, reviewSortOption } from '../../../lib/interface';
-import ProductDropdownComponent from '../../../components/ProductDropdown';
-import QuantityDropdownComponent from '../../../components/QuantityDropdown';
-import ReviewFilterDropdown from '../../../components/ReviewFilterDropdwon';
-import { FontAwesome } from '@expo/vector-icons';
-import { dateFormatting } from '@/lib/dateFormat';
-import { useUserData } from '@/contexts/UserContext';
-import { Redirect } from 'expo-router'; 
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { getProductById, addItemToCart, sortImageById } from "../../../lib/utils";
+import { productInterface, review, productType, reviewSortOption } from "../../../lib/interface";
+import ProductDropdownComponent from "../../../components/ProductDropdown";
+import QuantityDropdownComponent from "../../../components/QuantityDropdown";
+import ReviewFilterDropdown from "../../../components/ReviewFilterDropdwon";
+import ReviewComponent from "../../../components/ReviewComponent";
+import { FontAwesome } from "@expo/vector-icons";
+import { useUserData } from "@/contexts/UserContext";
+import { Redirect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProductPage() {
     const { userData } = useUserData();
@@ -63,46 +63,24 @@ export default function ProductPage() {
     }
     
     const renderReview = ({ item }: { item: review }) => (
-        <View className="mb-4 rounded-md border border-gray-500 p-2">
-            <Text className="text-sm">{item.user}</Text>
-            <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
-            <Text className="flex-row">
-                {Array(item.rating)
-                    .fill(null)
-                    .map((_, index) => (
-                        <FontAwesome
-                            key={index} // Ensure each star has a unique key
-                            name="star"
-                            size={16} // Adjust size as needed
-                            color="gold" // Change color as needed
-                            style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
-                        />
-                    ))}
-            </Text>
-            <Text>{item.comment}</Text>
-        </View>
+        <ReviewComponent
+        user={item.user}
+        userId={item.userId}
+        updatedAt={item.updatedAt}
+        rating={item.rating}
+        comment={item.comment}
+        />
     );
 
     const renderModalReview = ({ item }: { item: review }) => (
-        <View>
-            <Text className="text-sm">{item.user}</Text>
-            <Text className="text-sm">{dateFormatting(item.updatedAt)}</Text>
-            <Text className="flex-row pb-2">
-                {Array(item.rating)
-                    .fill(null)
-                    .map((_, index) => (
-                        <FontAwesome
-                            key={index} // Ensure each star has a unique key
-                            name="star"
-                            size={16}
-                            color="gold" // Change color as needed
-                            style={{ marginHorizontal: 2 }} // Add spacing between stars if needed
-                        />
-                    ))}
-            </Text>
-            <Text>{item.comment}</Text>
-            <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-        </View>
+        <ReviewComponent
+        user={item.user}
+        userId={item.userId}
+        updatedAt={item.updatedAt}
+        rating={item.rating}
+        comment={item.comment}
+        isModal={true} // Add modal-specific styling or behavior
+        />
     );
 
     const handleAddItemToCart = ()=>{
