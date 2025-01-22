@@ -1,6 +1,6 @@
 import { UserModel } from "../models/UserModel.js";
 
-const { User, Address, PaymentMethod, OrderHistory } = UserModel.models;
+const { User, PaymentMethod, OrderHistory } = UserModel.models;
 
 class UserController {
   constructor() {
@@ -8,7 +8,7 @@ class UserController {
   }
   static async getAllUsers(req, res) {
     try {
-        const users = await User.findAll({include : ["Addresses", "PaymentMethods", "OrderHistories"]});
+        const users = await User.findAll({include : ["PaymentMethods", "OrderHistories"]});
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving users:", error);
@@ -19,7 +19,7 @@ class UserController {
   static async getUserById(req, res) {
     try {
       const { id } = req.params;
-      const user = await User.findByPk(id, { include: ["Addresses", "PaymentMethods", "OrderHistories"] }); // Include related
+      const user = await User.findByPk(id, { include: ["PaymentMethods", "OrderHistories"] }); // Include related
 
       if (!user) {
         return res.status(404).json({ error: "User not found." });
@@ -37,7 +37,7 @@ class UserController {
       const { email } = req.params;
       const user = await User.findOne({
         where: { email },
-        include: ["Addresses", "PaymentMethods", "OrderHistories"], // Include related models
+        include: ["PaymentMethods", "OrderHistories"], // Include related models
       });
   
       if (!user) {

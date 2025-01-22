@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions, ActivityIndicator, } from "react-native";
 import { useState, useCallback, useEffect } from "react";
 import { updateCartQuantity, getAllCartItemsByUser } from "@/lib/utils";
 import { useFocusEffect } from "@react-navigation/native";
@@ -14,17 +14,21 @@ export default function CartPage() {
   const [ subtotal, setSubtotal ] = useState<number>(0);
   const { userData } = useUserData();
   const { width } = useWindowDimensions();
+  const [loading, setLoading] = useState<boolean>(true);
 
   if (!userData) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/(auth)/sign-in" />;
   }
 
   const fetchData = async () => {
+    setLoading(true); // Start loading
     try {
       const data = await getAllCartItemsByUser(userData.id);
       setCartItems(data || []);
     } catch (error) {
       console.error("Error fetching cart:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -201,7 +205,11 @@ export default function CartPage() {
 
   return (
     <SafeAreaView className="flex-1 p-5 items-center bg-gray-200">
-      {cartItems.length > 0 ? (
+      {loading ? ( // Show loading indicator while data is being fetched
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="gray" />
+        </View>
+      ):(cartItems.length > 0 ? (
         <View className="w-full">
           <View className="mb-2">
             <Text
@@ -216,6 +224,13 @@ export default function CartPage() {
               <TouchableOpacity 
               activeOpacity={0.7}
               className="bg-orange-400 p-3 rounded-full w-[95%] m-2"
+              onPress={() => router.push({
+                pathname: "/(tabs)/checkout",
+                params: {
+                  cartItems: JSON.stringify(cartItems),
+                  subtotal: subtotal.toFixed(2),
+                },
+              })}
               >
                 <Text
                   className="text-center"
@@ -264,7 +279,7 @@ export default function CartPage() {
             Your cart is empty!
           </Text>
         </View>
-      )}
+      ))}
     </SafeAreaView>
   );
 }

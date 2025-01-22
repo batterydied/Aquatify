@@ -179,3 +179,15 @@ export async function deleteAvatar(id: string){
     return null;
   }
 }
+
+export async function updateUsername(name: string, id: string) {
+  try {
+    const response = await axios.put(`${BASE_URL}/api/user/${id}`,{
+      name,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading avatar:", error);
+    return null;
+  }
+}

@@ -20,7 +20,7 @@ import UserRoutes from './routes/UserRoutes.js';
 import CartRoutes from './routes/CartRoutes.js';
 import ProductRoutes from './routes/ProductRoutes.js';
 import FileRoutes from './routes/FileRoutes.js';
-//import OrderRoutes from './routes/OrderRoutes.js';
+import OrderRoutes from './routes/OrderRoutes.js';
  
 dotenv.config();
 
@@ -70,10 +70,10 @@ class Server{
       next();
   }, FileRoutes);
 
-    // this.app.use('/api/order', (req, res, next) => {
-    //     console.log(`Route hit: ${req.method} ${req.url}`);
-    //     next();
-    // }, OrderRoutes);
+    this.app.use('/api/order', (req, res, next) => {
+        console.log(`Route hit: ${req.method} ${req.url}`);
+        next();
+    }, OrderRoutes);
 
     this.app.get('/', (req, res) => {
       res.send("You reached the server.");

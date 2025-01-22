@@ -4,8 +4,9 @@ import { Redirect } from "expo-router";
 import { useUserData } from "@/contexts/UserContext";
 import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from "expo-image-picker";
-import { uploadAvatar } from "@/lib/utils";
+import { uploadAvatar, updateUsername } from "@/lib/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingPage() {
@@ -22,9 +23,11 @@ export default function SettingPage() {
     const [ username, setUsername ] = useState("");
     const [ previousUsername, setPreviousUsername ] = useState("");
 
+    const [ usernameError, setUsernameError ] = useState(false);
+
     // Redirect if user is not logged in
     if (!userData) {
-        return <Redirect href="/sign-in" />;
+        return <Redirect href="/(auth)/sign-in" />;
     }
 
     useEffect(() => {
@@ -90,6 +93,22 @@ export default function SettingPage() {
         setEditingProfilePicture(false);
     };
 
+    const saveChanges = () => {
+        if(username === ""){
+            setUsernameError(true);
+            return;
+        }
+        if(originalImage !== image){
+            uploadAvatar(null, image, userData.id);
+            setOriginalImage(image); // Update original image upon save
+        }
+        if(previousUsername !== username){
+            updateUsername(username, userData.id);
+            setPreviousUsername(username);
+        }
+        setUsernameError(false);
+        setEditingProfile(false);
+    }
     const discardChanges = () => {
         setImage(originalImage); // Reset to the original image
         setUsername(previousUsername);
@@ -117,10 +136,30 @@ export default function SettingPage() {
                     }
                 />
                 <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg m-2">
-                    {userData.name}
+                    {username}
                 </Text>
             </View>
-            <View className="flex p-2 w-full">
+            <View className="flex px-2 w-full">
+                <View className="w-full flex-row justify-between p-2"> 
+                    <TouchableOpacity className="w-[50%] flex justify-center items-center" activeOpacity={0.7}>
+                        <View className="flex justify-center items-center">
+                            <FontAwesome5 name="box" size={20} color="gray" />
+                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                Orders
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity className="w-[50%] flex justify-center items-center" activeOpacity={0.7}>
+                        <View className="flex justify-center items-center">
+                            <FontAwesome5 name="wallet" size={20} color="gray" />
+                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                Payments
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => setEditingProfile(true)} className="my-2 bg-white p-2 rounded-3xl w-full">
                     <View className="w-full">
                         <View className="flex-row justify-center items-center">
@@ -141,11 +180,7 @@ export default function SettingPage() {
                                         <FontAwesome name="times" color="gray" size={30} />
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => {
-                                    uploadAvatar(null, image, userData.id);
-                                    setOriginalImage(image); // Update original image upon save
-                                    setEditingProfile(false);
-                                }}>
+                                <TouchableOpacity onPress={saveChanges}>
                                     <View className="rounded-lg m-2">
                                         <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
                                             Save
@@ -182,11 +217,15 @@ export default function SettingPage() {
                                 </TouchableOpacity>
                             </View>
                             <View className="flex-row items-center border border-gray-500 py-1 px-2 m-2 rounded-xl bg-white justify-between">
-                                <TextInput value={username} onChangeText={setUsername} className="flex-1"/>
+                                <TextInput value={username} onChangeText={setUsername} className="flex-1" style={{ fontFamily: "MontserratRegular" }}/>
                                 <TouchableOpacity onPress={clearUsername} activeOpacity={0.7}>
                                     <FontAwesome name="times-circle" color="gray" size={25} />
                                 </TouchableOpacity>
                             </View>
+                            {usernameError && 
+                            <View className="px-3">
+                                <Text className="text-red-500">You can't leave your username blank.</Text>
+                            </View>}
                         </View>
                     </TouchableWithoutFeedback>
                         {/* Modal for editing profile picture */}

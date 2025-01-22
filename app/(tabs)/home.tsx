@@ -12,13 +12,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
     useLockPortraitOrientation();
-    const [ homeProducts, setHomeProducts ] = useState<homeProduct[]>([]);
-    const [ filteredProducts, setFilteredProducts ] = useState<homeProduct[]>([]);
-    const [ searchQuery, setSearchQuery ] = useState<string>("");
-    const [ searchInput, setSearchInput ] = useState<string>("");
-    const [ modalVisible, setModalVisible ] = useState(false);
-    const [ filterError, setFilterError ] = useState(false);
-    const [ filterCriteria, setFilterCriteria ] = useState<filterCriteriaType>({
+    const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchInput, setSearchInput] = useState<string>("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [filterError, setFilterError] = useState(false);
+    const [filterCriteria, setFilterCriteria] = useState<filterCriteriaType>({
         minPrice: null,
         maxPrice: null,
         minRating: null,
@@ -39,7 +39,7 @@ export default function HomePage() {
         MontserratBold: Montserrat_700Bold,
     });
 
-    const resetFilter = ()=>{
+    const resetFilter = () => {
         setCurrFilterCriteria({
             minPrice: null,
             maxPrice: null,
@@ -48,26 +48,35 @@ export default function HomePage() {
         })
     }
 
+    const [imageLoading, setImageLoading] = useState(true);
+
     const renderItem = ({ item }: { item: homeProduct }) => {
         const images = sortImageById(item.images);
-        return(
-        <View className="flex-1 mx-1">
-            <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
-                <Image
-                    source={{ uri: images[0].url }}
-                    className="h-[85%] w-full rounded-lg"
-                    resizeMode="cover"
-                />
-                <View
-                className="h-[15%]">
-                    <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
-                    <View className="flex-row justify-between">
-                        <Text style={{ fontFamily: "MontserratRegular" }}>{'$'+item.price}</Text>
-                        <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
+
+        return (
+            <View className="flex-1 mx-1">
+                <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
+                    {imageLoading && (
+                        <View className="h-[85%] w-full rounded-lg justify-center items-center">
+                            <ActivityIndicator size="large" color="grey" />
+                        </View>
+                    )}
+                    <Image
+                        source={{ uri: images[0].url }}
+                        className="h-[85%] w-full rounded-lg"
+                        resizeMode="cover"
+                        onLoadStart={() => setImageLoading(true)}
+                        onLoadEnd={() => setImageLoading(false)}
+                    />
+                    <View className="h-[15%]">
+                        <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
+                        <View className="flex-row justify-between">
+                            <Text style={{ fontFamily: "MontserratRegular" }}>{'$' + item.price}</Text>
+                            <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        </View>
+                </TouchableOpacity>
+            </View>
         )
     };
 
@@ -89,7 +98,7 @@ export default function HomePage() {
         const intervalId = setInterval(fetchData, 10000);
     
         return () => clearInterval(intervalId);
-    },[]);
+    }, []);
     
     useEffect(() => {
         let filtered = homeProducts;
@@ -127,9 +136,9 @@ export default function HomePage() {
     };
     
     const applyFilters = (newFilters: filterCriteriaType) => {
-        if(newFilters.minPrice && newFilters.maxPrice && newFilters.minPrice > newFilters.maxPrice){
+        if (newFilters.minPrice && newFilters.maxPrice && newFilters.minPrice > newFilters.maxPrice) {
             setFilterError(true);
-        }else{
+        } else {
             setFilterError(false);
             setFilterCriteria(newFilters);
             setModalVisible(false);
@@ -146,7 +155,7 @@ export default function HomePage() {
 
     const itemSpacing = 12;
     const desiredItemWidth = 200;
-    const itemsPerRow = width / (desiredItemWidth + itemSpacing) >= 2? Math.floor(width / (desiredItemWidth + itemSpacing)) : 2;
+    const itemsPerRow = width / (desiredItemWidth + itemSpacing) >= 2 ? Math.floor(width / (desiredItemWidth + itemSpacing)) : 2;
     const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
@@ -208,7 +217,7 @@ export default function HomePage() {
                             placeholderTextColor="grey"
                             keyboardType="numeric"
                             value={currFilterCriteria.minRating?.toString() || ""}
-                            onChangeText={(text) =>{
+                            onChangeText={(text) => {
                                 const numericValue = parseFloat(text);
                                 // Ensure the value is between 0 and 5
                                 if (!isNaN(numericValue)) {
@@ -228,47 +237,47 @@ export default function HomePage() {
                         />
                         <Text style={{ fontFamily: "MontserratBold" }}>Categories:</Text>
                         <View className="mb-4">
-                            {categoryTypes.map((category)=>(
-                                <TouchableOpacity 
-                                activeOpacity={0.7} 
-                                key={category}
-                                onPress={()=>{
-                                    const index = currFilterCriteria.categories.indexOf(category);
-                                    if(index === -1){
-                                        setCurrFilterCriteria({
-                                        ...currFilterCriteria,
-                                        categories: [...currFilterCriteria.categories, category]
-                                        })
-                                    }else{
-                                        const newCategories = currFilterCriteria.categories;
-                                        newCategories.splice(index, 1);
-                                        setCurrFilterCriteria({
-                                            ...currFilterCriteria,
-                                            categories: newCategories,
-                                        })
-                                    }
-                                }}
+                            {categoryTypes.map((category) => (
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    key={category}
+                                    onPress={() => {
+                                        const index = currFilterCriteria.categories.indexOf(category);
+                                        if (index === -1) {
+                                            setCurrFilterCriteria({
+                                                ...currFilterCriteria,
+                                                categories: [...currFilterCriteria.categories, category]
+                                            })
+                                        } else {
+                                            const newCategories = currFilterCriteria.categories;
+                                            newCategories.splice(index, 1);
+                                            setCurrFilterCriteria({
+                                                ...currFilterCriteria,
+                                                categories: newCategories,
+                                            })
+                                        }
+                                    }}
                                 >
                                     <Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"}>{category}</Text></TouchableOpacity>
                             ))}
                         </View>
                         <View className="flex-row w-full">
                             <TouchableOpacity activeOpacity={0.7} className="w-[40%]"
-                            onPress={() => resetFilter()}
+                                onPress={() => resetFilter()}
                             >
                                 <Text className="text-red-500" style={{ fontFamily: "MontserratRegular" }}>Reset filter</Text>
                             </TouchableOpacity>
                             <View className="w-[60%] flex-row justify-end">
                                 <TouchableOpacity
-                                activeOpacity={0.7} 
-                                onPress={() => setModalVisible(false)}
-                                className="mr-4"
+                                    activeOpacity={0.7}
+                                    onPress={() => setModalVisible(false)}
+                                    className="mr-4"
                                 >
                                     <Text className="text-gray-600" style={{ fontFamily: "MontserratRegular" }}>Cancel</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                activeOpacity={0.7}  
-                                onPress={()=>applyFilters(currFilterCriteria)}>
+                                    activeOpacity={0.7}
+                                    onPress={() => applyFilters(currFilterCriteria)}>
                                     <Text className="text-blue-600" style={{ fontFamily: "MontserratRegular" }}>Apply</Text>
                                 </TouchableOpacity>
                             </View>
@@ -289,9 +298,9 @@ export default function HomePage() {
                     )}
                     numColumns={itemsPerRow}
                     columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
-                    showsVerticalScrollIndicator={false} 
+                    showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    bounces = {false}
+                    bounces={false}
                 />
             </View>
         </SafeAreaView>

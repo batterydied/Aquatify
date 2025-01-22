@@ -26,34 +26,7 @@ const User = sequelize.define("User", {
   },
 });
 
-// Define Address Model
-const Address = sequelize.define("Address", {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
-  streetAddress: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  state: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  zipCode: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      isNumeric: true,
-      len: [5, 10],
-    },
-  },
-});
+
 
 // Define PaymentMethod Model
 const PaymentMethod = sequelize.define("PaymentMethod", {
@@ -120,10 +93,6 @@ const OrderHistory = sequelize.define("OrderHistory", {
   },
 });
 
-// Define Relationships
-Address.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
-User.hasMany(Address, { foreignKey: "userId", onDelete: "CASCADE", as: "Addresses" });
-
 PaymentMethod.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(PaymentMethod, { foreignKey: "userId", onDelete: "CASCADE", as: "PaymentMethods" });
 
@@ -133,7 +102,7 @@ User.hasMany(OrderHistory, { foreignKey: "userId", onDelete: "CASCADE", as: "Ord
 // Define the UserModel Class
 class _UserModel {
   constructor() {
-    this.models = { User, Address, PaymentMethod, OrderHistory };
+    this.models = { User, PaymentMethod, OrderHistory };
   }
 }
 

@@ -37,7 +37,7 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen 
-      name="setting" 
+      name="profile" 
       options={{
         title: '',
         tabBarIcon: ({ color, size }) => (
@@ -47,6 +47,12 @@ export default function TabLayout() {
       />
       <Tabs.Screen 
       name="(product)/[productId]"
+      options={{
+        href: null,
+      }}
+      />
+      <Tabs.Screen 
+      name="checkout"
       options={{
         href: null,
       }}
