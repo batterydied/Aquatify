@@ -1,12 +1,12 @@
 import { Text, View, Image, useWindowDimensions, TouchableOpacity, Modal, TouchableWithoutFeedback, TextInput, Keyboard } from "react-native";
 import SignOutButton from "../../components/SignOutButton";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useUserData } from "@/contexts/UserContext";
 import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from "expo-image-picker";
-import { uploadAvatar, updateUsername } from "@/lib/utils";
+import { uploadAvatar, updateUsername } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingPage() {
@@ -141,7 +141,18 @@ export default function SettingPage() {
             </View>
             <View className="flex px-2 w-full">
                 <View className="w-full flex-row justify-between p-2"> 
-                    <TouchableOpacity className="w-[50%] flex justify-center items-center" activeOpacity={0.7}>
+                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7} 
+                    onPress={()=>router.push({
+                    pathname: "/(tabs)/address"})}>
+                        <View className="flex justify-center items-center">
+                            <FontAwesome5 name="address-book" size={20} color="gray" />
+                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                Address
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="box" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
@@ -150,7 +161,7 @@ export default function SettingPage() {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="w-[50%] flex justify-center items-center" activeOpacity={0.7}>
+                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="wallet" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>

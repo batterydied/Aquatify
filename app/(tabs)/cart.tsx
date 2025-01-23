@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions, ActivityIndicator, } from "react-native";
 import { useState, useCallback, useEffect } from "react";
-import { updateCartQuantity, getAllCartItemsByUser } from "@/lib/utils";
+import { updateCartQuantity, getAllCartItemsByUser } from "@/lib/apiCalls";
 import { useFocusEffect } from "@react-navigation/native";
 import { cartItem } from "@/lib/interface";
-import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById, saveItem } from "@/lib/utils";
+import { getProductType, calculatePriceWithQuantity, deleteItemFromCart, deleteAllItemFromCart, sortImageById, saveItem } from "@/lib/apiCalls";
 import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from "@/contexts/UserContext";
 import { Redirect, router } from "expo-router"; 

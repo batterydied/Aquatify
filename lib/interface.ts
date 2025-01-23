@@ -81,3 +81,13 @@ export interface cartItem{
     isSaved: boolean;
     Product: productInterface;
 }
+
+export interface address{
+    id: string;
+    userId: string;
+    streetAddress: string;
+    streetAddress2: string | null;
+    city: string;
+    state: string;
+    zipCode: string;
+}

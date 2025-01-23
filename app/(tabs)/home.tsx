@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Modal, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
-import { getProducts, sortImageById } from "@/lib/utils";
+import { getProducts, sortImageById } from "@/lib/apiCalls";
 import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useRouter } from "expo-router";

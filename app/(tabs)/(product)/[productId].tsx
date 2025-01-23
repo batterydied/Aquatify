@@ -12,7 +12,7 @@ import {
   import { useRouter, useLocalSearchParams } from "expo-router";
   import { useEffect, useState, useRef, useCallback } from "react";
   import { useFocusEffect } from "@react-navigation/native";
-  import { getProductById, addItemToCart, sortImageById } from "../../../lib/utils";
+  import { getProductById, addItemToCart, sortImageById } from "../../../lib/apiCalls";
   import { productInterface, review, productType, reviewSortOption } from "../../../lib/interface";
   import ProductDropdownComponent from "../../../components/ProductDropdown";
   import QuantityDropdownComponent from "../../../components/QuantityDropdown";

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-expo';
-import { getUserData } from '@/lib/utils';
+import { getUserData } from '@/lib/apiCalls';
 import { User } from '@/lib/interface';
 
 interface UserContextType {

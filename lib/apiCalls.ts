@@ -1,4 +1,4 @@
-import { productType, image } from "./interface";
+import { productType, image, address } from "./interface";
 import axios from 'axios';
 
 function getIP() {
@@ -191,3 +191,47 @@ export async function updateUsername(name: string, id: string) {
     return null;
   }
 }
+
+export async function fetchAddresses(userId: string){
+  try {
+      const response = await axios.get(`${BASE_URL}/api/address/user/${userId}`);  
+      return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  } 
+};
+
+export async function saveEditedAddress(selectedAddress: address){
+  try {
+    await axios.put(`${BASE_URL}/api/address/${selectedAddress.id}`, 
+        selectedAddress,
+    );
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function addNewAddress(address: address){
+  try {
+    await axios.post(`${BASE_URL}/api/address`, address);
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function deleteAddress(addressId: string){
+  try {
+    await axios.delete(`${BASE_URL}/api/address/${addressId}`);
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function placeOrder(){
+
+}
+

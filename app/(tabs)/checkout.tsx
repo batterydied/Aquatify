@@ -13,7 +13,7 @@ import {
   } from "react-native";
   import { useState } from "react";
   import { useUserData } from "@/contexts/UserContext";
-  import { calculatePriceWithQuantity, getProductType } from "@/lib/utils";
+  import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
   import { cartItem } from "@/lib/interface";
   import { SafeAreaView } from "react-native-safe-area-context";
   import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";

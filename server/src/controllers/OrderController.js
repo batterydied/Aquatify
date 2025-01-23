@@ -1,5 +1,6 @@
 import { OrderModel } from "../models/OrderModel.js";
 import { ProductModel } from "../models/ProductModel.js";
+import { Op } from "sequelize"; // Import Sequelize operators
 
 const { Order, OrderProduct, Address } = OrderModel.models;
 const { Product, ProductType } = ProductModel.models;
@@ -20,6 +21,7 @@ class OrderController {
             include: [
               {
                 model: ProductType,
+                as: "productTypes", // Use the alias defined in the association
                 attributes: ["type"], // Include product type name
               },
             ],
@@ -29,6 +31,7 @@ class OrderController {
           },
           {
             model: Address,
+            as: "address",
             attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],
@@ -52,6 +55,7 @@ class OrderController {
             include: [
               {
                 model: ProductType,
+                as: "productTypes", // Use the alias defined in the association
                 attributes: ["type"], // Include product type name
               },
             ],
@@ -61,6 +65,7 @@ class OrderController {
           },
           {
             model: Address,
+            as: "address",
             attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],
@@ -200,6 +205,7 @@ class OrderController {
             include: [
               {
                 model: ProductType,
+                as: "productTypes", // Use the alias defined in the association
                 attributes: ["type"], // Include product type name
               },
             ],
@@ -209,6 +215,7 @@ class OrderController {
           },
           {
             model: Address,
+            as: "address",
             attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],
@@ -235,6 +242,7 @@ class OrderController {
             include: [
               {
                 model: ProductType,
+                as: "productTypes", // Use the alias defined in the association
                 attributes: ["type"], // Include product type name
               },
             ],
@@ -244,6 +252,7 @@ class OrderController {
           },
           {
             model: Address,
+            as: "address",
             attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],
@@ -378,6 +387,7 @@ class OrderController {
             include: [
               {
                 model: ProductType,
+                as: "productTypes", // Use the alias defined in the association
                 attributes: ["type"], // Include product type name
               },
             ],
@@ -387,6 +397,7 @@ class OrderController {
           },
           {
             model: Address,
+            as: "address",
             attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],

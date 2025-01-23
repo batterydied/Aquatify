@@ -95,6 +95,17 @@ Product.belongsToMany(Order, { through: OrderProduct, foreignKey: "productId" })
 OrderProduct.belongsTo(ProductType, { foreignKey: "productTypeId", onDelete: "CASCADE" });
 ProductType.hasMany(OrderProduct, { foreignKey: "productTypeId", onDelete: "CASCADE" });
 
+Order.belongsTo(Address, {
+    foreignKey: "addressId", // Foreign key in the Order table
+    as: "address", // Alias for the association
+    onDelete: "CASCADE", // Optional: Delete orders if the associated address is deleted
+  });
+Address.hasMany(Order, {
+    foreignKey: "addressId", // Foreign key in the Order table
+    as: "orders", // Alias for the association
+    onDelete: "CASCADE", // Optional: Delete orders if the associated address is deleted
+  });
+
 // Export Models
 class _OrderModel {
   constructor() {
