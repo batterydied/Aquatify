@@ -145,6 +145,23 @@ export default function HomePage() {
         }
     };
 
+    const handleCategoryToggle = (category: string) => {
+        const index = currFilterCriteria.categories.indexOf(category);
+        if (index === -1) {
+            setCurrFilterCriteria({
+                ...currFilterCriteria,
+                categories: [...currFilterCriteria.categories, category]
+            })
+        } else {
+            const newCategories = currFilterCriteria.categories;
+            newCategories.splice(index, 1);
+            setCurrFilterCriteria({
+                ...currFilterCriteria,
+                categories: newCategories,
+            })
+        }
+    }
+
     if (!fontsLoaded) {
         return (
             <View className="flex-1 justify-center items-center bg-white">
@@ -241,22 +258,7 @@ export default function HomePage() {
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     key={category}
-                                    onPress={() => {
-                                        const index = currFilterCriteria.categories.indexOf(category);
-                                        if (index === -1) {
-                                            setCurrFilterCriteria({
-                                                ...currFilterCriteria,
-                                                categories: [...currFilterCriteria.categories, category]
-                                            })
-                                        } else {
-                                            const newCategories = currFilterCriteria.categories;
-                                            newCategories.splice(index, 1);
-                                            setCurrFilterCriteria({
-                                                ...currFilterCriteria,
-                                                categories: newCategories,
-                                            })
-                                        }
-                                    }}
+                                    onPress={()=>handleCategoryToggle(category)}
                                 >
                                     <Text className={currFilterCriteria.categories.includes(category) ? "text-blue-500" : "text-black"}>{category}</Text></TouchableOpacity>
                             ))}

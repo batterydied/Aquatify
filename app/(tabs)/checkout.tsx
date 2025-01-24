@@ -11,13 +11,14 @@ import {
     KeyboardAvoidingView,
     Platform,
   } from "react-native";
-  import { useState } from "react";
+  import { useCallback, useState } from "react";
   import { useUserData } from "@/contexts/UserContext";
-  import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
-  import { cartItem } from "@/lib/interface";
+  import { calculatePriceWithQuantity, getProductType, fetchAddresses } from "@/lib/apiCalls";
+  import { cartItem, address } from "@/lib/interface";
   import { SafeAreaView } from "react-native-safe-area-context";
   import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
-  import { router, useLocalSearchParams } from "expo-router";
+  import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+  import AddressDropdown from "@/components/AddressDropdown";
   
   export default function CheckoutPage() {
     const params = useLocalSearchParams();
@@ -36,12 +37,11 @@ import {
     // Shipping Information State
     const [shippingInfo, setShippingInfo] = useState({
       fullName: "",
-      addressLine1: "",
-      addressLine2: "",
+      streetAddress: "",
+      streetAddress2: "",
       city: "",
       state: "",
-      postalCode: "",
-      country: "",
+      zipCode: "",
       phoneNumber: "",
     });
   
@@ -56,6 +56,8 @@ import {
     const [loading, setLoading] = useState<boolean>(false);
     const { userData } = useUserData();
     const { width } = useWindowDimensions();
+    const [addresses, setAddresses] = useState<address[]>([]);
+    const [selectedAddress, setSelectedAddress] = useState<address | null>(null);
   
     const [fontsLoaded] = useFonts({
       MontserratRegular: Montserrat_400Regular,
@@ -67,15 +69,32 @@ import {
       return null;
     }
   
+    const fetchData = async () => {
+      setLoading(true); // Start loading
+      try {
+        const data = await fetchAddresses(userData.id);
+        setAddresses(data || []);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+  
+    useFocusEffect(
+      useCallback(() => {
+        fetchData();
+      }, [])
+    );
+  
     const handlePlaceOrder = async () => {
       // Validate Shipping Information
       if (
         !shippingInfo.fullName ||
-        !shippingInfo.addressLine1 ||
+        !shippingInfo.streetAddress ||
         !shippingInfo.city ||
         !shippingInfo.state ||
-        !shippingInfo.postalCode ||
-        !shippingInfo.country ||
+        !shippingInfo.zipCode ||
         !shippingInfo.phoneNumber
       ) {
         alert("Please fill out all shipping information fields.");
@@ -105,6 +124,43 @@ import {
         console.error("Error placing order:", error);
         setLoading(false);
       }
+    };
+  
+    const handleAddressSelect = (address: address | null) => {
+      if (address) {
+        setSelectedAddress(address);
+        setShippingInfo({
+          ...shippingInfo,
+          streetAddress: address.streetAddress,
+          streetAddress2: address.streetAddress2 || "",
+          city: address.city,
+          state: address.state,
+          zipCode: address.zipCode,
+        });
+      } else {
+        // Reset the form if "Select an address" is chosen
+        setSelectedAddress(null);
+        setShippingInfo({
+          ...shippingInfo,
+          streetAddress: "",
+          streetAddress2: "",
+          city: "",
+          state: "",
+          zipCode: "",
+        });
+      }
+    };
+  
+    const handleManualInput = () => {
+      setSelectedAddress(null); // Clear the selected address
+      setShippingInfo({
+        ...shippingInfo,
+        streetAddress: "",
+        streetAddress2: "",
+        city: "",
+        state: "",
+        zipCode: "",
+      });
     };
   
     const renderCartItem = (item: cartItem) => {
@@ -179,71 +235,84 @@ import {
                 <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
                   Shipping Information
                 </Text>
-                <TextInput
-                  placeholder="Full Name"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.fullName}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, fullName: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="Address Line 1"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.addressLine1}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, addressLine1: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="Address Line 2 (Optional)"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.addressLine2}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, addressLine2: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="City"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.city}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, city: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="State"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.state}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, state: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="Postal Code"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.postalCode}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, postalCode: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="Country"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.country}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, country: text })}
-                  className="p-3 border border-gray-300 rounded-lg mb-3"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                />
-                <TextInput
-                  placeholder="Phone Number"
-                  placeholderTextColor="gray"
-                  value={shippingInfo.phoneNumber}
-                  onChangeText={(text) => setShippingInfo({ ...shippingInfo, phoneNumber: text })}
-                  className="p-3 border border-gray-300 rounded-lg"
-                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                  keyboardType="phone-pad"
-                />
+                {addresses.length > 0 && (
+                  <AddressDropdown data={addresses} select={handleAddressSelect} value={selectedAddress} />
+                )}
+  
+                {/* Show "Go Back to Filling" button if an address is selected */}
+                {selectedAddress && (
+                  <TouchableOpacity
+                    onPress={handleManualInput}
+                    className="bg-gray-300 p-2 rounded-lg mb-3 items-center"
+                  >
+                    <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.035 }}>
+                      Manual input
+                    </Text>
+                  </TouchableOpacity>
+                )}
+  
+                {/* Conditionally render address input fields if no address is selected */}
+                {!selectedAddress && (
+                  <View>
+                    <TextInput
+                      placeholder="Full Name"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.fullName}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, fullName: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="Street Address"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.streetAddress}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, streetAddress: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="Street Address 2 (Optional)"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.streetAddress2}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, streetAddress2: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="City"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.city}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, city: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="State"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.state}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, state: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="Zip Code"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.zipCode}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, zipCode: text })}
+                      className="p-3 border border-gray-300 rounded-lg mb-3"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                    />
+                    <TextInput
+                      placeholder="Phone Number"
+                      placeholderTextColor="gray"
+                      value={shippingInfo.phoneNumber}
+                      onChangeText={(text) => setShippingInfo({ ...shippingInfo, phoneNumber: text })}
+                      className="p-3 border border-gray-300 rounded-lg"
+                      style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+                )}
               </View>
   
               {/* Payment Information */}
