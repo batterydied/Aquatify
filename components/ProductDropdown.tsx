@@ -1,17 +1,16 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
-import { productType } from '@/lib/interface';
 
 type DropdownComponentProps = {
-  data: productType[];
-  value: productType | null;
-  select: (item: productType)=>void;
+  data: any[];
+  value: any;
+  select: (item: any)=>void;
 };
 
 const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, select, value }) => {
   const sortedProductTypeById = data.sort((a, b) => a.id - b.id);
-  const renderItem = (item: productType) => {
+  const renderItem = (item: any) => {
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item.type}</Text>
@@ -78,16 +77,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textItem: {
-      fontFamily: "MontserratRegular",
+    fontFamily: "MontserratRegular",
     flex: 1,
     fontSize: 16,
   },
   placeholderStyle: {
-      fontFamily: "MontserratRegular",
+    fontFamily: "MontserratRegular",
     fontSize: 16,
   },
   selectedTextStyle: {
-      fontFamily: "MontserratRegular",
+    fontFamily: "MontserratRegular",
+    color: "black",
     fontSize: 16,
   },
   iconStyle: {

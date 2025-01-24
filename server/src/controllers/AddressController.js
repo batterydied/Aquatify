@@ -6,17 +6,20 @@ class AddressController {
   // Create a new address
   static async createAddress(req, res) {
     try {
-      const { userId, streetAddress, city, state, zipCode } = req.body;
+      const { userId, streetAddress, city, state, zipCode, streetAddress2, name, phoneNumber } = req.body;
 
       // Validate input
-      if (!userId || !streetAddress || !city || !state || !zipCode) {
+      if (!userId || !streetAddress || !city || !state || !zipCode || !name || !phoneNumber) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
       // Create the address
       const newAddress = await Address.create({
         userId,
+        name, 
+        phoneNumber,
         streetAddress,
+        streetAddress2,
         city,
         state,
         zipCode,
@@ -50,10 +53,10 @@ class AddressController {
   static async updateAddress(req, res) {
     try {
       const { id } = req.params;
-      const { streetAddress, city, state, zipCode } = req.body;
+      const { streetAddress, city, state, zipCode, streetAddress2, phoneNumber, name } = req.body;
 
       // Validate input
-      if (!streetAddress && !city && !state && !zipCode) {
+      if (!streetAddress && !city && !state && !zipCode && !streetAddress2 && !phoneNumber && !name) {
         return res.status(400).json({ error: "No fields to update" });
       }
 
@@ -66,6 +69,9 @@ class AddressController {
 
       // Update fields
       if (streetAddress) addressToUpdate.streetAddress = streetAddress;
+      if (streetAddress2) addressToUpdate.streetAddress2 = streetAddress2;
+      if (name) addressToUpdate.name = name;
+      if (phoneNumber) addressToUpdate.phoneNumber = phoneNumber;
       if (city) addressToUpdate.city = city;
       if (state) addressToUpdate.state = state;
       if (zipCode) addressToUpdate.zipCode = zipCode;

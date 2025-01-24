@@ -19,6 +19,14 @@ const Address = sequelize.define("Address", {
       key: 'id',   // Reference the primary key of the User model
     },
   },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   streetAddress: {
     type: DataTypes.STRING,
     allowNull: false,

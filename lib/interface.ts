@@ -87,6 +87,8 @@ export interface address{
     userId: string;
     streetAddress: string;
     streetAddress2: string | null;
+    name: string;
+    phoneNumber: string;
     city: string;
     state: string;
     zipCode: string;

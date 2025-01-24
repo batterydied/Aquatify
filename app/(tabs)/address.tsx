@@ -95,7 +95,7 @@ export default function Address() {
 
     // Save new address
     const handleSaveNewAddress = async () => {
-        if (!newAddress.streetAddress || !newAddress.city || !newAddress.state || !newAddress.zipCode) {
+        if (!newAddress.streetAddress || !newAddress.city || !newAddress.state || !newAddress.zipCode || !newAddress.name || !newAddress.phoneNumber) {
             alert('Please fill in all required fields');
             return;
         }
@@ -208,6 +208,18 @@ export default function Address() {
 
                             <View className="bg-white rounded-xl p-4">
                                 <TextInput
+                                    value={selectedAddress?.name || ""}
+                                    onChangeText={(text) => {
+                                        if (selectedAddress) {
+                                            setSelectedAddress({ ...selectedAddress, name: text });
+                                        }
+                                    }}
+                                    placeholder="Name"
+                                    placeholderTextColor="gray"
+                                    style={{ fontFamily: "MontserratRegular" }}
+                                    className="border-b border-gray-300 py-2"
+                                />
+                                <TextInput
                                     value={selectedAddress?.streetAddress || ""}
                                     onChangeText={(text) => {
                                         if (selectedAddress) {
@@ -267,6 +279,18 @@ export default function Address() {
                                     style={{ fontFamily: "MontserratRegular" }}
                                     className="border-b border-gray-300 py-2"
                                 />
+                                 <TextInput
+                                    value={selectedAddress?.phoneNumber || ""}
+                                    onChangeText={(text) => {
+                                        if (selectedAddress) {
+                                            setSelectedAddress({ ...selectedAddress, phoneNumber: text });
+                                        }
+                                    }}
+                                    placeholder="Phone Number"
+                                    placeholderTextColor="gray"
+                                    style={{ fontFamily: "MontserratRegular" }}
+                                    className="border-b border-gray-300 py-2"
+                                />
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
@@ -291,6 +315,14 @@ export default function Address() {
                             </View>
 
                             <View className="bg-white rounded-xl p-4">
+                                <TextInput
+                                    value={newAddress.name || ""}
+                                    onChangeText={(text) => setNewAddress({ ...newAddress, name: text })}
+                                    placeholder="Name"
+                                    placeholderTextColor="gray"
+                                    style={{ fontFamily: "MontserratRegular" }}
+                                    className="border-b border-gray-300 py-2"
+                                />
                                 <TextInput
                                     value={newAddress.streetAddress || ""}
                                     onChangeText={(text) => setNewAddress({ ...newAddress, streetAddress: text })}
@@ -327,6 +359,14 @@ export default function Address() {
                                     value={newAddress.zipCode || ""}
                                     onChangeText={(text) => setNewAddress({ ...newAddress, zipCode: text })}
                                     placeholder="Zip Code"
+                                    placeholderTextColor="gray"
+                                    style={{ fontFamily: "MontserratRegular" }}
+                                    className="border-b border-gray-300 py-2"
+                                />
+                                <TextInput
+                                    value={newAddress.phoneNumber|| ""}
+                                    onChangeText={(text) => setNewAddress({ ...newAddress, phoneNumber: text })}
+                                    placeholder="Phone Number"
                                     placeholderTextColor="gray"
                                     style={{ fontFamily: "MontserratRegular" }}
                                     className="border-b border-gray-300 py-2"
