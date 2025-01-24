@@ -37,6 +37,7 @@ class FileRoutes {
     this.router.post("/upload/avatar/:id", upload.single("file"), FileController.uploadAvatar);
     this.router.post("/upload", upload.single("file"), FileController.upload);
     this.router.get("/:filename", FileController.retrieveFile);
+    this.router.delete("/:filename", FileController.deleteFile);
   }
 
   /**

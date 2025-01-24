@@ -93,22 +93,44 @@ export default function SettingPage() {
         setEditingProfilePicture(false);
     };
 
-    const saveChanges = () => {
-        if(username === ""){
+    const saveChanges = async () => {
+        if (username === "") {
             setUsernameError(true);
             return;
         }
-        if(originalImage !== image){
-            uploadAvatar(null, image, userData.id);
-            setOriginalImage(image); // Update original image upon save
+    
+        try {
+            // Update the avatar if it has changed
+            if (originalImage !== image) {
+                const avatarResponse = await uploadAvatar(originalImage, image, userData.id);
+                if (avatarResponse) {
+                    // Update the userData context with the new avatar URI
+                    setUserData({ ...userData, avatarFileURI: avatarResponse.file.uri });
+                    setOriginalImage(image); // Update the original image state
+                } else {
+                    setUserData({ ...userData, avatarFileURI: null});
+                    setOriginalImage(null); 
+                }
+            }
+    
+            // Update the username if it has changed
+            if (previousUsername !== username) {
+                const usernameResponse = await updateUsername(username, userData.id);
+                if (usernameResponse) {
+                    // Update the userData context with the new username
+                    setUserData({ ...userData, name: username });
+                    setPreviousUsername(username); // Update the previous username state
+                }
+            }
+    
+            setUsernameError(false);
+            setEditingProfile(false);
+        } catch (error) {
+            console.error("Error saving changes:", error);
+            alert("Failed to save changes. Please try again.");
         }
-        if(previousUsername !== username){
-            updateUsername(username, userData.id);
-            setPreviousUsername(username);
-        }
-        setUsernameError(false);
-        setEditingProfile(false);
-    }
+    };
+
     const discardChanges = () => {
         setImage(originalImage); // Reset to the original image
         setUsername(previousUsername);

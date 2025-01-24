@@ -7,17 +7,64 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 class FileController {
-    static retrieveAllFiles(req, res){
-        const uploadsDir = path.join(__dirname, "../uploads");
+    static retrieveAllFiles(req, res) {
+        const uploadsDir = path.join(__dirname, '../uploads');
 
+        // Read the directory
         fs.readdir(uploadsDir, (err, files) => {
             if (err) {
                 return res.status(500).json({ error: "Failed to retrieve files" });
             }
 
-            res.status(200).json({
-                message: "All files retrieved successfully",
-                files: files
+            // Array to store file details
+            const fileDetails = [];
+
+            // Counter to track processed files
+            let processedFiles = 0;
+
+            // If the directory is empty, return an empty array
+            if (files.length === 0) {
+                return res.status(200).json({
+                    message: "All files retrieved successfully",
+                    files: fileDetails,
+                });
+            }
+
+            // Iterate through each file and get its details
+            files.forEach((filename) => {
+                const filePath = path.join(uploadsDir, filename);
+
+                // Get file stats (e.g., size)
+                fs.stat(filePath, (statErr, stats) => {
+                    if (statErr) {
+                        console.error(`Failed to get stats for file: ${filename}`, statErr);
+                        processedFiles++;
+                        return;
+                    }
+
+                    // Construct file details object
+                    const fileInfo = {
+                        originalName: filename, // Assuming the original name is the same as the filename
+                        filename: filename,
+                        path: filePath,
+                        size: stats.size, // File size in bytes
+                    };
+
+                    // Add file details to the array
+                    fileDetails.push(fileInfo);
+
+                    // Increment the processed files counter
+                    processedFiles++;
+
+                    // Check if all files have been processed
+                    if (processedFiles === files.length) {
+                        // Send the response with all file details
+                        res.status(200).json({
+                            message: "All files retrieved successfully",
+                            files: fileDetails,
+                        });
+                    }
+                });
             });
         });
     }
@@ -41,27 +88,10 @@ class FileController {
     static async uploadAvatar(req, res) {
         try {
           const { id } = req.params;
-          const previousAvatarPath = req.body.previousAvatarPath; // Path to the previously associated avatar
       
           // Check if a file is uploaded
           if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
-          }
-      
-          // If there's a previous avatar, attempt to delete it
-          if (previousAvatarPath) {
-            const filePath = path.join(process.cwd(), previousAvatarPath); // Get the absolute path
-            fs.access(filePath, fs.constants.F_OK, (err) => {
-              if (!err) {
-                fs.unlink(filePath, (unlinkErr) => {
-                  if (unlinkErr) {
-                    console.error(`Failed to delete file: ${filePath}`, unlinkErr);
-                  } else {
-                    console.log(`Deleted previous avatar: ${filePath}`);
-                  }
-                });
-              }
-            });
           }
       
           // Construct the full URI for the uploaded file
@@ -98,6 +128,29 @@ class FileController {
             return res.status(404).json({ error: "File not found" });
             }
             res.sendFile(filePath);
+        });
+    }
+
+    static deleteFile(req, res) {
+        const { filename } = req.params; // Treat the `id` parameter as the filename
+        const filePath = path.join(__dirname, '../uploads', filename); // Construct the file path
+
+        // Check if the file exists
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                return res.status(404).json({ error: "File not found" });
+            }
+
+            // Delete the file
+            fs.unlink(filePath, (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error(`Failed to delete file: ${filePath}`, unlinkErr);
+                    return res.status(500).json({ error: "Failed to delete file" });
+                }
+
+                console.log(`File deleted successfully: ${filePath}`);
+                res.status(200).json({ message: "File deleted successfully" });
+            });
         });
     }
 }

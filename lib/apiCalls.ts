@@ -1,4 +1,5 @@
 import { productType, image, address } from "./interface";
+import { extractFilename } from "./extractFilename";
 import axios from 'axios';
 
 function getIP() {
@@ -155,22 +156,32 @@ export async function moveItem(cartId: string) {
 }
 
 export async function uploadAvatar(previousUri: string | null, uri: string | null, id: string) {
-  if(!uri){
-    return null;
-  }
   try {
-    const formData = new FormData();
-    formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
+    if (previousUri) {
+      try {
+        await axios.delete(`${BASE_URL}/api/file/${extractFilename(previousUri)}`);
+        console.log("Previous avatar deleted successfully");
+      } catch (error) {
+        console.error("Error deleting previous avatar:", error);
+      }
+    }
+    if(uri){
+      const formData = new FormData();
+      formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
 
-    const response = await axios.post(`${BASE_URL}/api/file/upload/avatar/${id}`, formData);
-    return response.data;
+      const response = await axios.post(`${BASE_URL}/api/file/upload/avatar/${id}`, formData);
+      return response.data;
+    }else{
+      await axios.delete(`${BASE_URL}/api/user/avatar/${id}`);
+      return null;
+    }
   } catch (error) {
     console.error("Error uploading avatar:", error);
     return null;
   }
 }
 
-export async function deleteAvatar(id: string){
+export async function deleteAvatar(id: string, uri: string){
   try{
     const response = await axios.post(`${BASE_URL}/api/file/delete/avatar/${id}`);
     return response.data;
