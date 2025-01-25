@@ -1,4 +1,12 @@
-import { View, Text, TouchableOpacity, Image, FlatList, useWindowDimensions, ActivityIndicator, } from "react-native";
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  Image, 
+  FlatList, 
+  useWindowDimensions, 
+  ActivityIndicator, 
+} from "react-native";
 import { useState, useCallback, useEffect } from "react";
 import { updateCartQuantity, getAllCartItemsByUser } from "@/lib/apiCalls";
 import { useFocusEffect } from "@react-navigation/native";

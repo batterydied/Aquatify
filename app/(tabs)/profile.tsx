@@ -1,4 +1,14 @@
-import { Text, View, Image, useWindowDimensions, TouchableOpacity, Modal, TouchableWithoutFeedback, TextInput, Keyboard } from "react-native";
+import { 
+    Text, 
+    View, 
+    Image, 
+    useWindowDimensions, 
+    TouchableOpacity, 
+    Modal, 
+    TouchableWithoutFeedback, 
+    TextInput, 
+    Keyboard 
+} from "react-native";
 import SignOutButton from "../../components/SignOutButton";
 import { Redirect, router } from "expo-router";
 import { useUserData } from "@/contexts/UserContext";

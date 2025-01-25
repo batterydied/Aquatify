@@ -1,4 +1,15 @@
-import { Text, View, TouchableOpacity, ScrollView, Modal, TouchableWithoutFeedback, TextInput, Keyboard, Alert, ActivityIndicator } from "react-native";
+import { 
+    Text, 
+    View, 
+    TouchableOpacity, 
+    ScrollView, 
+    Modal, 
+    TouchableWithoutFeedback, 
+    TextInput, 
+    Keyboard, 
+    Alert, 
+    ActivityIndicator 
+} from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";

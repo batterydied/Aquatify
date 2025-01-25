@@ -6,10 +6,7 @@ import {
     useWindowDimensions,
     ActivityIndicator,
     TouchableWithoutFeedback,
-    Keyboard,
     ScrollView,
-    KeyboardAvoidingView,
-    Platform,
     Alert,
   } from "react-native";
   import { useCallback, useState } from "react";
@@ -211,114 +208,116 @@ import {
                       <ActivityIndicator size="large" color="gray" />
                     </View>
                   ):
-            (<View>
-                <TouchableOpacity
-                    activeOpacity={0.7}
-                    className="ml-4 mb-0 absolute z-10"
-                    onPress={() => router.push("/(tabs)/profile")}
-                >
-                    <FontAwesome
-                        name="arrow-left"
-                        size={20}
-                        color="gray"
-                        className="ml-2"
-                    />
-                </TouchableOpacity>
-                <ScrollView className="mt-4 p-4">
-                <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.06, marginBottom: 20 }}>
-                    Payment Methods
-                </Text>
-    
-                {/* List of Saved Payment Methods */}
-                {paymentMethods.length > 0 ? (
-                    paymentMethods.map((method) => renderPaymentMethod(method))
-                ) : (
-                    <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.04, marginBottom: 20 }}>
-                    No payment methods saved.
-                    </Text>
-                )}
-    
-                {/* Add/Edit Payment Method Form */}
-                <View className="bg-white rounded-lg p-4 mb-4">
-                    <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
-                    {editingPaymentMethod ? "Edit Payment Method" : "Add New Payment Method"}
-                    </Text>
-                    <TextInput
-                    placeholder="Cardholder Name"
-                    placeholderTextColor="gray"
-                    value={paymentInfo.cardName}
-                    onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardName: text })}
-                    className="p-3 border border-gray-300 rounded-lg mb-3"
-                    style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                    />
-                    <TextInput
-                    placeholder="Card Number"
-                    placeholderTextColor="gray"
-                    value={paymentInfo.cardNumber}
-                    onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardNumber: text })}
-                    className="p-3 border border-gray-300 rounded-lg mb-3"
-                    style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                    keyboardType="numeric"
-                    />
-                    <View className="flex-row justify-between mb-3">
-                    <TextInput
-                        placeholder="MM"
-                        placeholderTextColor="gray"
-                        value={paymentInfo.expiryMonth}
-                        onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryMonth: text })}
-                        className="p-3 border border-gray-300 rounded-lg flex-1 mr-2"
-                        style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                        keyboardType="numeric"
-                    />
-                    <TextInput
-                        placeholder="YY"
-                        placeholderTextColor="gray"
-                        value={paymentInfo.expiryYear}
-                        onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryYear: text })}
-                        className="p-3 border border-gray-300 rounded-lg flex-1 ml-2"
-                        style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                        keyboardType="numeric"
-                    />
-                    </View>
-                    <TextInput
-                    placeholder="CVV"
-                    placeholderTextColor="gray"
-                    value={paymentInfo.cvv}
-                    onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cvv: text })}
-                    className="p-3 border border-gray-300 rounded-lg mb-3"
-                    style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
-                    keyboardType="numeric"
-                    secureTextEntry
-                    />
-                    <View className="flex-row justify-between">
-                    {editingPaymentMethod && (
-                        <TouchableOpacity
-                        className="bg-gray-500 p-4 rounded-full items-center flex-1 mr-2"
-                        onPress={handleCancel}
-                        disabled={loading}
-                        >
-                        <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
-                            Cancel
-                        </Text>
-                        </TouchableOpacity>
-                    )}
+            (<TouchableWithoutFeedback>
+                <View>
                     <TouchableOpacity
-                        className="bg-orange-400 p-4 rounded-full items-center flex-1 ml-2"
-                        onPress={handleAddPaymentMethod}
-                        disabled={loading}
+                        activeOpacity={0.7}
+                        className="ml-4 mb-0 absolute z-10"
+                        onPress={() => router.push("/(tabs)/profile")}
                     >
-                        {loading ? (
-                        <ActivityIndicator size="small" color="white" />
-                        ) : (
-                        <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
-                            {editingPaymentMethod ? "Update" : "Add"}
-                        </Text>
-                        )}
+                        <FontAwesome
+                            name="arrow-left"
+                            size={20}
+                            color="gray"
+                            className="ml-2"
+                        />
                     </TouchableOpacity>
+                    <ScrollView className="mt-4 p-4">
+                    <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.06, marginBottom: 20 }}>
+                        Payment Methods
+                    </Text>
+        
+                    {/* List of Saved Payment Methods */}
+                    {paymentMethods.length > 0 ? (
+                        paymentMethods.map((method) => renderPaymentMethod(method))
+                    ) : (
+                        <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.04, marginBottom: 20 }}>
+                        No payment methods saved.
+                        </Text>
+                    )}
+        
+                    {/* Add/Edit Payment Method Form */}
+                    <View className="bg-white rounded-lg p-4 mb-4">
+                        <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
+                        {editingPaymentMethod ? "Edit Payment Method" : "Add New Payment Method"}
+                        </Text>
+                        <TextInput
+                        placeholder="Cardholder Name"
+                        placeholderTextColor="gray"
+                        value={paymentInfo.cardName}
+                        onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardName: text })}
+                        className="p-3 border border-gray-300 rounded-lg mb-3"
+                        style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                        />
+                        <TextInput
+                        placeholder="Card Number"
+                        placeholderTextColor="gray"
+                        value={paymentInfo.cardNumber}
+                        onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardNumber: text })}
+                        className="p-3 border border-gray-300 rounded-lg mb-3"
+                        style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                        keyboardType="numeric"
+                        />
+                        <View className="flex-row justify-between mb-3">
+                        <TextInput
+                            placeholder="MM"
+                            placeholderTextColor="gray"
+                            value={paymentInfo.expiryMonth}
+                            onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryMonth: text })}
+                            className="p-3 border border-gray-300 rounded-lg flex-1 mr-2"
+                            style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                            keyboardType="numeric"
+                        />
+                        <TextInput
+                            placeholder="YY"
+                            placeholderTextColor="gray"
+                            value={paymentInfo.expiryYear}
+                            onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryYear: text })}
+                            className="p-3 border border-gray-300 rounded-lg flex-1 ml-2"
+                            style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                            keyboardType="numeric"
+                        />
+                        </View>
+                        <TextInput
+                        placeholder="CVV"
+                        placeholderTextColor="gray"
+                        value={paymentInfo.cvv}
+                        onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cvv: text })}
+                        className="p-3 border border-gray-300 rounded-lg mb-3"
+                        style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                        keyboardType="numeric"
+                        secureTextEntry
+                        />
+                        <View className="flex-row justify-between">
+                        {editingPaymentMethod && (
+                            <TouchableOpacity
+                            className="bg-gray-500 p-4 rounded-full items-center flex-1 mr-2"
+                            onPress={handleCancel}
+                            disabled={loading}
+                            >
+                            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
+                                Cancel
+                            </Text>
+                            </TouchableOpacity>
+                        )}
+                        <TouchableOpacity
+                            className="bg-orange-400 p-4 rounded-full items-center flex-1 ml-2"
+                            onPress={handleAddPaymentMethod}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                            <ActivityIndicator size="small" color="white" />
+                            ) : (
+                            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
+                                {editingPaymentMethod ? "Update" : "Add"}
+                            </Text>
+                            )}
+                        </TouchableOpacity>
+                        </View>
                     </View>
+                    </ScrollView>
                 </View>
-                </ScrollView>
-            </View>)}
+            </TouchableWithoutFeedback>)}
         </SafeAreaView>
     );
   }
