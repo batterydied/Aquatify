@@ -13,7 +13,7 @@ import {
   } from "react-native";
   import { useCallback, useState } from "react";
   import { useUserData } from "@/contexts/UserContext";
-  import { calculatePriceWithQuantity, getProductType, fetchAddresses, fetchPaymentMethods } from "@/lib/apiCalls";
+  import { calculatePriceWithQuantity, getProductType, fetchAddresses, fetchPaymentMethods, placeOrder } from "@/lib/apiCalls";
   import { cartItem, address, paymentMethod } from "@/lib/interface";
   import { SafeAreaView } from "react-native-safe-area-context";
   import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
@@ -122,10 +122,8 @@ import {
       setLoading(true);
       try {
         // Simulate placing an order (replace with your API call)
-        setTimeout(() => {
-          setLoading(false);
-          alert("Order placed successfully!");
-        }, 2000);
+        await placeOrder(userData.id, shippingInfo, cartItems);
+        router.push("/home");
       } catch (error) {
         console.error("Error placing order:", error);
         setLoading(false);
@@ -185,7 +183,7 @@ import {
         });
       }
     };
-    
+
     const renderCartItem = (item: cartItem) => {
       const productType = getProductType(item.productTypeId, item.Product.productTypes);
       const price = productType ? calculatePriceWithQuantity(item.quantity, productType.price) : 0;

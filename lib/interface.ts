@@ -94,6 +94,16 @@ export interface address{
     zipCode: string;
 }
 
+export interface addressData{
+    streetAddress: string;
+    streetAddress2: string | null;
+    fullName: string;
+    phoneNumber: string;
+    city: string;
+    state: string;
+    zipCode: string;
+}
+
 export interface paymentMethod {
     id: string;
     cardNumber: string;

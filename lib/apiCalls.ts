@@ -1,4 +1,4 @@
-import { productType, image, address, paymentMethodData } from "./interface";
+import { productType, image, address, addressData, paymentMethodData, cartItem } from "./interface";
 import { extractFilename } from "./extractFilename";
 import axios from 'axios';
 
@@ -285,7 +285,32 @@ export async function deletePaymentMethod(userId: string, paymentMethodId: strin
   }
 }
 
-export async function placeOrder(){
-
+export async function placeOrder(userId: string, address: addressData, cartItems: cartItem[]){
+  try {
+    const products = cartItems.map((cartItem)=>{
+      return {
+        productId: cartItem.Product.productId,
+        productTypeId: cartItem.productTypeId,
+        quantity: cartItem.quantity
+      }
+    })
+    const orderInfo = {
+      userId,
+      name: address.fullName,
+      phoneNumber: address.phoneNumber,
+      streetAddress: address.streetAddress,
+      streetAddress2: address.streetAddress2,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      products
+    }
+    console.log(orderInfo);
+    const response = await axios.post(`${BASE_URL}/api/order`, orderInfo);
+    return response.data;
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
 }
 
