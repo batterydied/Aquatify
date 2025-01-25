@@ -58,25 +58,16 @@ export default function HomePage() {
         })
     }
 
-    const [imageLoading, setImageLoading] = useState(true);
-
     const renderItem = ({ item }: { item: homeProduct }) => {
         const images = sortImageById(item.images);
 
         return (
             <View className="flex-1 mx-1">
                 <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
-                    {imageLoading && (
-                        <View className="h-[85%] w-full rounded-lg justify-center items-center">
-                            <ActivityIndicator size="large" color="grey" />
-                        </View>
-                    )}
                     <Image
                         source={{ uri: images[0].url }}
                         className="h-[85%] w-full rounded-lg"
                         resizeMode="cover"
-                        onLoadStart={() => setImageLoading(true)}
-                        onLoadEnd={() => setImageLoading(false)}
                     />
                     <View className="h-[15%]">
                         <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>

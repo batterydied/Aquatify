@@ -1,16 +1,15 @@
 import { OrderModel } from "../models/OrderModel.js";
 import { ProductModel } from "../models/ProductModel.js";
-import { Op } from "sequelize"; // Import Sequelize operators
+import { UserModel } from "../models/UserModel.js";
+import { Op } from "sequelize";
+import sequelize from "../database.js";
 
-const { Order, OrderProduct, Address } = OrderModel.models;
+const { Order, OrderProduct } = OrderModel.models;
 const { Product, ProductType } = ProductModel.models;
+const { User } = UserModel.models;
 
 class OrderController {
-  constructor() {
-    this.model = OrderModel; // Associate the controller with the OrderModel abstraction
-  }
-
-  // Retrieve all orders for the signed-in user
+  // Retrieve all orders
   static async getOrders(req, res) {
     try {
       const orders = await Order.findAll({
@@ -18,24 +17,17 @@ class OrderController {
           {
             model: Product,
             attributes: ["productId", "name"],
-            include: [
-              {
-                model: ProductType,
-                as: "productTypes", // Use the alias defined in the association
-                attributes: ["type"], // Include product type name
-              },
-            ],
             through: {
-              attributes: ["quantity", "priceAtTimeOfOrder"], // Include OrderProduct fields
+              attributes: ["quantity", "priceAtTimeOfOrder", "productType"],
             },
           },
           {
-            model: Address,
-            as: "address",
-            attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
+            model: User,
+            attributes: ["id", "name", "email"],
           },
         ],
       });
+
       res.status(200).json(orders);
     } catch (error) {
       console.error("Error retrieving orders:", error);
@@ -52,21 +44,13 @@ class OrderController {
           {
             model: Product,
             attributes: ["productId", "name"],
-            include: [
-              {
-                model: ProductType,
-                as: "productTypes", // Use the alias defined in the association
-                attributes: ["type"], // Include product type name
-              },
-            ],
             through: {
-              attributes: ["quantity", "priceAtTimeOfOrder"], // Include OrderProduct fields
+                attributes: ["quantity", "priceAtTimeOfOrder", "productType"],
             },
           },
           {
-            model: Address,
-            as: "address",
-            attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
+            model: User,
+            attributes: ["id", "name", "email"],
           },
         ],
       });
@@ -85,10 +69,10 @@ class OrderController {
   // Add a new order
   static async addOrder(req, res) {
     try {
-      const { userId, products, addressId } = req.body;
+      const { userId, products, name, phoneNumber, streetAddress, streetAddress2, city, state, zipCode } = req.body;
 
       // Validate input
-      if (!userId || !products || !Array.isArray(products) || !addressId) {
+      if (!userId || !products || !Array.isArray(products) || !name || !phoneNumber || !streetAddress || !city || !state || !zipCode) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
@@ -96,35 +80,54 @@ class OrderController {
       let totalPrice = 0;
       for (const product of products) {
         const productData = await Product.findByPk(product.productId, {
-          include: [{ model: ProductType, where: { type: product.productType } }],
+          include: [
+            {
+              model: ProductType,
+              as: "productTypes",
+              where: { id: product.productTypeId },
+            },
+          ],
         });
 
-        if (!productData) {
-          return res.status(404).json({ error: `Product ${product.productId} not found` });
+        if (!productData || !productData.productTypes || productData.productTypes.length === 0) {
+          return res.status(404).json({ error: `Product or product type not found for product ${product.productId}` });
         }
 
-        totalPrice += productData.ProductTypes[0].price * product.quantity;
+        totalPrice += productData.productTypes[0].price * product.quantity;
       }
 
       // Create the order
       const newOrder = await Order.create({
         userId,
+        name,
+        phoneNumber,
+        streetAddress,
+        streetAddress2,
+        city,
+        state,
+        zipCode,
         totalPrice,
         status: "pending",
-        addressId,
       });
 
       // Add products to the order
       for (const product of products) {
         const productData = await Product.findByPk(product.productId, {
-          include: [{ model: ProductType, where: { type: product.productType } }],
+          include: [
+            {
+              model: ProductType,
+              as: "productTypes",
+              where: { id: product.productTypeId },
+            },
+          ],
         });
 
         await OrderProduct.create({
+          productId: productData.productId,
           orderId: newOrder.orderId,
-          productId: product.productId,
           quantity: product.quantity,
-          priceAtTimeOfOrder: productData.ProductTypes[0].price,
+          priceAtTimeOfOrder: productData.productTypes[0].price,
+          productType: productData.productTypes[0].type,
         });
       }
 
@@ -133,38 +136,6 @@ class OrderController {
     } catch (error) {
       console.error("Error adding order:", error);
       res.status(500).json({ error: "Failed to add order" });
-    }
-  }
-
-  // Update an existing order
-  static async updateOrder(req, res) {
-    try {
-      const { id } = req.params;
-      const { status, addressId } = req.body;
-
-      // Validate input
-      if (!status && !addressId) {
-        return res.status(400).json({ error: "No fields to update" });
-      }
-
-      // Fetch the order
-      const orderToUpdate = await Order.findByPk(id);
-
-      if (!orderToUpdate) {
-        return res.status(404).json({ error: "Order not found" });
-      }
-
-      // Update fields
-      if (status) orderToUpdate.status = status;
-      if (addressId) orderToUpdate.addressId = addressId;
-
-      await orderToUpdate.save();
-
-      // Respond with the updated order
-      res.status(200).json(orderToUpdate);
-    } catch (error) {
-      console.error("Error updating order:", error);
-      res.status(500).json({ error: "Failed to update order" });
     }
   }
 
@@ -202,21 +173,9 @@ class OrderController {
           {
             model: Product,
             attributes: ["productId", "name"],
-            include: [
-              {
-                model: ProductType,
-                as: "productTypes", // Use the alias defined in the association
-                attributes: ["type"], // Include product type name
-              },
-            ],
             through: {
-              attributes: ["quantity", "priceAtTimeOfOrder"], // Include OrderProduct fields
+              attributes: ["quantity", "priceAtTimeOfOrder", "productType"],
             },
-          },
-          {
-            model: Address,
-            as: "address",
-            attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
           },
         ],
       });
@@ -239,21 +198,20 @@ class OrderController {
           {
             model: Product,
             attributes: ["productId", "name"],
+            through: {
+              attributes: ["quantity", "priceAtTimeOfOrder", "productType"],
+            },
             include: [
               {
                 model: ProductType,
-                as: "productTypes", // Use the alias defined in the association
-                attributes: ["type"], // Include product type name
+                as: "productTypes",
+                attributes: ["id", "type"],
               },
             ],
-            through: {
-              attributes: ["quantity", "priceAtTimeOfOrder"], // Include OrderProduct fields
-            },
           },
           {
-            model: Address,
-            as: "address",
-            attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
+            model: User,
+            attributes: ["id", "name", "email"],
           },
         ],
       });
@@ -262,75 +220,6 @@ class OrderController {
     } catch (error) {
       console.error("Error retrieving orders by status:", error);
       res.status(500).json({ error: "Failed to retrieve orders by status" });
-    }
-  }
-
-  // Add items to an existing order
-  static async addItemsToOrder(req, res) {
-    try {
-      const { id } = req.params;
-      const { products } = req.body;
-
-      // Validate input
-      if (!products || !Array.isArray(products)) {
-        return res.status(400).json({ error: "Invalid products format" });
-      }
-
-      // Fetch the order
-      const order = await Order.findByPk(id);
-
-      if (!order) {
-        return res.status(404).json({ error: "Order not found" });
-      }
-
-      // Add products to the order
-      for (const product of products) {
-        const productData = await Product.findByPk(product.productId, {
-          include: [{ model: ProductType, where: { type: product.productType } }],
-        });
-
-        if (!productData) {
-          return res.status(404).json({ error: `Product ${product.productId} not found` });
-        }
-
-        await OrderProduct.create({
-          orderId: order.orderId,
-          productId: product.productId,
-          quantity: product.quantity,
-          priceAtTimeOfOrder: productData.ProductTypes[0].price,
-        });
-      }
-
-      // Respond with success
-      res.status(200).json({ status: "Items added to order successfully" });
-    } catch (error) {
-      console.error("Error adding items to order:", error);
-      res.status(500).json({ error: "Failed to add items to order" });
-    }
-  }
-
-  // Remove a specific item from an order
-  static async removeItemFromOrder(req, res) {
-    try {
-      const { id, itemId } = req.params;
-
-      // Fetch the order product
-      const orderProduct = await OrderProduct.findOne({
-        where: { orderId: id, productId: itemId },
-      });
-
-      if (!orderProduct) {
-        return res.status(404).json({ error: "Item not found in order" });
-      }
-
-      // Delete the item
-      await orderProduct.destroy();
-
-      // Respond with success
-      res.status(200).json({ status: "Item removed from order successfully" });
-    } catch (error) {
-      console.error("Error removing item from order:", error);
-      res.status(500).json({ error: "Failed to remove item from order" });
     }
   }
 
@@ -361,52 +250,6 @@ class OrderController {
     } catch (error) {
       console.error("Error updating order status:", error);
       res.status(500).json({ error: "Failed to update order status" });
-    }
-  }
-
-  // Search orders by criteria (e.g., date range, product name, user ID)
-  static async searchOrders(req, res) {
-    try {
-      const { query } = req.query;
-
-      // Build the search criteria
-      const where = {};
-      if (query) {
-        where[Op.or] = [
-          { userId: { [Op.like]: `%${query}%` } },
-          { status: { [Op.like]: `%${query}%` } },
-        ];
-      }
-
-      const orders = await Order.findAll({
-        where,
-        include: [
-          {
-            model: Product,
-            attributes: ["productId", "name"],
-            include: [
-              {
-                model: ProductType,
-                as: "productTypes", // Use the alias defined in the association
-                attributes: ["type"], // Include product type name
-              },
-            ],
-            through: {
-              attributes: ["quantity", "priceAtTimeOfOrder"], // Include OrderProduct fields
-            },
-          },
-          {
-            model: Address,
-            as: "address",
-            attributes: ["streetAddress", "city", "state", "zipCode"], // Include address fields
-          },
-        ],
-      });
-
-      res.status(200).json(orders);
-    } catch (error) {
-      console.error("Error searching orders:", error);
-      res.status(500).json({ error: "Failed to search orders" });
     }
   }
 }

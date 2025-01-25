@@ -13,12 +13,13 @@ import {
   } from "react-native";
   import { useCallback, useState } from "react";
   import { useUserData } from "@/contexts/UserContext";
-  import { calculatePriceWithQuantity, getProductType, fetchAddresses } from "@/lib/apiCalls";
-  import { cartItem, address } from "@/lib/interface";
+  import { calculatePriceWithQuantity, getProductType, fetchAddresses, fetchPaymentMethods } from "@/lib/apiCalls";
+  import { cartItem, address, paymentMethod } from "@/lib/interface";
   import { SafeAreaView } from "react-native-safe-area-context";
   import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
   import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
   import AddressDropdown from "@/components/AddressDropdown";
+  import PaymentMethodsDropdown from "@/components/PaymentMethodDropdown";
   
   export default function CheckoutPage() {
     const params = useLocalSearchParams();
@@ -48,8 +49,9 @@ import {
     // Payment Information State
     const [paymentInfo, setPaymentInfo] = useState({
       cardNumber: "",
-      cardHolderName: "",
-      expirationDate: "",
+      cardName: "",
+      expiryMonth: "",
+      expiryYear: "",
       cvv: "",
     });
   
@@ -58,6 +60,8 @@ import {
     const { width } = useWindowDimensions();
     const [addresses, setAddresses] = useState<address[]>([]);
     const [selectedAddress, setSelectedAddress] = useState<address | null>(null);
+    const [paymentMethods, setPaymentMethods] = useState<paymentMethod[]>([]);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<paymentMethod | null>(null);
   
     const [fontsLoaded] = useFonts({
       MontserratRegular: Montserrat_400Regular,
@@ -72,8 +76,10 @@ import {
     const fetchData = async () => {
       setLoading(true); // Start loading
       try {
-        const data = await fetchAddresses(userData.id);
-        setAddresses(data || []);
+        const addressData = await fetchAddresses(userData.id);
+        const paymentData = await fetchPaymentMethods(userData.id);
+        setAddresses(addressData || []);
+        setPaymentMethods(paymentData || []);
       } catch (error) {
         console.error("Error fetching addresses:", error);
       } finally {
@@ -104,8 +110,9 @@ import {
       // Validate Payment Information
       if (
         !paymentInfo.cardNumber ||
-        !paymentInfo.cardHolderName ||
-        !paymentInfo.expirationDate ||
+        !paymentInfo.cardName ||
+        !paymentInfo.expiryMonth ||
+        !paymentInfo.expiryYear ||
         !paymentInfo.cvv
       ) {
         alert("Please fill out all payment information fields.");
@@ -118,11 +125,35 @@ import {
         setTimeout(() => {
           setLoading(false);
           alert("Order placed successfully!");
-          router.push("/orders"); // Redirect to orders page
         }, 2000);
       } catch (error) {
         console.error("Error placing order:", error);
         setLoading(false);
+      }
+    };
+  
+    const handlePaymentMethodSelect = (paymentMethod: paymentMethod | null) => {
+      if (paymentMethod) {
+        setSelectedPaymentMethod(paymentMethod);
+        setPaymentInfo({
+          ...paymentInfo,
+          cardName: paymentMethod.cardName || "",
+          cardNumber: paymentMethod.cardNumber || "",
+          expiryMonth: paymentMethod.expiryMonth || "",
+          expiryYear: paymentMethod.expiryYear || "",
+          cvv: paymentMethod.cvv || "",
+        });
+      } else {
+        // Reset the form if "Select a payment method" is chosen
+        setSelectedPaymentMethod(null);
+        setPaymentInfo({
+          ...paymentInfo,
+          cardName: "",
+          cardNumber: "",
+          expiryMonth: "",
+          expiryYear: "",
+          cvv: "",
+        });
       }
     };
   
@@ -154,7 +185,7 @@ import {
         });
       }
     };
-  
+    
     const renderCartItem = (item: cartItem) => {
       const productType = getProductType(item.productTypeId, item.Product.productTypes);
       const price = productType ? calculatePriceWithQuantity(item.quantity, productType.price) : 0;
@@ -289,6 +320,13 @@ import {
                   style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
                   keyboardType="phone-pad"
                 />
+                <TouchableOpacity className="p-2" onPress={()=>handleAddressSelect(null)}>
+                    <View>
+                        <Text className="text-red-500" style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
+                            Clear
+                        </Text>
+                    </View>
+                </TouchableOpacity>
               </View>
   
               {/* Payment Information */}
@@ -296,6 +334,9 @@ import {
                 <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
                   Payment Information
                 </Text>
+                {paymentMethods.length > 0 && (
+                  <PaymentMethodsDropdown data={paymentMethods} select={handlePaymentMethodSelect} value={selectedPaymentMethod} />
+                )}
                 <TextInput
                   placeholder="Card Number"
                   placeholderTextColor="gray"
@@ -308,16 +349,24 @@ import {
                 <TextInput
                   placeholder="Cardholder Name"
                   placeholderTextColor="gray"
-                  value={paymentInfo.cardHolderName}
-                  onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardHolderName: text })}
+                  value={paymentInfo.cardName}
+                  onChangeText={(text) => setPaymentInfo({ ...paymentInfo, cardName: text })}
                   className="p-3 border border-gray-300 rounded-lg mb-3"
                   style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
                 />
                 <TextInput
-                  placeholder="Expiration Date (MM/YY)"
+                  placeholder="Expiration Date (MM)"
                   placeholderTextColor="gray"
-                  value={paymentInfo.expirationDate}
-                  onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expirationDate: text })}
+                  value={paymentInfo.expiryMonth}
+                  onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryMonth: text })}
+                  className="p-3 border border-gray-300 rounded-lg mb-3"
+                  style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
+                />
+                <TextInput
+                  placeholder="Expiration Date (YY)"
+                  placeholderTextColor="gray"
+                  value={paymentInfo.expiryYear}
+                  onChangeText={(text) => setPaymentInfo({ ...paymentInfo, expiryYear: text })}
                   className="p-3 border border-gray-300 rounded-lg mb-3"
                   style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}
                 />
@@ -331,6 +380,13 @@ import {
                   keyboardType="numeric"
                   secureTextEntry
                 />
+                <TouchableOpacity className="p-2" onPress={()=>handlePaymentMethodSelect(null)}>
+                    <View>
+                        <Text className="text-red-500" style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
+                            Clear
+                        </Text>
+                    </View>
+                </TouchableOpacity>
               </View>
   
               {/* Place Order Button */}

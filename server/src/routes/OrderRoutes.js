@@ -24,9 +24,6 @@ class OrderRoutes {
     // Add a new order
     this.router.post("/", OrderController.addOrder);
 
-    // Update an existing order
-    this.router.put("/:id", OrderController.updateOrder);
-
     // Cancel (delete) an existing order
     this.router.delete("/:id", OrderController.cancelOrder);
 
@@ -36,17 +33,8 @@ class OrderRoutes {
     // Fetch all orders with a specific status
     this.router.get("/status/:status", OrderController.getOrdersByStatus);
 
-    // Add items to an existing order
-    this.router.post("/:id/items", OrderController.addItemsToOrder);
-
-    // Remove a specific item from an order
-    this.router.delete("/:id/items/:itemId", OrderController.removeItemFromOrder);
-
     // Update the status of an order
     this.router.put("/:id/status", OrderController.updateOrderStatus);
-
-    // Search orders by criteria
-    this.router.get("/search", OrderController.searchOrders);
 
   }
 
