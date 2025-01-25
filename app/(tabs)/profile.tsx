@@ -183,7 +183,9 @@ export default function SettingPage() {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}>
+                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}
+                    onPress={()=>router.push({
+                    pathname: "/(tabs)/payments"})}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="wallet" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>

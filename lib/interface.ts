@@ -93,3 +93,20 @@ export interface address{
     state: string;
     zipCode: string;
 }
+
+export interface paymentMethod {
+    id: string;
+    cardNumber: string;
+    expiryMonth: string;
+    expiryYear: string;
+    cvv: string;
+    cardName: string;
+}
+
+export interface paymentMethodData {
+    cardNumber: string;
+    expiryMonth: string;
+    expiryYear: string;
+    cvv: string;
+    cardName: string;
+}

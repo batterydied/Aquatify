@@ -1,4 +1,4 @@
-import { productType, image, address } from "./interface";
+import { productType, image, address, paymentMethodData } from "./interface";
 import { extractFilename } from "./extractFilename";
 import axios from 'axios';
 
@@ -215,9 +215,10 @@ export async function fetchAddresses(userId: string){
 
 export async function saveEditedAddress(selectedAddress: address){
   try {
-    await axios.put(`${BASE_URL}/api/address/${selectedAddress.id}`, 
+    const response = await axios.put(`${BASE_URL}/api/address/${selectedAddress.id}`, 
         selectedAddress,
     );
+    return response.data;
   } catch(error) {
     console.error(error);
     return null;
@@ -226,7 +227,8 @@ export async function saveEditedAddress(selectedAddress: address){
 
 export async function addNewAddress(address: address){
   try {
-    await axios.post(`${BASE_URL}/api/address`, address);
+    const response = await axios.post(`${BASE_URL}/api/address`, address);
+    return response.data;
   } catch(error) {
     console.error(error);
     return null;
@@ -235,7 +237,48 @@ export async function addNewAddress(address: address){
 
 export async function deleteAddress(addressId: string){
   try {
-    await axios.delete(`${BASE_URL}/api/address/${addressId}`);
+    const response = await axios.delete(`${BASE_URL}/api/address/${addressId}`);
+    return response.data;
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function fetchPaymentMethods(userId: string){
+  try {
+    const response = await axios.get(`${BASE_URL}/api/user/payments/${userId}`);
+    return response.data;
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function addPaymentMethod(userId: string, payment: paymentMethodData){
+  try {
+    const response = await axios.post(`${BASE_URL}/api/user/payments/${userId}`, payment);
+    return response.data;
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function updatePaymentMethod(userId: string, paymentMethodId: string, payment: paymentMethodData){
+  try {
+    const response = await axios.put(`${BASE_URL}/api/user/payments/${userId}/${paymentMethodId}`, payment);
+    return response.data;
+  } catch(error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function deletePaymentMethod(userId: string, paymentMethodId: string){
+  try {
+    const response = await axios.delete(`${BASE_URL}/api/user/payments/${userId}/${paymentMethodId}`);
+    return response.data;
   } catch(error) {
     console.error(error);
     return null;

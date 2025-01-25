@@ -184,6 +184,111 @@ class UserController {
       return res.status(500).json({ error: "An error occurred while deleting the user avatar." });
     }
   }
+
+  static async getUserPaymentMethods(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the user by ID
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found." });
+      }
+
+      // Fetch all payment methods associated with the user
+      const paymentMethods = await PaymentMethod.findAll({
+        where: { userId: id }, // Assuming the PaymentMethod model has a `userId` field
+      });
+
+      // Return the payment methods
+      res.status(200).json(paymentMethods);
+    } catch (error) {
+      console.error("Error retrieving user payment methods:", error);
+      res.status(500).json({ error: "Failed to retrieve payment methods." });
+    }
+  }
+
+  static async addPaymentMethod(req, res) {
+    try {
+      const { id } = req.params; // User ID
+      const { cardNumber, expiryMonth, expiryYear, cvv, cardName } = req.body;
+  
+      // Validate required fields
+      if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !cardName) {
+        return res.status(400).json({ error: "All fields are required." });
+      }
+  
+      // Create a new payment method
+      const newPaymentMethod = await PaymentMethod.create({
+        cardNumber,
+        expiryMonth,
+        expiryYear,
+        cvv,
+        cardName,
+        userId: id, // Associate the payment method with the user
+      });
+  
+      // Return the newly created payment method
+      res.status(201).json(newPaymentMethod);
+    } catch (error) {
+      console.error("Error adding payment method:", error);
+      res.status(500).json({ error: "Failed to add payment method." });
+    }
+  }
+
+  static async updatePaymentMethod(req, res) {
+    try {
+      const { id, paymentMethodId } = req.params; // User ID and Payment Method ID
+      const { cardNumber, expiryMonth, expiryYear, cvv, cardName } = req.body;
+
+      // Find the payment method
+      const paymentMethod = await PaymentMethod.findOne({
+        where: { id: paymentMethodId, userId: id }, // Ensure the payment method belongs to the user
+      });
+
+      if (!paymentMethod) {
+        return res.status(404).json({ error: "Payment method not found." });
+      }
+
+      // Update the payment method
+      if (cardNumber !== undefined) paymentMethod.cardNumber = cardNumber;
+      if (expiryMonth !== undefined) paymentMethod.expiryMonth = expiryMonth;
+      if (expiryYear !== undefined) paymentMethod.expiryYear = expiryYear;
+      if (cvv !== undefined) paymentMethod.cvv = cvv;
+      if (cardName !== undefined) paymentMethod.cardName = cardName;
+
+      await paymentMethod.save();
+
+      // Return the updated payment method
+      res.status(200).json(paymentMethod);
+    } catch (error) {
+      console.error("Error updating payment method:", error);
+      res.status(500).json({ error: "Failed to update payment method." });
+    }
+  }
+  static async deletePaymentMethod(req, res) {
+    try {
+      const { id, paymentMethodId } = req.params; // User ID and Payment Method ID
+
+      // Find the payment method
+      const paymentMethod = await PaymentMethod.findOne({
+        where: { id: paymentMethodId, userId: id }, // Ensure the payment method belongs to the user
+      });
+
+      if (!paymentMethod) {
+        return res.status(404).json({ error: "Payment method not found." });
+      }
+
+      // Delete the payment method
+      await paymentMethod.destroy();
+
+      // Return a success message
+      res.status(200).json({ message: "Payment method deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting payment method:", error);
+      res.status(500).json({ error: "Failed to delete payment method." });
+    }
+  }
 }
 
 export default UserController;

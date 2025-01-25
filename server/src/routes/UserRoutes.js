@@ -15,6 +15,18 @@ class UserRoutes {
     // Fetch a single User by ID
     this.router.get("/email/:email", UserController.getUserByEmail);
 
+    // Get all payment methods for a user
+    this.router.get("/payments/:id", UserController.getUserPaymentMethods);
+
+    // Add a new payment method for a user
+    this.router.post("/payments/:id", UserController.addPaymentMethod);
+
+    // Update an existing payment method
+    this.router.put("/payments/:id/:paymentMethodId", UserController.updatePaymentMethod);
+
+    // Delete a payment method
+    this.router.delete("/payments/:id/:paymentMethodId", UserController.deletePaymentMethod);
+
     // Fetch a User by email or create a new User
     this.router.get("/fetch/:email", UserController.getUserOrCreate);
     
