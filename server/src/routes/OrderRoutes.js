@@ -27,6 +27,8 @@ class OrderRoutes {
     // Cancel (delete) an existing order
     this.router.delete("/:id", OrderController.cancelOrder);
 
+    this.router.delete("/", OrderController.deleteAllOrders);
+
     // Fetch all orders for a specific user (admin only)
     this.router.get("/user/:userId", OrderController.getOrdersByUserId);
 

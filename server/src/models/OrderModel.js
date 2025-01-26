@@ -71,30 +71,41 @@ const Order = sequelize.define("Order", {
     },
   });
 
-// Define the OrderProduct join table
-const OrderProduct = sequelize.define("OrderProduct", {
-  quantity: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-  },
-  priceAtTimeOfOrder: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  productType: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  }
+  const OrderProduct = sequelize.define("OrderProduct", {
+    id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+    },
+    productId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
+    productName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    productType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+    },
+    priceAtTimeOfOrder: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
 });
 
 // Order belongs to User (one-to-many)
 Order.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(Order, { foreignKey: "userId", as: "orders", onDelete: "CASCADE" });
 
-// Many-to-many relationship between Order and Product through OrderProduct
-Order.belongsToMany(Product, { through: OrderProduct, foreignKey: "orderId" });
-Product.belongsToMany(Order, { through: OrderProduct, foreignKey: "productId" });
+OrderProduct.belongsTo(Order, { foreignKey: "orderId", onDelete: "CASCADE" });
+Order.hasMany(OrderProduct, { foreignKey: "orderId", as: "orderProducts", onDelete: "CASCADE" });
 
 
 // Export Models
