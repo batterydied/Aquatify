@@ -321,7 +321,22 @@ class ProductController {
       res.status(500).json({ error: "Failed to delete all products." });
     }
   }
-  
+
+  static async getProductType(req, res){
+    try{
+      const { productId } = req.params;
+      const { productTypeId } = req.query;
+      const productType = await ProductType.findOne({ where: { id: productTypeId, productId } });
+      if (productType) {
+        return res.status(201).json(productType);
+      } else {
+        return res.status(404).json({ error: `ProductType with ID ${productTypeId} not found for the given product.` });
+      }
+    } catch (error) {
+      console.error("Error fetching the product type:", error);
+      res.status(500).json({ error: "Failed to fetch the product type." });
+    }
+  }
 }
 
 export default ProductController;

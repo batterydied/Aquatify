@@ -110,6 +110,7 @@ class CartController {
         productTypeId,
         quantity,
         isSaved: false,
+        price: 5.99
       });
   
       return res.status(201).json(newCartItem);

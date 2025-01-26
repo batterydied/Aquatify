@@ -7,9 +7,9 @@ import {
     ScrollView,
     ActivityIndicator,
   } from "react-native";
-  import { useLocalSearchParams, router } from "expo-router";
-  import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
-  import { cartItem } from "@/lib/interface";
+import { useLocalSearchParams, router } from "expo-router";
+import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
+import { cartItem } from "@/lib/interface";
 import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
   
   export default function OrderConfirmationPage() {
@@ -47,6 +47,9 @@ import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
             <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
               {item.Product.name}
             </Text>
+            {productType && <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.03, color: "gray" }}>
+              {productType.type}
+            </Text>}
             <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.03, color: "gray" }}>
               {`${item.quantity} x $${productType?.price.toFixed(2)}`}
             </Text>

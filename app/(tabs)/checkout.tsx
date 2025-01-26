@@ -32,7 +32,7 @@ import {
   
     // Tax rate (e.g., 10%)
     const taxRate = 0.1; // 10% tax
-    const tax = subtotal * taxRate; // Calculate tax
+    const tax = parseFloat((subtotal * taxRate).toFixed(2)); // Calculate tax
     const total = subtotal + tax; // Calculate total
   
     // Shipping Information State
@@ -122,7 +122,7 @@ import {
         setLoading(true);
         try {
             // Simulate placing an order (replace with your API call)
-            await placeOrder(userData.id, shippingInfo, cartItems);
+            await placeOrder(userData.id, shippingInfo, cartItems, {subtotal, tax, total});
             router.push({
                 pathname: "/(tabs)/order",
                 params: {

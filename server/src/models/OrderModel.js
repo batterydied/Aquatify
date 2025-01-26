@@ -54,6 +54,14 @@ const Order = sequelize.define("Order", {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    subtotal: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    tax: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
     status: {
       type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
       defaultValue: 'pending',

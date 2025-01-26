@@ -285,15 +285,22 @@ export async function deletePaymentMethod(userId: string, paymentMethodId: strin
   }
 }
 
-export async function placeOrder(userId: string, address: addressData, cartItems: cartItem[]){
+export async function placeOrder(userId: string, address: addressData, cartItems: cartItem[], {subtotal, tax, total}:{subtotal: number, tax: number, total: number}){
   try {
-    const products = cartItems.map((cartItem)=>{
+    const products = await Promise.all(cartItems.map(async (cartItem)=>{
+      const productId = cartItem.Product.productId;
+      const productTypeId = cartItem.productTypeId;
+      const response = await axios.get(`${BASE_URL}/api/product/${productId}/productType`,{
+        params: { productTypeId }
+      });
+      const productType = response.data
       return {
-        productId: cartItem.Product.productId,
-        productTypeId: cartItem.productTypeId,
+        productId,
+        productTypeId,
         quantity: cartItem.quantity,
+        priceAtTimeOfOrder: productType.price
       }
-    })
+    }))
     const orderInfo = {
       userId,
       name: address.fullName,
@@ -303,6 +310,9 @@ export async function placeOrder(userId: string, address: addressData, cartItems
       city: address.city,
       state: address.state,
       zipCode: address.zipCode,
+      tax: tax,
+      subtotal: subtotal,
+      totalPrice: total,
       products
     }
     console.log(orderInfo);

@@ -11,8 +11,10 @@
         initializeRoutes() {
         // Fetch all products
         this.router.get("/", ProductController.getAllProducts);
-    
+        
+        this.router.get("/:productId/productType", ProductController.getProductType);
         // Fetch a single product by ID
+
         this.router.get("/:productId", ProductController.getProductById);
     
         // Add a new product

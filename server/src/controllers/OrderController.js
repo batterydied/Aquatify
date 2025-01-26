@@ -44,10 +44,10 @@ class OrderController {
     const transaction = await sequelize.transaction(); // Start a transaction
   
     try {
-      const { userId, name, phoneNumber, streetAddress, streetAddress2, city, state, zipCode, totalPrice, products } = req.body;
+      const { userId, name, phoneNumber, streetAddress, streetAddress2, city, state, zipCode, totalPrice, products, tax, subtotal } = req.body;
   
       // Validate input
-      if (!userId || !name || !phoneNumber || !streetAddress || !city || !state || !zipCode || !totalPrice || !products) {
+      if (!userId || !name || !phoneNumber || !streetAddress || !city || !state || !zipCode || !totalPrice || !products || !tax || !subtotal) {
         return res.status(400).json({ error: "Missing required fields" });
       }
   
@@ -80,6 +80,8 @@ class OrderController {
         state,
         zipCode,
         totalPrice,
+        tax,
+        subtotal
       }, { transaction });
   
       // Associate products with the order and update stock levels
