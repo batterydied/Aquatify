@@ -120,3 +120,30 @@ export interface paymentMethodData {
     cvv: string;
     cardName: string;
 }
+
+export interface orderProduct {
+    productId: string;
+    productTypeId: number;
+    productName: string;
+    productType: string;
+    quantity: number;
+    priceAtTimeOfOrder: number;
+}
+
+export interface order {
+    orderId: string;
+    name: string;
+    phoneNumber: string;
+    streetAddress: string;
+    streetAddress2: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    totalPrice: number;
+    subtotal: number;
+    tax: number;
+    status: string;
+    updatedAt: string;
+    createdAt: string;
+    orderProducts: orderProduct[];
+}

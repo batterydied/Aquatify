@@ -324,3 +324,13 @@ export async function placeOrder(userId: string, address: addressData, cartItems
   }
 }
 
+export async function fetchOrders(userId: string){
+  try{
+    const response = await axios.get(`${BASE_URL}/api/order/user/${userId}`);
+    return response.data
+  }catch(error){
+    console.error(error);
+    return null;
+  }
+}
+

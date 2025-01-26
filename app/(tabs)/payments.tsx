@@ -171,7 +171,7 @@ import {
   
     const renderPaymentMethod = (method: paymentMethod) => {
       return (
-        <View key={method.id} className="bg-white rounded-lg p-4 mb-3">
+        <View key={method.id} className="bg-white rounded-lg p-4 mb-3 shadow-sm">
           <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>
             {method.cardName}
           </Text>
@@ -237,7 +237,7 @@ import {
                     )}
         
                     {/* Add/Edit Payment Method Form */}
-                    <View className="bg-white rounded-lg p-4 mb-4">
+                    <View className="bg-white rounded-lg p-4 mb-4 shadow-sm">
                         <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
                         {editingPaymentMethod ? "Edit Payment Method" : "Add New Payment Method"}
                         </Text>
