@@ -124,6 +124,7 @@ export default function CheckoutPage() {
             // Simulate placing an order (replace with your API call)
             await deleteAllItemFromCart(userData.id);
             await placeOrder(userData.id, shippingInfo, cartItems, {subtotal, tax, total});
+
             router.push({
                 pathname: "/(tabs)/order",
                 params: {

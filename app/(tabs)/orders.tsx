@@ -18,15 +18,15 @@ import { order } from "../../lib/interface";
 
 export default function Orders() {
     const { userData } = useUserData();
-    const [orders, setOrders] = useState<order[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState<order | null>(null);
-    const [isViewingOrder, setViewingOrder] = useState(false);
+    const [ orders, setOrders ] = useState<order[]>([]);
+    const [ loading, setLoading ] = useState(true);
+    const [ error, setError ] = useState(false);
+    const [ selectedOrder, setSelectedOrder ] = useState<order | null>(null);
+    const [ isViewingOrder, setViewingOrder ] = useState(false);
 
     // Search functionality
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [filteredOrders, setFilteredOrders] = useState<order[]>([]);
+    const [ searchQuery, setSearchQuery ] = useState<string>("");
+    const [ filteredOrders, setFilteredOrders ] = useState<order[]>([]);
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
@@ -82,6 +82,17 @@ export default function Orders() {
     const closeOrderDetails = () => {
         setViewingOrder(false);
         setSelectedOrder(null);
+    };
+
+    const goToProductPage = (productId: string) => {
+        closeOrderDetails();
+        router.push({
+            pathname: "/(tabs)/product" as any,
+            params: {
+               productId,
+               fromPage: "/(tabs)/orders"
+            }
+        });
     };
 
     if (error) {
@@ -212,20 +223,22 @@ export default function Orders() {
                                                 Products
                                             </Text>
                                             {selectedOrder.orderProducts.map((product) => (
-                                                <View key={product.productId} className="mt-2">
-                                                    <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                        Product ID: {product.productId.slice(0, 4)}...{product.productId.slice(-4)}
-                                                    </Text>
-                                                    <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                        {product.productName} ({product.productType})
-                                                    </Text>
-                                                    <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                        Quantity: {product.quantity}
-                                                    </Text>
-                                                    <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                        Price: ${product.priceAtTimeOfOrder.toFixed(2)}
-                                                    </Text>
-                                                </View>
+                                                <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId)} >
+                                                    <View className="mt-2">
+                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
+                                                            Product ID: {product.productId.slice(0, 4)}...{product.productId.slice(-4)}
+                                                        </Text>
+                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
+                                                            {product.productName} ({product.productType})
+                                                        </Text>
+                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
+                                                            Quantity: {product.quantity}
+                                                        </Text>
+                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
+                                                            Price: ${product.priceAtTimeOfOrder.toFixed(2)}
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
                                             ))}
                                         </View>
 

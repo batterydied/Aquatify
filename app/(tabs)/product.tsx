@@ -12,12 +12,12 @@ import {
   import { useRouter, useLocalSearchParams } from "expo-router";
   import { useEffect, useState, useRef, useCallback } from "react";
   import { useFocusEffect } from "@react-navigation/native";
-  import { getProductById, addItemToCart, sortImageById } from "../../../lib/apiCalls";
-  import { productInterface, review, productType, reviewSortOption } from "../../../lib/interface";
-  import ProductDropdownComponent from "../../../components/ProductDropdown";
-  import QuantityDropdownComponent from "../../../components/QuantityDropdown";
-  import ReviewFilterDropdown from "../../../components/ReviewFilterDropdwon";
-  import ReviewComponent from "../../../components/ReviewComponent";
+  import { getProductById, addItemToCart, sortImageById } from "../../lib/apiCalls";
+  import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
+  import ProductDropdownComponent from "../../components/ProductDropdown";
+  import QuantityDropdownComponent from "../../components/QuantityDropdown";
+  import ReviewFilterDropdown from "../../components/ReviewFilterDropdwon";
+  import ReviewComponent from "../../components/ReviewComponent";
   import { FontAwesome } from "@expo/vector-icons";
   import { useUserData } from "@/contexts/UserContext";
   import { Redirect } from "expo-router";
@@ -26,7 +26,7 @@ import {
   export default function ProductPage() {
     const { userData } = useUserData();
     const router = useRouter();
-    const { productId } = useLocalSearchParams<{ productId: string }>();
+    const { productId, fromPage } = useLocalSearchParams<{ productId: string, fromPage: string }>();
     const [product, setProduct] = useState<productInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -93,7 +93,6 @@ import {
         </View>
       );
     }
-  
     const renderReview = ({ item }: { item: review }) => (
       <ReviewComponent
         user={item.user}
@@ -279,7 +278,7 @@ import {
         <TouchableOpacity
           activeOpacity={0.7}
           className="ml-4 mt-16 mb-0 absolute z-10"
-          onPress={() => router.back()}
+          onPress={() => router.push(fromPage as any)}
         >
           <FontAwesome
             name="arrow-left"

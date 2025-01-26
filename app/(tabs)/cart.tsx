@@ -41,7 +41,13 @@ export default function CartPage() {
   };
 
   const goToProductPage = (productId: string) => {
-    router.push(`/(tabs)/(product)/${productId}`);
+    router.push({
+      pathname: "/(tabs)/product" as any,
+      params: {
+         productId,
+         fromPage: "/(tabs)/cart"
+      }
+  });
   };
 
   // Refresh cart when the screen is focused

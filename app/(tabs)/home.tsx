@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { getProducts, sortImageById } from "@/lib/apiCalls";
 import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
@@ -82,7 +82,13 @@ export default function HomePage() {
     };
 
     const goToProductPage = (productId: string) => {
-        router.push(`/(tabs)/(product)/${productId}`);
+        router.push({
+            pathname: "/(tabs)/product" as any,
+            params: {
+               productId,
+               fromPage: "/(tabs)/home"
+            }
+        });
     };
 
     useEffect(() => {

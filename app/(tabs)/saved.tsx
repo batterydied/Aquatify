@@ -50,7 +50,13 @@ export default function SavedPage() {
   );
 
   const goToProductPage = (productId: string) => {
-    router.push(`/(tabs)/(product)/${productId}`);
+    router.push({
+      pathname: "/(tabs)/product" as any,
+      params: {
+         productId,
+         fromPage: "/(tabs)/saved"
+      }
+  });
   };
 
   const handleDeletingItem = async (cartId: string) => {
