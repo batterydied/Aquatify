@@ -94,40 +94,48 @@ import {
     );
   
     const handlePlaceOrder = async () => {
-      // Validate Shipping Information
-      if (
-        !shippingInfo.fullName ||
-        !shippingInfo.streetAddress ||
-        !shippingInfo.city ||
-        !shippingInfo.state ||
-        !shippingInfo.zipCode ||
-        !shippingInfo.phoneNumber
-      ) {
-        alert("Please fill out all shipping information fields.");
-        return;
-      }
-  
-      // Validate Payment Information
-      if (
-        !paymentInfo.cardNumber ||
-        !paymentInfo.cardName ||
-        !paymentInfo.expiryMonth ||
-        !paymentInfo.expiryYear ||
-        !paymentInfo.cvv
-      ) {
-        alert("Please fill out all payment information fields.");
-        return;
-      }
-  
-      setLoading(true);
-      try {
-        // Simulate placing an order (replace with your API call)
-        await placeOrder(userData.id, shippingInfo, cartItems);
-        router.push("/home");
-      } catch (error) {
-        console.error("Error placing order:", error);
-        setLoading(false);
-      }
+        // Validate Shipping Information
+        if (
+            !shippingInfo.fullName ||
+            !shippingInfo.streetAddress ||
+            !shippingInfo.city ||
+            !shippingInfo.state ||
+            !shippingInfo.zipCode ||
+            !shippingInfo.phoneNumber
+        ) {
+            alert("Please fill out all shipping information fields.");
+            return;
+        }
+    
+        // Validate Payment Information
+        if (
+            !paymentInfo.cardNumber ||
+            !paymentInfo.cardName ||
+            !paymentInfo.expiryMonth ||
+            !paymentInfo.expiryYear ||
+            !paymentInfo.cvv
+        ) {
+            alert("Please fill out all payment information fields.");
+            return;
+        }
+    
+        setLoading(true);
+        try {
+            // Simulate placing an order (replace with your API call)
+            await placeOrder(userData.id, shippingInfo, cartItems);
+            router.push({
+                pathname: "/(tabs)/order",
+                params: {
+                    cartItems: JSON.stringify(cartItems), // Serialize cartItems to a string
+                    subtotal: subtotal.toString(), // Convert subtotal to a string
+                    tax: tax.toString(), // Convert tax to a string
+                    total: total.toString(), // Convert total to a string
+                }
+            });
+        } catch (error) {
+            console.error("Error placing order:", error);
+            setLoading(false);
+        }
     };
   
     const handlePaymentMethodSelect = (paymentMethod: paymentMethod | null) => {
