@@ -1,6 +1,8 @@
 import { OrderModel } from "../models/OrderModel.js";
-
+import { ProductModel } from "../models/ProductModel.js";
+import sequelize from "../database.js";
 const { Order, OrderProduct } = OrderModel.models;
+const { Product, ProductType } = ProductModel.models;
 
 class OrderController {
   constructor() {
@@ -39,14 +41,34 @@ class OrderController {
 
   // Add a new order
   static async addOrder(req, res) {
+    const transaction = await sequelize.transaction(); // Start a transaction
+  
     try {
       const { userId, name, phoneNumber, streetAddress, streetAddress2, city, state, zipCode, totalPrice, products } = req.body;
-
+  
       // Validate input
       if (!userId || !name || !phoneNumber || !streetAddress || !city || !state || !zipCode || !totalPrice || !products) {
         return res.status(400).json({ error: "Missing required fields" });
       }
-
+  
+      // Validate products and check stock availability
+      for (const product of products) {
+        const productType = await ProductType.findOne({
+          where: { id: product.productTypeId },
+          transaction,
+        });
+  
+        if (!productType) {
+          await transaction.rollback();
+          return res.status(400).json({ error: `Product type ${product.productTypeId} not found` });
+        }
+  
+        if (productType.quantity < product.quantity) {
+          await transaction.rollback();
+          return res.status(400).json({ error: `Insufficient stock for product type ${product.productTypeId}` });
+        }
+      }
+  
       // Create a new order
       const newOrder = await Order.create({
         userId,
@@ -58,26 +80,59 @@ class OrderController {
         state,
         zipCode,
         totalPrice,
-      });
-
-      // Check if products are provided and associate them with the order
-      if (products && Array.isArray(products)) {
-        const productPromises = products.map(product =>
-          OrderProduct.create({
+      }, { transaction });
+  
+      // Associate products with the order and update stock levels
+    const productPromises = products.map(async (product) => {
+        // Fetch the product to get its name
+        const productInstance = await Product.findOne({
+            where: { productId: product.productId }
+        });
+    
+        // Check if the product exists
+        if (!productInstance) {
+            throw new Error(`Product with ID ${product.productId} not found`);
+        }
+    
+        const productName = productInstance.name; // Access the name property correctly
+    
+        // Fetch the product type
+        const productType = await ProductType.findOne({
+            where: { id: product.productTypeId },
+            transaction,
+        });
+    
+        // Check if the product type exists
+        if (!productType) {
+            throw new Error(`Product type with ID ${product.productTypeId} not found`);
+        }
+    
+        // Update the stock level
+        productType.quantity -= product.quantity;
+        await productType.save({ transaction });
+    
+        // Create the order product
+        return OrderProduct.create({
             productId: product.productId,
-            productName: product.productName,
-            productType: product.productType,
+            productTypeId: product.productTypeId,
+            productName, // Use the correctly fetched product name
+            productType: productType.type,
             quantity: product.quantity,
             priceAtTimeOfOrder: product.priceAtTimeOfOrder,
             orderId: newOrder.orderId, // Link to the newly created order
-          })
-        );
-        await Promise.all(productPromises);
-      }
-
+        }, { transaction });
+    });
+    
+    await Promise.all(productPromises);
+  
+      // Commit the transaction
+      await transaction.commit();
+  
       // Respond with the created order and associated data
       res.status(201).json(newOrder);
     } catch (error) {
+      // Rollback the transaction in case of error
+      await transaction.rollback();
       console.error("Error adding order:", error);
       res.status(500).json({ error: "Failed to add order" });
     }

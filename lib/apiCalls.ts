@@ -291,7 +291,7 @@ export async function placeOrder(userId: string, address: addressData, cartItems
       return {
         productId: cartItem.Product.productId,
         productTypeId: cartItem.productTypeId,
-        quantity: cartItem.quantity
+        quantity: cartItem.quantity,
       }
     })
     const orderInfo = {
