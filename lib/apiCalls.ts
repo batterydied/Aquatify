@@ -334,3 +334,7 @@ export async function fetchOrders(userId: string){
   }
 }
 
+export async function fetchUserShop(userId: string){
+  return null;
+}
+

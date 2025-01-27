@@ -28,7 +28,11 @@ const Shop = sequelize.define("Shop", {
   description: {
     type: DataTypes.STRING,
     allowNull: true,
-  }
+  },
+  avatarFileURI: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 // Define the relationship between Shop and User

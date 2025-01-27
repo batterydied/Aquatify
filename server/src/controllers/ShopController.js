@@ -37,10 +37,6 @@ class ShopController {
       const { userId } = req.params;
       const shops = await Shop.findAll({ where: { userId } });
 
-      if (shops.length === 0) {
-        return res.status(404).json({ error: "No shops found for this user." });
-      }
-
       res.status(200).json(shops);
     } catch (error) {
       console.error("Error retrieving shops by user:", error);
@@ -51,13 +47,13 @@ class ShopController {
   // Create a new shop for a user
   static async createShop(req, res) {
     try {
-      const { shopName, userId, description } = req.body;
+      const { shopName, userId, description, avatarFileURI } = req.body;
 
       if (!shopName || !userId) {
         return res.status(400).json({ error: "Shop name and user ID are required." });
       }
 
-      const newShop = await Shop.create({ shopName, userId, description });
+      const newShop = await Shop.create({ shopName, userId, description, avatarFileURI });
       res.status(201).json(newShop);
     } catch (error) {
       console.error("Error creating shop:", error);
@@ -69,7 +65,7 @@ class ShopController {
   static async updateShop(req, res) {
     try {
       const { id } = req.params;
-      const { shopName, description } = req.body;
+      const { shopName, description, avatarFileURI } = req.body;
 
       const shop = await Shop.findByPk(id);
       if (!shop) {
@@ -79,6 +75,7 @@ class ShopController {
       const updatedFields = {};
       if (shopName !== undefined) updatedFields.shopName = shopName;
       if (description !== undefined) updatedFields.description = description;
+      if (avatarFileURI !== undefined) updatedFields.avatarFileURI = avatarFileURI;
 
       if (Object.keys(updatedFields).length > 0) {
         await shop.update(updatedFields);

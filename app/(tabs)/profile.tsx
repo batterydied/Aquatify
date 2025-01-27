@@ -208,11 +208,11 @@ export default function SettingPage() {
 
                     <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
                     onPress={()=>router.push({
-                    pathname: "/(tabs)/address"})}>
+                    pathname: "/(tabs)/shopList"})}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="store" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                My shop
+                                My shops
                             </Text>
                         </View>
                     </TouchableOpacity>

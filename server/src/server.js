@@ -16,12 +16,13 @@ const root = path.dirname(__dirname);
 const port = process.env.PORT
 
 import AuthRoutes from "./routes/AuthRoutes.js";
-import UserRoutes from './routes/UserRoutes.js';
-import CartRoutes from './routes/CartRoutes.js';
-import ProductRoutes from './routes/ProductRoutes.js';
-import FileRoutes from './routes/FileRoutes.js';
-import OrderRoutes from './routes/OrderRoutes.js';
-import AddressRoutes from './routes/AddressRoutes.js';
+import UserRoutes from "./routes/UserRoutes.js";
+import CartRoutes from "./routes/CartRoutes.js";
+import ProductRoutes from "./routes/ProductRoutes.js";
+import FileRoutes from "./routes/FileRoutes.js";
+import OrderRoutes from "./routes/OrderRoutes.js";
+import AddressRoutes from "./routes/AddressRoutes.js";
+import ShopRoutes from "./routes/ShopRoutes.js";
  
 dotenv.config();
 
@@ -69,7 +70,7 @@ class Server{
     this.app.use('/api/file', (req, res, next) => {
       console.log(`Route hit: ${req.method} ${req.url}`);
       next();
-  }, FileRoutes);
+    }, FileRoutes);
 
     this.app.use('/api/order', (req, res, next) => {
         console.log(`Route hit: ${req.method} ${req.url}`);
@@ -79,7 +80,12 @@ class Server{
     this.app.use('/api/address', (req, res, next) => {
       console.log(`Route hit: ${req.method} ${req.url}`);
       next();
-  }, AddressRoutes);
+    }, AddressRoutes);
+
+    this.app.use('/api/shop', (req, res, next) => {
+      console.log(`Route hit: ${req.method} ${req.url}`);
+      next();
+    }, ShopRoutes);
 
     this.app.get('/', (req, res) => {
       res.send("You reached the server.");

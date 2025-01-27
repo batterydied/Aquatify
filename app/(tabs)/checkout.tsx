@@ -56,8 +56,8 @@ export default function CheckoutPage() {
     });
 
     const [loading, setLoading] = useState<boolean>(false);
-    const { userData } = useUserData();
-    const { width } = useWindowDimensions();
+    const {userData} = useUserData();
+    const {width} = useWindowDimensions();
     const [addresses, setAddresses] = useState<address[]>([]);
     const [selectedAddress, setSelectedAddress] = useState<address | null>(null);
     const [paymentMethods, setPaymentMethods] = useState<paymentMethod[]>([]);
