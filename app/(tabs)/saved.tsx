@@ -23,8 +23,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SavedPage() {
   const [savedItems, setSavedItems] = useState<cartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userData } = useUserData();
-  const { width } = useWindowDimensions();
+  const {userData} = useUserData();
+  const {width} = useWindowDimensions();
 
   if (!userData) {
     return <Redirect href="/(auth)/sign-in" />;

@@ -20,7 +20,7 @@ import { address } from "@/lib/interface";
 import { isValidZipCode } from "../../lib/isValidZipCode";
 
 export default function Address() {
-    const { userData } = useUserData();
+    const {userData} = useUserData();
     const [addresses, setAddresses] = useState<address[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);

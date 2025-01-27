@@ -18,10 +18,10 @@ import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CartPage() {
-  const [ cartItems, setCartItems ] = useState<cartItem[]>([]);
-  const [ subtotal, setSubtotal ] = useState<number>(0);
-  const { userData } = useUserData();
-  const { width } = useWindowDimensions();
+  const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const [subtotal, setSubtotal] = useState<number>(0);
+  const {userData} = useUserData();
+  const {width} = useWindowDimensions();
   const [loading, setLoading] = useState<boolean>(true);
 
   if (!userData) {

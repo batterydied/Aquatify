@@ -12,21 +12,22 @@ import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, router, useFocusEffect } from "expo-router";
+import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { fetchOrders } from "@/lib/apiCalls";
 import { order } from "../../lib/interface";
 
 export default function Orders() {
-    const { userData } = useUserData();
-    const [ orders, setOrders ] = useState<order[]>([]);
-    const [ loading, setLoading ] = useState(true);
-    const [ error, setError ] = useState(false);
-    const [ selectedOrder, setSelectedOrder ] = useState<order | null>(null);
-    const [ isViewingOrder, setViewingOrder ] = useState(false);
+    const {userData} = useUserData();
+    const [orders, setOrders] = useState<order[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [ selectedOrder, setSelectedOrder] = useState<order | null>(null);
+    const [isViewingOrder, setViewingOrder] = useState(false);
+    const {orderId} = useLocalSearchParams();
 
     // Search functionality
-    const [ searchQuery, setSearchQuery ] = useState<string>("");
-    const [ filteredOrders, setFilteredOrders ] = useState<order[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [filteredOrders, setFilteredOrders] = useState<order[]>([]);
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
@@ -59,6 +60,19 @@ export default function Orders() {
         }, [])
     );
 
+    useFocusEffect(
+        useCallback(() => {
+            if (orderId) {
+                const orderToView = orders.find(order => order.orderId === orderId);
+                if (orderToView) {
+                    setSelectedOrder(orderToView);
+                    setViewingOrder(true);
+                }
+            }
+        }, [orderId, orders])
+    );
+
+
     // Handle search by the first 8 characters of orderId
     const handleSearch = (query: string) => {
         setSearchQuery(query);
@@ -82,15 +96,17 @@ export default function Orders() {
     const closeOrderDetails = () => {
         setViewingOrder(false);
         setSelectedOrder(null);
+        router.setParams({ orderId: undefined });
     };
 
-    const goToProductPage = (productId: string) => {
+    const goToProductPage = (productId: string, orderId: string) => {
         closeOrderDetails();
         router.push({
             pathname: "/(tabs)/product" as any,
             params: {
                productId,
-               fromPage: "/(tabs)/orders"
+               fromPage: "/(tabs)/orders",
+               orderId
             }
         });
     };
@@ -223,7 +239,7 @@ export default function Orders() {
                                                 Products
                                             </Text>
                                             {selectedOrder.orderProducts.map((product) => (
-                                                <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId)} >
+                                                <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId, selectedOrder.orderId)} >
                                                     <View className="mt-2">
                                                         <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
                                                             Product ID: {product.productId.slice(0, 4)}...{product.productId.slice(-4)}

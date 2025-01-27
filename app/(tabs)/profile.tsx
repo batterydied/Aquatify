@@ -20,10 +20,10 @@ import { uploadAvatar, updateUsername } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingPage() {
-    const { userData, setUserData } = useUserData();
-    const { width } = useWindowDimensions();
-    const [ isEditingProfile, setEditingProfile ] = useState(false);
-    const [ isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
+    const {userData, setUserData} = useUserData();
+    const {width} = useWindowDimensions();
+    const [isEditingProfile, setEditingProfile] = useState(false);
+    const [isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
     const imageWidth = width * 0.25;
 
     // New state to track original image URI

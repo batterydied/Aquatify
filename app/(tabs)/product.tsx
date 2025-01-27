@@ -24,13 +24,13 @@ import {
   import { SafeAreaView } from "react-native-safe-area-context";
   
   export default function ProductPage() {
-    const { userData } = useUserData();
+    const {userData} = useUserData();
     const router = useRouter();
-    const { productId, fromPage } = useLocalSearchParams<{ productId: string, fromPage: string }>();
+    const {productId, fromPage, orderId} = useLocalSearchParams<{ productId: string, fromPage: string, orderId?: string}>();
     const [product, setProduct] = useState<productInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const scrollX = useRef(new Animated.Value(0)).current;
-    const { width } = useWindowDimensions();
+    const {width } = useWindowDimensions();
     const [selectedType, setSelectedType] = useState<productType | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState<string>("1");
     const [showAllReviews, setShowAllReviews] = useState(false);
@@ -124,7 +124,17 @@ import {
       const userId = userData.id;
       addItemToCart(productId, productTypeId, quantity, userId);
     };
-  
+    
+    const handleBack = ()=>{
+      if (fromPage === "/(tabs)/orders" && orderId) {
+        router.push({
+            pathname: "/(tabs)/orders",
+            params: { orderId },
+        });
+      }else{
+        router.push(fromPage as any)
+      }
+    }
     const renderHeader = () => {
       const images = sortImageById(product.images);
       return (
@@ -278,7 +288,7 @@ import {
         <TouchableOpacity
           activeOpacity={0.7}
           className="ml-4 mt-16 mb-0 absolute z-10"
-          onPress={() => router.push(fromPage as any)}
+          onPress={handleBack}
         >
           <FontAwesome
             name="arrow-left"

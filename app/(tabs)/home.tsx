@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { getProducts, sortImageById } from "@/lib/apiCalls";
 import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
