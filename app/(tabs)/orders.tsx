@@ -33,13 +33,16 @@ export default function Orders() {
         return <Redirect href="/(auth)/sign-in" />;
     }
 
-    // Fetch orders from the API
     const fetchData = async () => {
         try {
             const data = await fetchOrders(userData.id);
             if (data) {
-                setOrders(data);
-                setFilteredOrders(data); // Initialize filtered orders with all orders
+                // Sort orders by createdAt in descending order (most recent first)
+                const sortedOrders = data.sort((a: order, b: order) => 
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                setOrders(sortedOrders);
+                setFilteredOrders(sortedOrders); // Initialize filtered orders with sorted orders
             }
         } catch (err) {
             setError(true);
