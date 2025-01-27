@@ -173,7 +173,7 @@ export default function SettingPage() {
             </View>
             <View className="flex px-2 w-full">
                 <View className="w-full flex-row justify-between p-2"> 
-                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7} 
+                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
                     onPress={()=>router.push({
                     pathname: "/(tabs)/address"})}>
                         <View className="flex justify-center items-center">
@@ -184,7 +184,7 @@ export default function SettingPage() {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}
+                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
                     onPress={()=>router.push({
                     pathname: "/(tabs)/orders"})}>
                         <View className="flex justify-center items-center">
@@ -195,7 +195,7 @@ export default function SettingPage() {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="w-[30%] flex justify-center items-center" activeOpacity={0.7}
+                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
                     onPress={()=>router.push({
                     pathname: "/(tabs)/payments"})}>
                         <View className="flex justify-center items-center">
@@ -205,6 +205,18 @@ export default function SettingPage() {
                             </Text>
                         </View>
                     </TouchableOpacity>
+
+                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
+                    onPress={()=>router.push({
+                    pathname: "/(tabs)/address"})}>
+                        <View className="flex justify-center items-center">
+                            <FontAwesome5 name="store" size={20} color="gray" />
+                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                My shop
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
 
                 </View>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => setEditingProfile(true)} className="my-2 bg-white p-2 rounded-3xl w-full">
