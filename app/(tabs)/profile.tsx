@@ -186,7 +186,7 @@ export default function SettingPage() {
 
                     <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
                     onPress={()=>router.push({
-                    pathname: "/(tabs)/orders"})}>
+                    pathname: "/(tabs)/orderList"})}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="box" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>

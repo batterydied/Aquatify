@@ -76,7 +76,19 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen 
-      name="orders"
+      name="orderList"
+      options={{
+        href: null,
+      }}
+      />
+      <Tabs.Screen 
+      name="shopList"
+      options={{
+        href: null,
+      }}
+      />
+      <Tabs.Screen 
+      name="shop"
       options={{
         href: null,
       }}

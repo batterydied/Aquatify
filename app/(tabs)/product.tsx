@@ -128,7 +128,7 @@ import {
     const handleBack = ()=>{
       if (fromPage === "/(tabs)/orders" && orderId) {
         router.push({
-            pathname: "/(tabs)/orders",
+            pathname: "/(tabs)/orderList",
             params: { orderId },
         });
       }else{
