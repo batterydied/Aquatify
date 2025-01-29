@@ -22,8 +22,8 @@ import {
   export default function PaymentsPage() {
     const [paymentMethods, setPaymentMethods] = useState<paymentMethod[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const { userData } = useUserData();
-    const { width } = useWindowDimensions();
+    const {userData} = useUserData();
+    const {width} = useWindowDimensions();
   
     // Payment Information State
     const [paymentInfo, setPaymentInfo] = useState({

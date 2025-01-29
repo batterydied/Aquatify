@@ -5,18 +5,19 @@ import {
     ActivityIndicator,
     Modal,
     Image,
-    useWindowDimensions
+    useWindowDimensions,
 } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router } from "expo-router";
-import { fetchUserShop } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
+import { fetchUserShop } from "@/lib/apiCalls";
+import { shopInterface } from "@/lib/interface";
 
 export default function ShopList() {
     const {userData} = useUserData();
-    const [shops, setShops] = useState<any>(null); // Replace 'any' with your shop interface
+    const [shop, setShop] = useState<shopInterface | null>(null); // Replace 'any' with your shop interface
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [isCreatingShop, setIsCreatingShop] = useState(false);
@@ -30,7 +31,7 @@ export default function ShopList() {
         try {
             const data = await fetchUserShop(userData.id);
             if (data) {
-                setShops(data);
+                setShop(data);
             }
         } catch (err) {
             setError(true);
@@ -45,10 +46,6 @@ export default function ShopList() {
         }
     }, [userData.id]);
 
-    const handleCreateShop = () => {
-        setIsCreatingShop(true);
-    };
-
     if (error) {
         return (
             <SafeAreaView className="flex-1 bg-gray-200 justify-center items-center">
@@ -56,6 +53,17 @@ export default function ShopList() {
             </SafeAreaView>
         );
     }
+
+    useEffect(() => {
+        if (shop) {
+          router.replace({
+            pathname: "/(tabs)/shop",
+            params: {
+              data: JSON.stringify(shop)
+            },
+          });
+        }
+    }, [shop]);
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
@@ -77,37 +85,31 @@ export default function ShopList() {
                 </View>
             ) : 
             <View className="flex-1">
-               <TouchableOpacity
-                onPress={handleCreateShop}
-                activeOpacity={0.7}
-                className="bg-c2 rounded-full absolute left-1/2 transform -translate-x-1/2 z-10 bottom-1 w-20 h-20 flex items-center justify-center shadow-sm"
-                >
-                    <FontAwesome name="plus" color="white" size={24} />
-                </TouchableOpacity>
-                {shops ? (
-                <Modal>
-                    
-                </Modal>
-                ) : (
-                    <View className="flex-1">
-                        <View className="flex-1 justify-center items-center">
-                            <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
-                                You don't have any shops!
-                            </Text>
-                            <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
-                                Would you like to create one?
-                            </Text>
-                        </View>
-                        <Image
-                        className="ml-4"
-                        source={require("../../assets/images/cockatiel.png")}
-                        style={{
-                            width: width * .3,
-                            height: width * .18
-                        }}
-                        />
+                <View className="flex-1">
+                    <View className="flex-1 justify-center items-center">
+                        <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
+                            You don't have any shops!
+                        </Text>
+                        <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
+                            Would you like to create one?
+                        </Text>
                     </View>
-                )}
+                    <Image
+                    className="ml-4"
+                    source={require("../../assets/images/cockatiel.png")}
+                    style={{
+                        width: width * .3,
+                        height: width * .18
+                    }}
+                    />
+                    <TouchableOpacity
+                    onPress={()=>setIsCreatingShop(true)}
+                    activeOpacity={0.7}
+                    className="bg-c2 rounded-full absolute left-1/2 transform -translate-x-1/2 z-10 bottom-1 w-20 h-20 flex items-center justify-center shadow-sm"
+                    >
+                        <FontAwesome name="plus" color="white" size={24} />
+                    </TouchableOpacity>
+                </View>
             </View>
             }
             <Modal animationType="slide" visible={isCreatingShop}>

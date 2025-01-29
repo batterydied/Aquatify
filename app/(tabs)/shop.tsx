@@ -9,91 +9,54 @@ import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { fetchUserShop } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
+import { shopInterface } from "@/lib/interface";
 
 export default function Shop() {
-    const { userData } = useUserData();
-    const [shop, setShop] = useState<any>(null); // Replace 'any' with your shop interface
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
+    const {userData} = useUserData();
+    const params = useLocalSearchParams()
+    const shop: shopInterface = typeof params.data === "string" ? JSON.parse(params.data) : {};
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
     }
-
-    const fetchShopData = async () => {
-        try {
-            const data = await fetchUserShop(userData.id);
-            if (data) {
-                setShop(data);
-            }
-        } catch (err) {
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (userData.id) {
-            fetchShopData();
-        }
-    }, [userData.id]);
-
     const handleCreateShop = () => {
         
     };
 
-    if (error) {
-        return (
-            <SafeAreaView className="flex-1 bg-gray-200 justify-center items-center">
-                <Text style={{ fontFamily: "MontserratRegular" }}>Error fetching shop data.</Text>
-            </SafeAreaView>
-        );
+    const isMyShop = (shopUserId: string) => {
+        return shopUserId === userData.id;
     }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
-            {loading ? ( // Show loading indicator while data is being fetched
-                <View className="flex-1 justify-center items-center">
-                    <ActivityIndicator size="large" color="gray" />
-                </View>
-            ) : (
-                <ScrollView className="mt-4 p-4">
-                    {shop ? (
-                        <View className="bg-white rounded-xl p-4 shadow-sm">
-                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                {shop.name}
+            <ScrollView className="mt-4 p-4">
+                {shop ? (
+                    <View className="bg-white rounded-xl p-4 shadow-sm">
+                        <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
+                            {shop.shopName}
+                        </Text>
+                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
+                            {shop.description}
+                        </Text>
+                        {/*isMyShop && <Text> this is your shop</Text>*/}
+                    </View>
+                ) : (
+                    <View className="flex-1 justify-center items-center">
+                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600 text-center mb-4">
+                            You don't have any shop.
+                        </Text>
+                        <TouchableOpacity
+                            onPress={handleCreateShop}
+                            className="bg-blue-500 rounded-xl p-3"
+                        >
+                            <Text style={{ fontFamily: "MontserratBold" }} className="text-white">
+                                Create Shop
                             </Text>
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                {shop.description}
-                            </Text>
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                Created: {new Date(shop.createdAt).toLocaleDateString()}
-                            </Text>
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                Updated: {new Date(shop.updatedAt).toLocaleDateString()}
-                            </Text>
-                            {/* Add more shop details here */}
-                        </View>
-                    ) : (
-                        <View className="flex-1 justify-center items-center">
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600 text-center mb-4">
-                                You don't have any shop.
-                            </Text>
-                            <TouchableOpacity
-                                onPress={handleCreateShop}
-                                className="bg-blue-500 rounded-xl p-3"
-                            >
-                                <Text style={{ fontFamily: "MontserratBold" }} className="text-white">
-                                    Create Shop
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </ScrollView>
-            )}
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </ScrollView>
         </SafeAreaView>
     );
 }

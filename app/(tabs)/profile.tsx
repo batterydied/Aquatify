@@ -30,10 +30,10 @@ export default function SettingPage() {
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [image, setImage] = useState<string | null>(null);
 
-    const [ username, setUsername ] = useState("");
-    const [ previousUsername, setPreviousUsername ] = useState("");
+    const [username, setUsername] = useState("");
+    const [previousUsername, setPreviousUsername] = useState("");
 
-    const [ usernameError, setUsernameError ] = useState(false);
+    const [usernameError, setUsernameError] = useState(false);
 
     // Redirect if user is not logged in
     if (!userData) {
@@ -208,11 +208,11 @@ export default function SettingPage() {
 
                     <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
                     onPress={()=>router.push({
-                    pathname: "/(tabs)/shopList"})}>
+                    pathname: "/(tabs)/shopDashboard"})}>
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="store" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                My shops
+                                My shop
                             </Text>
                         </View>
                     </TouchableOpacity>

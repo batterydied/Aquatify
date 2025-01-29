@@ -82,7 +82,7 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen 
-      name="shopList"
+      name="shopDashboard"
       options={{
         href: null,
       }}

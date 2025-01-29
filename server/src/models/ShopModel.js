@@ -38,7 +38,7 @@ const Shop = sequelize.define("Shop", {
 // Define the relationship between Shop and User
 const User = UserModel.models.User; // Access the User model from UserModel
 Shop.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
-User.hasMany(Shop, { foreignKey: "userId", onDelete: "CASCADE", as: "Shops" });
+User.hasOne(Shop, { foreignKey: "userId", onDelete: "CASCADE", as: "Shop" });
 
 // Define the ShopModel Class
 class _ShopModel {

@@ -147,3 +147,11 @@ export interface order {
     createdAt: string;
     orderProducts: orderProduct[];
 }
+
+export interface shopInterface {
+    id: string;
+    shopName: string;
+    userId: string;
+    description: string;
+    avatarFileURI: string;
+}

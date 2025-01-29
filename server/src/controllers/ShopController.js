@@ -35,9 +35,9 @@ class ShopController {
   static async getShopsByUser(req, res) {
     try {
       const { userId } = req.params;
-      const shops = await Shop.findAll({ where: { userId } });
+      const shop = await Shop.findOne({ where: { userId } });
 
-      res.status(200).json(shops);
+      res.status(200).json(shop);
     } catch (error) {
       console.error("Error retrieving shops by user:", error);
       res.status(500).json({ error: "Failed to retrieve shops by user." });

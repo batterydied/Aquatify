@@ -21,7 +21,7 @@ export default function Orders() {
     const [orders, setOrders] = useState<order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [ selectedOrder, setSelectedOrder] = useState<order | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<order | null>(null);
     const [isViewingOrder, setViewingOrder] = useState(false);
     const {orderId} = useLocalSearchParams();
 

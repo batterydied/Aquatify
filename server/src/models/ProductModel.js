@@ -10,8 +10,8 @@ const Product = sequelize.define("Product", {
   },
   name: { type: DataTypes.STRING, allowNull: false },
   secondaryName: { type: DataTypes.STRING, allowNull: true },
-  sellerId: { type: DataTypes.UUID, allowNull: false },
-  sellerName: { type: DataTypes.STRING, allowNull: false },
+  ShopId: { type: DataTypes.UUID, allowNull: false },
+  ShopName: { type: DataTypes.STRING, allowNull: false },
   categories: { 
     type: DataTypes.ARRAY(DataTypes.STRING), // Array of strings
     allowNull: false 

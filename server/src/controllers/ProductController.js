@@ -38,7 +38,7 @@ class ProductController {
   // Add a new product to the database
   static async addProduct(req, res) {
     try {
-      const { name, secondaryName, sellerId, sellerName, categories, description, images, reviews, productTypes } = req.body;
+      const { name, secondaryName, shopId, shopName, categories, description, images, reviews, productTypes } = req.body;
   
       // Validate input
       if (!name || !sellerId || !sellerName || !categories) {
@@ -49,8 +49,8 @@ class ProductController {
       const newProduct = await Product.create({
         name,
         secondaryName,
-        sellerId,
-        sellerName,
+        shopId,
+        shopName,
         categories,
         description,
       });
@@ -105,9 +105,9 @@ class ProductController {
       const { productId } = req.params;
       const {
         name,
-        secondaryname,
-        sellerid,
-        sellername,
+        secondaryName,
+        shopId,
+        shopName,
         categories,
         description,
         price,
@@ -127,9 +127,9 @@ class ProductController {
       // Step 2: Build an object with only the fields that are provided in the request
       const updatedFields = {};
       if (name !== undefined) updatedFields.name = name;
-      if (secondaryname !== undefined) updatedFields.secondaryname = secondaryname;
-      if (sellerid !== undefined) updatedFields.sellerid = sellerid;
-      if (sellername !== undefined) updatedFields.sellername = sellername;
+      if (secondaryName !== undefined) updatedFields.secondaryName = secondaryName;
+      if (shopId !== undefined) updatedFields.shopId = shopId;
+      if (shopName !== undefined) updatedFields.shopName = shopName;
       if (categories !== undefined) updatedFields.categories = categories;
       if (description !== undefined) updatedFields.description = description;
       if (price !== undefined) updatedFields.price = price;
