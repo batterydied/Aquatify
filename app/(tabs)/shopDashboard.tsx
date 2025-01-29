@@ -7,11 +7,11 @@ import {
     Image,
     useWindowDimensions,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, useFocusEffect } from "expo-router";
 import { fetchUserShop } from "@/lib/apiCalls";
 import { shopInterface } from "@/lib/interface";
 
@@ -54,16 +54,22 @@ export default function ShopList() {
         );
     }
 
-    useEffect(() => {
+    const goToShop = ()=>{
         if (shop) {
-          router.replace({
-            pathname: "/(tabs)/shop",
-            params: {
-              data: JSON.stringify(shop)
-            },
-          });
+            router.replace({
+              pathname: "/(tabs)/shop",
+              params: {
+                data: JSON.stringify(shop)
+              },
+            });
         }
-    }, [shop]);
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+          if (shop) goToShop();
+        }, [shop])
+    );
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">

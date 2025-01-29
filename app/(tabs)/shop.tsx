@@ -32,14 +32,18 @@ export default function Shop() {
         <SafeAreaView className="flex-1 bg-gray-200">
             <ScrollView className="mt-4 p-4">
                 {shop ? (
-                    <View className="bg-white rounded-xl p-4 shadow-sm">
+                    <View>
                         <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
                             {shop.shopName}
                         </Text>
                         <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
                             {shop.description}
                         </Text>
-                        {/*isMyShop && <Text> this is your shop</Text>*/}
+                        {isMyShop(shop.userId) && 
+                            <TouchableOpacity activeOpacity={0.7}>
+                               <FontAwesome name="cog" color="gray" size={20}/>
+                            </TouchableOpacity>
+                        }
                     </View>
                 ) : (
                     <View className="flex-1 justify-center items-center">
