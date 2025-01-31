@@ -4,6 +4,8 @@ import {
     TouchableOpacity, 
     ScrollView, 
     ActivityIndicator,
+    Image,
+    useWindowDimensions
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
@@ -17,6 +19,13 @@ export default function Shop() {
     const {userData} = useUserData();
     const params = useLocalSearchParams()
     const shop: shopInterface = typeof params.data === "string" ? JSON.parse(params.data) : {};
+    const [originalImage, setOriginalImage] = useState<string | null>(null);
+    const [image, setImage] = useState<string | null>(null);
+
+     const {width} = useWindowDimensions();
+
+    const imageWidth = width * 0.25;
+
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
     }
@@ -28,22 +37,55 @@ export default function Shop() {
         return shopUserId === userData.id;
     }
 
+    useEffect(() => {
+        if (shop && shop.avatarFileURI) {
+            setImage(shop.avatarFileURI);
+            setOriginalImage(shop.avatarFileURI); // Set original image initially
+        }
+    }, []);
+
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
-            <ScrollView className="mt-4 p-4">
+            <ScrollView>
                 {shop ? (
                     <View>
-                        <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                            {shop.shopName}
-                        </Text>
-                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                            {shop.description}
-                        </Text>
-                        {isMyShop(shop.userId) && 
-                            <TouchableOpacity activeOpacity={0.7}>
-                               <FontAwesome name="cog" color="gray" size={20}/>
-                            </TouchableOpacity>
+                        <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="ml-4 mb-0 absolute z-10"
+                        onPress={() => router.push("/(tabs)/profile")}
+                        >
+                        <FontAwesome
+                        name="arrow-left"
+                        size={20}
+                        color="gray"
+                        className="ml-2"
+                        />
+                    </TouchableOpacity>
+                        <View className="p-4 flex-1 justify-center items-center relative">
+                            <Image
+                                className="rounded-full border-2 border-gray-400"
+                                style={{
+                                    width: imageWidth,
+                                    height: imageWidth,
+                                }}
+                                resizeMode="cover"
+                                source={
+                                    image
+                                        ? { uri: image }
+                                        : require('../../assets/images/default-avatar-icon.png')
+                                }
+                            />
+                            {isMyShop(shop.userId) && 
+                            <View className="w-full flex items-end absolute">
+                                <TouchableOpacity activeOpacity={0.7} >
+                                <FontAwesome name="cog" color="gray" size={20}/>
+                                </TouchableOpacity>
+                            </View>
                         }
+                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg p-2">
+                                {shop.shopName}
+                            </Text>
+                        </View>
                     </View>
                 ) : (
                     <View className="flex-1 justify-center items-center">

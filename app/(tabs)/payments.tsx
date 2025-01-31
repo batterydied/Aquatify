@@ -211,15 +211,15 @@ import {
             (<TouchableWithoutFeedback>
                 <View>
                     <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="ml-4 mb-0 absolute z-10"
-                        onPress={() => router.push("/(tabs)/profile")}
+                    activeOpacity={0.7}
+                    className="ml-4 mb-0 absolute z-10"
+                    onPress={() => router.push("/(tabs)/profile")}
                     >
                         <FontAwesome
-                            name="arrow-left"
-                            size={20}
-                            color="gray"
-                            className="ml-2"
+                        name="arrow-left"
+                        size={20}
+                        color="gray"
+                        className="ml-2"
                         />
                     </TouchableOpacity>
                     <ScrollView className="mt-4 p-4">

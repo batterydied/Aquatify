@@ -1,6 +1,8 @@
 import { ShopModel } from "../models/ShopModel.js";
+import { ProductModel } from "../models/ProductModel.js"
 
 const { Shop } = ShopModel.models;
+const { Product } = ProductModel.models;
 
 class ShopController {
   // Get all shops
@@ -28,19 +30,6 @@ class ShopController {
     } catch (error) {
       console.error("Error retrieving shop:", error);
       res.status(500).json({ error: "Failed to retrieve shop." });
-    }
-  }
-
-  // Get all shops owned by a specific user
-  static async getShopsByUser(req, res) {
-    try {
-      const { userId } = req.params;
-      const shop = await Shop.findOne({ where: { userId } });
-
-      res.status(200).json(shop);
-    } catch (error) {
-      console.error("Error retrieving shops by user:", error);
-      res.status(500).json({ error: "Failed to retrieve shops by user." });
     }
   }
 
@@ -106,21 +95,16 @@ class ShopController {
     }
   }
 
-  // Delete all shops owned by a specific user
-  static async deleteShopsByUser(req, res) {
+  static async getProductsByShopId(req, res){
     try {
-      const { userId } = req.params;
-
-      const shops = await Shop.findAll({ where: { userId } });
-      if (shops.length === 0) {
-        return res.status(404).json({ error: "No shops found for this user." });
-      }
-
-      await Shop.destroy({ where: { userId } });
-      res.status(200).json({ message: "All shops for this user deleted successfully." });
+      const { id } = req.params;
+      const products = await Product.findAll({
+        where: {shopId: id}
+      })
+      return res.status(200).json(products);
     } catch (error) {
-      console.error("Error deleting shops by user:", error);
-      res.status(500).json({ error: "Failed to delete shops by user." });
+      console.error("Error getting products by shop ID:", error);
+      res.status(500).json({ error: "Failed to get products by shop ID." });
     }
   }
 }
