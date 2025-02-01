@@ -11,7 +11,7 @@ class ShopRoutes {
         // Fetch all shops
         this.router.get("/", ShopController.getAllShops);
 
-        this.router.get("/:id/product", ShopController.getProductsByShopId);
+        this.router.get("/:id/products", ShopController.getProductsByShopId);
 
         this.router.get("/user/:userId", ShopController.getShopByUserId);
         // Fetch a single shop by ID
