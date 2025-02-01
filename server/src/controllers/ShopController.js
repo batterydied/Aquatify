@@ -33,6 +33,28 @@ class ShopController {
     }
   }
 
+  static async getShopByUserId(req, res) {
+    try {
+      // Extract the user ID from the request parameters
+      const { userId } = req.params;
+
+      // Find the shop associated with the user ID
+      const shop = await Shop.findOne({ where: { userId } });
+
+      // If no shop is found, return a 404 error
+      if (!shop) {
+        return res.status(404).json({ error: "Shop not found." });
+      }
+
+      // Return the shop data with a 200 status code
+      res.status(200).json(shop);
+    } catch (error) {
+      // Log the error and return a 500 status code with an error message
+      console.error("Error retrieving shop:", error);
+      res.status(500).json({ error: "Failed to retrieve shop." });
+    }
+  }
+
   // Create a new shop for a user
   static async createShop(req, res) {
     try {
