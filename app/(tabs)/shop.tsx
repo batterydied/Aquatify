@@ -12,8 +12,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { fetchUserShop } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
-import { shopInterface } from "@/lib/interface";
+import { fetchUserShop, getProductsByShopId } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
+import { productGrid, shopInterface } from "@/lib/interface";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -21,6 +21,7 @@ export default function Shop() {
     const shop: shopInterface = typeof params.data === "string" ? JSON.parse(params.data) : {};
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [image, setImage] = useState<string | null>(null);
+    const [homeProducts, setHomeProducts] = useState<productGrid[]>([]);
 
      const {width} = useWindowDimensions();
 
@@ -43,6 +44,19 @@ export default function Shop() {
             setOriginalImage(shop.avatarFileURI); // Set original image initially
         }
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const data = await getProductsByShopId(shop.id);
+            setHomeProducts((data || []).sort((a: productGrid, b: productGrid) => b.rating - a.rating));
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
+
+    useEffect(() => { 
+            fetchData();
+        }, []);
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">

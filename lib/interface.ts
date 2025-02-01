@@ -5,7 +5,7 @@ export interface User{
     avatarFileURI: string | null;
 }
 
-export interface homeProduct{
+export interface productGrid{
     productId: string;
     name: string;
     categories: string[];

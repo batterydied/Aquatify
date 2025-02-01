@@ -344,3 +344,13 @@ export async function fetchUserShop(userId: string){
   }
 }
 
+export async function getProductsByShopId(shopId: string){
+  try{
+    const response = await axios.get(`${BASE_URL}/api/shop/${shopId}/products`);
+    return response.data
+  }catch(error){
+    console.error(error);
+    return null;
+  }
+}
+

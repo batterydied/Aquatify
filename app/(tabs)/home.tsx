@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { getProducts, sortImageById } from "@/lib/apiCalls";
-import { homeProduct, filterCriteriaType, categoryTypes } from "@/lib/interface";
+import { productGrid, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
@@ -22,8 +22,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
     useLockPortraitOrientation();
-    const [homeProducts, setHomeProducts] = useState<homeProduct[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<homeProduct[]>([]);
+    const [productGrids, setProductGrids] = useState<productGrid[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<productGrid[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
@@ -58,7 +58,7 @@ export default function HomePage() {
         })
     }
 
-    const renderItem = ({ item }: { item: homeProduct }) => {
+    const renderItem = ({ item }: { item: productGrid }) => {
         const images = sortImageById(item.images);
 
         return (
@@ -95,7 +95,7 @@ export default function HomePage() {
         const fetchData = async () => {
             try {
                 const data = await getProducts();
-                setHomeProducts((data || []).sort((a: homeProduct, b: homeProduct) => b.rating - a.rating));
+                setProductGrids((data || []).sort((a: productGrid, b: productGrid) => b.rating - a.rating));
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
@@ -108,7 +108,7 @@ export default function HomePage() {
     }, []);
     
     useEffect(() => {
-        let filtered = homeProducts;
+        let filtered = productGrids;
     
         if (searchQuery) {
             filtered = filtered.filter((product) =>
@@ -136,7 +136,7 @@ export default function HomePage() {
         });
         
         setFilteredProducts(filtered);
-    }, [homeProducts, searchQuery, filterCriteria]);
+    }, [productGrids, searchQuery, filterCriteria]);
     
     const handleSearch = (query: string) => {
         setSearchQuery(query);
@@ -299,7 +299,7 @@ export default function HomePage() {
                 <FlatList
                     key={width}
                     data={filteredProducts}
-                    keyExtractor={(item: homeProduct) => item.productId}
+                    keyExtractor={(item: productGrid) => item.productId}
                     renderItem={({ item }) => (
                         <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
                             {renderItem({ item })}
