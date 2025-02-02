@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { fetchOrders } from "@/lib/apiCalls";
 import { order } from "../../lib/interface";
+import { goToProductPage } from "@/lib/goToProductPage";
 
 export default function Orders() {
     const {userData} = useUserData();
@@ -100,18 +101,6 @@ export default function Orders() {
         setViewingOrder(false);
         setSelectedOrder(null);
         router.setParams({ orderId: undefined });
-    };
-
-    const goToProductPage = (productId: string, orderId: string) => {
-        closeOrderDetails();
-        router.push({
-            pathname: "/(tabs)/product" as any,
-            params: {
-               productId,
-               fromPage: "/(tabs)/orders",
-               orderId
-            }
-        });
     };
 
     if (error) {
@@ -242,7 +231,7 @@ export default function Orders() {
                                                 Products
                                             </Text>
                                             {selectedOrder.orderProducts.map((product) => (
-                                                <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId, selectedOrder.orderId)} >
+                                                <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId, "orders", selectedOrder.orderId)} >
                                                     <View className="mt-2">
                                                         <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
                                                             Product ID: {product.productId.slice(0, 4)}...{product.productId.slice(-4)}

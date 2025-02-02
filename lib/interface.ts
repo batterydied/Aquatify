@@ -3,6 +3,7 @@ export interface User{
     name: string | null;
     email: string;
     avatarFileURI: string | null;
+    hasShop: boolean;
 }
 
 export interface productGrid{

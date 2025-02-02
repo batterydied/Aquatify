@@ -103,8 +103,8 @@ export default function CartPage() {
       onPress={()=>goToProductPage(item.Product.productId)}
       activeOpacity={0.7}
       >
-        <View className="w-full bg-c3 rounded-lg my-2">
-          <View className="p-4">
+        <View className="w-full bg-c3 rounded-lg my-2 flex justify-center">
+          <View className="p-4 pt-0">
             <Text
               className="mb-2"
               style={{

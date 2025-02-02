@@ -13,12 +13,12 @@ import { useState, useEffect } from "react";
 import { getProducts, sortImageById } from "@/lib/apiCalls";
 import { productGrid, filterCriteriaType, categoryTypes } from "@/lib/interface";
 import { formatReviewsCount } from "@/lib/reviewFormat";
-import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { goToProductPage } from "@/lib/goToProductPage";
 
 export default function HomePage() {
     useLockPortraitOrientation();
@@ -41,8 +41,6 @@ export default function HomePage() {
         categories: [],
     });
     const { width } = useWindowDimensions();
-    
-    const router = useRouter();
 
     const [fontsLoaded] = useFonts({
         MontserratRegular: Montserrat_400Regular,
@@ -63,7 +61,7 @@ export default function HomePage() {
 
         return (
             <View className="flex-1 mx-1">
-                <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId)}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, "home")}>
                     <Image
                         source={{ uri: images[0].url }}
                         className="h-[85%] w-full rounded-lg"
@@ -79,16 +77,6 @@ export default function HomePage() {
                 </TouchableOpacity>
             </View>
         )
-    };
-
-    const goToProductPage = (productId: string) => {
-        router.push({
-            pathname: "/(tabs)/product" as any,
-            params: {
-               productId,
-               fromPage: "/(tabs)/home"
-            }
-        });
     };
 
     useEffect(() => {
@@ -297,19 +285,19 @@ export default function HomePage() {
 
             <View className="flex-1 items-center">
                 <FlatList
-                    key={width}
-                    data={filteredProducts}
-                    keyExtractor={(item: productGrid) => item.productId}
-                    renderItem={({ item }) => (
-                        <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
-                            {renderItem({ item })}
-                        </View>
-                    )}
-                    numColumns={itemsPerRow}
-                    columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    bounces={false}
+                key={width}
+                data={filteredProducts}
+                keyExtractor={(item: productGrid) => item.productId}
+                renderItem={({ item }) => (
+                    <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
+                        {renderItem({ item })}
+                    </View>
+                )}
+                numColumns={itemsPerRow}
+                columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                bounces={false}
                 />
             </View>
         </SafeAreaView>

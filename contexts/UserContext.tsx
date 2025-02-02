@@ -6,31 +6,34 @@ import { User } from '@/lib/interface';
 interface UserContextType {
     userData: User | null;
     setUserData: React.Dispatch<React.SetStateAction<User | null>>;
+    fetchUserData: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { user, isLoaded } = useUser();
+    const {user, isLoaded} = useUser();
     const [userData, setUserData] = useState<User | null>(null);
 
-    useEffect(() => {
+    // Define the fetchUserData function
+    const fetchUserData = async () => {
         if (!isLoaded || !user) return;
 
-        const fetchData = async () => {
-            try {
-                const data = await getUserData(user.emailAddresses[0].emailAddress);
-                setUserData(data);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
+        try {
+            const data = await getUserData(user.emailAddresses[0].emailAddress);
+            setUserData(data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
 
-        fetchData();
+    // Use useEffect to fetch data when the component mounts or user changes
+    useEffect(() => {
+        fetchUserData();
     }, [isLoaded, user]);
 
     return (
-        <UserContext.Provider value={{ userData, setUserData }}>
+        <UserContext.Provider value={{ userData, setUserData, fetchUserData }}>
             {children}
         </UserContext.Provider>
     );

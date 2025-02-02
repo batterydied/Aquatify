@@ -8,8 +8,6 @@ function getIP() {
 
 export const BASE_URL = "http://" + getIP() + ":3000";
 
-export let userId: string = '';
-
 export async function getUserData(email: string) {
   try {
     const response = await axios.get(`${BASE_URL}/api/user/fetch/${email}`);

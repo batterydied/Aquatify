@@ -90,7 +90,7 @@ export default function CheckoutPage() {
     useFocusEffect(
         useCallback(() => {
         fetchData();
-        }, [])
+        }, [fetchData])
     );
 
     const handlePlaceOrder = async () => {

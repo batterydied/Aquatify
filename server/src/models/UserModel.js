@@ -24,6 +24,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  hasShop: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  }
 });
 
 

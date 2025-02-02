@@ -12,12 +12,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect } from "expo-router";
-import { fetchUserShop } from "@/lib/apiCalls";
-import { shopInterface } from "@/lib/interface";
 
 export default function ShopList() {
-    const {userData} = useUserData();
-    const [shop, setShop] = useState<shopInterface | null>(null); // Replace 'any' with your shop interface
+    const {userData, fetchUserData} = useUserData();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [isCreatingShop, setIsCreatingShop] = useState(false);
@@ -27,24 +24,9 @@ export default function ShopList() {
         return <Redirect href="/(auth)/sign-in" />;
     }
 
-    const fetchShopData = async () => {
-        try {
-            const data = await fetchUserShop(userData.id);
-            if (data) {
-                setShop(data);
-            }
-        } catch (err) {
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (userData.id) {
-            fetchShopData();
-        }
-    }, [userData.id]);
+    useEffect(()=>{
+        if(userData) setLoading(false);
+    },[userData]);
 
     if (error) {
         return (
@@ -55,21 +37,23 @@ export default function ShopList() {
     }
 
     const goToShop = ()=>{
-        if (shop) {
-            router.replace({
-              pathname: "/(tabs)/shop",
-              params: {
-                data: JSON.stringify(shop)
-              },
-            });
-        }
+        router.replace({
+            pathname: "/(tabs)/shop",
+            params: {
+                userId: userData.id
+            },
+        });
     }
 
     useFocusEffect(
         useCallback(() => {
-          if (shop) goToShop();
-        }, [shop])
+            fetchUserData();
+        }, [])
     );
+
+    useEffect(()=>{
+        if (userData.hasShop) goToShop();
+    }, [userData])
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">

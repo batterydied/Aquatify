@@ -10,7 +10,7 @@ import {
 import { cartItem } from "@/lib/interface";
 import { useCallback, useState } from "react";
 import { useUserData } from "@/contexts/UserContext";
-import { Redirect, router, useFocusEffect } from "expo-router";
+import { Redirect, useFocusEffect } from "expo-router";
 import {
   deleteItemFromCart,
   getAllSavedItemsByUserId,
@@ -19,6 +19,7 @@ import {
   getProductType,
 } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { goToProductPage } from "@/lib/goToProductPage";
 
 export default function SavedPage() {
   const [savedItems, setSavedItems] = useState<cartItem[]>([]);
@@ -49,16 +50,6 @@ export default function SavedPage() {
     }, [])
   );
 
-  const goToProductPage = (productId: string) => {
-    router.push({
-      pathname: "/(tabs)/product" as any,
-      params: {
-         productId,
-         fromPage: "/(tabs)/saved"
-      }
-  });
-  };
-
   const handleDeletingItem = async (cartId: string) => {
     await deleteItemFromCart(cartId);
     await fetchData();
@@ -73,11 +64,11 @@ export default function SavedPage() {
     const productType = getProductType(item.productTypeId, item.Product.productTypes);
     return (
       <TouchableOpacity
-        onPress={() => goToProductPage(item.Product.productId)}
+        onPress={() => goToProductPage(item.Product.productId, "saved")}
         activeOpacity={0.7}
       >
         <View className="w-full bg-c3 rounded-lg my-2">
-          <View className="p-4">
+          <View className="p-4 pt-0">
             <Text
               className="mb-2"
               style={{
