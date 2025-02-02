@@ -6,27 +6,30 @@ import {
     Modal,
     Image,
     useWindowDimensions,
+    TextInput,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect } from "expo-router";
+import { shopInterface } from "@/lib/interface";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
+    const [shopData, setShopData] = useState<shopInterface|null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [isCreatingShop, setIsCreatingShop] = useState(false);
     const {width} = useWindowDimensions();
+    const [shopName, setShopName] = useState<string>("");
+    const [shopDescription, setShopDescription] = useState<string>("");
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
     }
-
-    useEffect(()=>{
-        if(userData) setLoading(false);
-    },[userData]);
 
     if (error) {
         return (
@@ -50,6 +53,10 @@ export default function ShopList() {
             fetchUserData();
         }, [])
     );
+
+    useEffect(()=>{
+        if(userData) setLoading(false);
+    }, [userData]);
 
     useEffect(()=>{
         if (userData.hasShop) goToShop();
@@ -103,25 +110,42 @@ export default function ShopList() {
             </View>
             }
             <Modal animationType="slide" visible={isCreatingShop}>
-                <View className="flex-1 bg-gray-200">
-                <TouchableOpacity
-                activeOpacity={0.7}
-                className="ml-4 mt-16 mb-0 absolute z-10"
-                onPress={()=>setIsCreatingShop(false)}
-                >
-                <FontAwesome
-                    name="arrow-left"
-                    size={20}
-                    color="gray"
-                    className="ml-2" // Adds some margin to the left of the icon
-                />
-                </TouchableOpacity>
-                    <View className="flex-1 justify-center items-center"> 
-                        <Text>
-                            Hey
-                        </Text>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <View className="flex-1 bg-gray-200">
+                        <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="ml-4 mt-16 mb-0 absolute z-10"
+                        onPress={()=>setIsCreatingShop(false)}
+                        >
+                        <FontAwesome
+                            name="arrow-left"
+                            size={20}
+                            color="gray"
+                            className="ml-2" // Adds some margin to the left of the icon
+                        />
+                        </TouchableOpacity>
+                        <View className="flex-1 justify-center items-center"> 
+                            <TextInput 
+                            value={shopName}
+                            className="text-black border w-[80%] p-2 mb-4 rounded-md"
+                            placeholder="Enter shop name here"
+                            placeholderTextColor={"gray"}
+                            style={{ fontFamily: "MontserratRegular" }}
+                            onChangeText={setShopName}
+                            />
+                            <TextInput 
+                            value={shopDescription}
+                            className="text-black w-[80%] border h-[20%] p-2 rounded-md"
+                            placeholder="Enter shop description here"
+                            placeholderTextColor={"gray"}
+                            style={{ fontFamily: "MontserratRegular" }}
+                            onChangeText={setShopDescription}
+                            multiline={true}
+                            />
+                      
+                        </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </SafeAreaView>
     );

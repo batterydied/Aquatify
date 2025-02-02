@@ -25,6 +25,8 @@ export default function Shop() {
     const [image, setImage] = useState<string | null>(null);
     const [productGrids, setProductGrids] = useState<productGrid[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<productGrid[]>([]);
+    const [shopName, setShopName] = useState("");
+    const [shopDescription, setShopDescription] = useState("");
 
      const {width} = useWindowDimensions();
 
@@ -33,6 +35,15 @@ export default function Shop() {
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
     }
+
+     useEffect(()=>{
+        if(userData && shopData) setLoading(false);
+    },[userData, shopData]);
+    
+    useEffect(()=>{
+        fetchUserShop
+    }, [userData])
+    
 
     if (!shop) {
         return (
