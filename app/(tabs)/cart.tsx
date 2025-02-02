@@ -104,7 +104,7 @@ export default function CartPage() {
       activeOpacity={0.7}
       >
         <View className="w-full bg-c3 rounded-lg my-2 flex justify-center">
-          <View className="p-4 pt-0">
+          <View className="p-4">
             <Text
               className="mb-2"
               style={{
@@ -112,7 +112,7 @@ export default function CartPage() {
                 fontFamily: "MontserratRegular",
               }}
             >
-              {item.Product.sellerName}
+              {item.Product.shopName}
             </Text>
             <View className="flex-row mb-2">
               <Image
@@ -127,7 +127,7 @@ export default function CartPage() {
                 <Text
                   style={{
                     fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
+                    fontFamily: "MontserratBold",
                   }}
                 >
                   {item.Product.name}

@@ -34,8 +34,8 @@ export interface productInterface{
     name: string;
     productId: string;
     secondaryName: string;
-    sellerId: string;
-    sellerName: string;
+    shopId: string;
+    shopName: string;
     description: string;
     rating: number;
     images: image[];

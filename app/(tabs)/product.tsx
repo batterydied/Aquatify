@@ -199,7 +199,7 @@ import BackArrow from "@/components/BackArrow";
               </Text>
               <TouchableOpacity activeOpacity={0.7}>
                 <Text className="text-xl text-blue-800" style={{ fontFamily: "MontserratRegular" }}>
-                  {"Visit the " + product.sellerName + " store"}
+                  {"Visit the " + product.shopName + " store"}
                 </Text>
               </TouchableOpacity>
               <Text>

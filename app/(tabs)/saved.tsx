@@ -68,7 +68,7 @@ export default function SavedPage() {
         activeOpacity={0.7}
       >
         <View className="w-full bg-c3 rounded-lg my-2">
-          <View className="p-4 pt-0">
+          <View className="p-4">
             <Text
               className="mb-2"
               style={{
@@ -76,7 +76,7 @@ export default function SavedPage() {
                 fontFamily: "MontserratRegular",
               }}
             >
-              {item.Product.sellerName}
+              {item.Product.shopName}
             </Text>
             <View className="flex-row mb-2">
               <Image
@@ -91,7 +91,7 @@ export default function SavedPage() {
                 <Text
                   style={{
                     fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
+                    fontFamily: "MontserratBold",
                   }}
                 >
                   {item.Product.name}

@@ -19,30 +19,23 @@ import EditableProfilePicture from "@/components/EditableProfilePicture";
 import BackArrow from "@/components/BackArrow";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import Description from "@/components/Description";
+import * as ImagePicker from "expo-image-picker";
+import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [isCreatingShop, setIsCreatingShop] = useState(false);
     const {width} = useWindowDimensions();
     const [shopName, setShopName] = useState<string>("");
     const [shopDescription, setShopDescription] = useState<string>("");
     const [imageUri, setImageUri] = useState<string | null>(null);
     const imageWidth = width * 0.25;
-    const [isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
+    const [isEditingShopImage, setEditingShopImage ] = useState(false);
     const [shopNameError, setShopNameError] = useState(false);
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
-    }
-
-    if (error) {
-        return (
-            <SafeAreaView className="flex-1 bg-gray-200 justify-center items-center">
-                <Text style={{ fontFamily: "MontserratRegular" }}>Error fetching shop data.</Text>
-            </SafeAreaView>
-        );
     }
 
     const goToShop = ()=>{
@@ -82,6 +75,55 @@ export default function ShopList() {
             setShopNameError(true);
             return;
         }
+    }
+
+    const saveImage = (image: string) => {
+        setImageUri(image);
+        setEditingShopImage(false);
+    };
+
+    const uploadImage = async (mode: string) => {
+        try {
+            let result: ImagePicker.ImagePickerResult;
+
+            if (mode === 'gallery') {
+                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the gallery is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ["images"],
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            } else {
+                const permission = await ImagePicker.requestCameraPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the camera is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchCameraAsync({
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            }
+
+            if (!result.canceled) {
+                saveImage(result.assets[0].uri); // Save the new image URI
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error uploading image');
+        }
+    };
+
+    const removeImage = () => {
+        setImageUri(null);
     }
 
     return (
@@ -131,16 +173,24 @@ export default function ShopList() {
                         }}
                         />
                         <View className="flex-1 justify-center items-center"> 
-                            <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{
+                            <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingShopImage} style={{
                                 marginBottom: 16,
                             }}/>
                            <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "80%"}} maxLength={20}/>
                             {shopNameError && 
                             <View className="px-3">
-                                <Text className="text-red-500">You can't leave your username blank.</Text>
+                                <Text className="text-red-500">You can't leave your shop name blank.</Text>
                             </View>}
                             <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here"/>
+                            <TouchableOpacity activeOpacity={0.7}>
+                                <View className="m-4 p-2 bg-orange-400 px-4 rounded-md">
+                                    <Text style={{ fontFamily: "MontserratRegular" }}>
+                                        Save
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
+                        <EditProfilePictureModal visible={isEditingShopImage} onClose={()=>setEditingShopImage(false)} onUpload={uploadImage} onRemove={removeImage}/>
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
