@@ -18,6 +18,7 @@ import { router, useFocusEffect } from "expo-router";
 import { saveEditedAddress, addNewAddress, deleteAddress, fetchAddresses } from "@/lib/apiCalls";
 import { address } from "@/lib/interface";
 import { isValidZipCode } from "../../lib/isValidZipCode";
+import BackArrow from "@/components/BackArrow";
 
 export default function Address() {
     const {userData} = useUserData();
@@ -138,6 +139,8 @@ export default function Address() {
         );
     }
 
+    const handleBack = ()=>router.push("/(tabs)/profile");
+    
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
             {loading ? ( // Show loading indicator while data is being fetched
@@ -146,18 +149,7 @@ export default function Address() {
                     </View>
                   ):
             (<View>
-                <TouchableOpacity
-                    activeOpacity={0.7}
-                    className="ml-4 mb-0 absolute z-10"
-                    onPress={() => router.push("/(tabs)/profile")}
-                >
-                    <FontAwesome
-                        name="arrow-left"
-                        size={20}
-                        color="gray"
-                        className="ml-2"
-                    />
-                </TouchableOpacity>
+                <BackArrow handleBack={handleBack} />
                 <ScrollView className="mt-4 p-4">
                     {/* Add Address Button */}
                     <TouchableOpacity

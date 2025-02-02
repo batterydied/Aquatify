@@ -19,6 +19,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { goToProductPage } from "@/lib/goToProductPage";
+import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 
 export default function HomePage() {
     useLockPortraitOrientation();
@@ -41,6 +42,7 @@ export default function HomePage() {
         categories: [],
     });
     const { width } = useWindowDimensions();
+    const { itemsPerRow, itemWidth } = calculateItemWidthAndRow(12, 200, width);
 
     const [fontsLoaded] = useFonts({
         MontserratRegular: Montserrat_400Regular,
@@ -164,11 +166,6 @@ export default function HomePage() {
             </View>
         );
     }
-
-    const itemSpacing = 12;
-    const desiredItemWidth = 200;
-    const itemsPerRow = width / (desiredItemWidth + itemSpacing) >= 2 ? Math.floor(width / (desiredItemWidth + itemSpacing)) : 2;
-    const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     return (
         <SafeAreaView className="flex-1 p-5 bg-gray-200">

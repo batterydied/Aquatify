@@ -129,6 +129,21 @@ class ShopController {
       res.status(500).json({ error: "Failed to get products by shop ID." });
     }
   }
+
+  static async deleteAllShops(req, res) {
+    try {
+      const shops = await Shop.findAll();
+  
+      for (const shop of shops) {
+        await shop.destroy();
+      }
+  
+      res.status(200).json({ status: "All shops deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting all shops:", error);
+      res.status(500).json({ error: "Failed to delete all shops." });
+    }
+  }
 }
 
 export default ShopController;

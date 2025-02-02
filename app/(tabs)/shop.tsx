@@ -13,23 +13,27 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { getProductsByShopId, sortImageById } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
+import { fetchUserShop, getProductsByShopId, sortImageById } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
 import { productGrid, shopInterface } from "@/lib/interface";
 import { goToProductPage } from "@/lib/goToProductPage";
+import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
+import BackArrow from "@/components/BackArrow";
+import ProfilePicture from "@/components/ProfilePicture";
 
 export default function Shop() {
     const {userData} = useUserData();
     const params = useLocalSearchParams()
     const [shop, setShop] = useState<shopInterface | null>(null);
-    const [originalImage, setOriginalImage] = useState<string | null>(null);
-    const [image, setImage] = useState<string | null>(null);
+    const [originalImageUri, setOriginalImageUri] = useState<string | null>(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
     const [productGrids, setProductGrids] = useState<productGrid[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<productGrid[]>([]);
     const [shopName, setShopName] = useState("");
     const [shopDescription, setShopDescription] = useState("");
+    const [loading, setLoading] = useState(true);
 
-     const {width} = useWindowDimensions();
-
+    const {width} = useWindowDimensions();
+    const { itemsPerRow, itemWidth } = calculateItemWidthAndRow(12, 200, width);
     const imageWidth = width * 0.25;
 
     if (!userData) {
@@ -37,8 +41,8 @@ export default function Shop() {
     }
 
      useEffect(()=>{
-        if(userData && shopData) setLoading(false);
-    },[userData, shopData]);
+        if(userData && shop) setLoading(false);
+    },[userData, shop]);
     
     useEffect(()=>{
         fetchUserShop
@@ -59,8 +63,8 @@ export default function Shop() {
 
     useEffect(() => {
         if (shop && shop.avatarFileURI) {
-            setImage(shop.avatarFileURI);
-            setOriginalImage(shop.avatarFileURI);
+            setImageUri(shop.avatarFileURI);
+            setOriginalImageUri(shop.avatarFileURI);
         }
     }, []);
 
@@ -76,11 +80,6 @@ export default function Shop() {
     useEffect(() => { 
             fetchData();
     }, []);
-
-    const itemSpacing = 12;
-    const desiredItemWidth = 200;
-    const itemsPerRow = width / (desiredItemWidth + itemSpacing) >= 2 ? Math.floor(width / (desiredItemWidth + itemSpacing)) : 2;
-    const itemWidth = (width - itemSpacing * (itemsPerRow - 1)) / itemsPerRow - 20;
 
     const renderItem = ({ item }: { item: productGrid }) => {
         const images = sortImageById(item.images);
@@ -104,48 +103,22 @@ export default function Shop() {
             </View>
         )
     };
-    
+
+    const handleBack = () => router.push("/(tabs)/profile");
+
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
             <View>
                 <View>
-                    <TouchableOpacity
-                    activeOpacity={0.7}
-                    className="ml-4 mb-0 absolute z-10"
-                    onPress={() => router.push("/(tabs)/profile")}
-                    >
-                    <FontAwesome
-                    name="arrow-left"
-                    size={20}
-                    color="gray"
-                    className="ml-2"
-                    />
-                </TouchableOpacity>
-                    <View className="p-4 flex-1 justify-center items-center relative">
-                        <Image
-                            className="rounded-full border-2 border-gray-400"
-                            style={{
-                                width: imageWidth,
-                                height: imageWidth,
-                            }}
-                            resizeMode="cover"
-                            source={
-                                image
-                                    ? { uri: image }
-                                    : require('../../assets/images/default-avatar-icon.png')
-                            }
-                        />
-                        {isMyShop(shop.userId) && 
+                    <BackArrow handleBack={handleBack}/>
+                    <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={shopName}/>
+                    {isMyShop(shop.userId) && 
                         <View className="w-full flex items-end absolute">
                             <TouchableOpacity activeOpacity={0.7} >
                             <FontAwesome name="cog" color="gray" size={20}/>
                             </TouchableOpacity>
                         </View>
                     }
-                        <Text style={{ fontFamily: "MontserratBold" }} className="text-lg p-2">
-                            {shop.shopName}
-                        </Text>
-                    </View>
                 </View>
                 <FlatList
                 key={width}

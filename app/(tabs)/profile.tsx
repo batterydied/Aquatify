@@ -18,6 +18,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from "expo-image-picker";
 import { uploadAvatar, updateUsername } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
+import EditProfilePictureModal from "@/components/EditProfilePictureModal";
+import EditableProfilePicture from "@/components/EditableProfilePicture";
+import ProfilePicture from "@/components/ProfilePicture";
+import RoundedTextInput from "@/components/RoundedTextInput";
 
 export default function SettingPage() {
     const {userData, setUserData} = useUserData();
@@ -27,8 +31,8 @@ export default function SettingPage() {
     const imageWidth = width * 0.25;
 
     // New state to track original image URI
-    const [originalImage, setOriginalImage] = useState<string | null>(null);
-    const [image, setImage] = useState<string | null>(null);
+    const [originalImageUri, setOriginalImageUri] = useState<string | null>(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
 
     const [username, setUsername] = useState("");
     const [previousUsername, setPreviousUsername] = useState("");
@@ -42,8 +46,8 @@ export default function SettingPage() {
 
     useEffect(() => {
         if (userData.avatarFileURI) {
-            setImage(userData.avatarFileURI);
-            setOriginalImage(userData.avatarFileURI); // Set original image initially
+            setImageUri(userData.avatarFileURI);
+            setOriginalImageUri(userData.avatarFileURI); // Set original image initially
         }
     }, [userData.avatarFileURI]);
 
@@ -95,11 +99,11 @@ export default function SettingPage() {
     };
 
     const removeImage = () => {
-        setImage(null);
+        setImageUri(null);
     }
 
     const saveImage = (image: string) => {
-        setImage(image);
+        setImageUri(image);
         setEditingProfilePicture(false);
     };
 
@@ -111,15 +115,15 @@ export default function SettingPage() {
     
         try {
             // Update the avatar if it has changed
-            if (originalImage !== image) {
-                const avatarResponse = await uploadAvatar(originalImage, image, userData.id);
+            if (originalImageUri !== imageUri) {
+                const avatarResponse = await uploadAvatar(originalImageUri, imageUri, userData.id);
                 if (avatarResponse) {
                     // Update the userData context with the new avatar URI
                     setUserData({ ...userData, avatarFileURI: avatarResponse.file.uri });
-                    setOriginalImage(image); // Update the original image state
+                    setOriginalImageUri(imageUri); // Update the original image state
                 } else {
                     setUserData({ ...userData, avatarFileURI: null});
-                    setOriginalImage(null); 
+                    setOriginalImageUri(null); 
                 }
             }
     
@@ -142,7 +146,7 @@ export default function SettingPage() {
     };
 
     const discardChanges = () => {
-        setImage(originalImage); // Reset to the original image
+        setImageUri(originalImageUri); // Reset to the original image
         setUsername(previousUsername);
         setEditingProfile(false); // Close the modal
     };
@@ -153,24 +157,7 @@ export default function SettingPage() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
-            <View className="p-4">
-                <Image
-                    className="rounded-full border-2 border-gray-400"
-                    style={{
-                        width: imageWidth,
-                        height: imageWidth,
-                    }}
-                    resizeMode="cover"
-                    source={
-                        image
-                            ? { uri: image }
-                            : require('../../assets/images/default-avatar-icon.png')
-                    }
-                />
-                <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg m-2">
-                    {username}
-                </Text>
-            </View>
+            <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={userData.name}/>
             <View className="flex px-2 w-full">
                 <View className="w-full flex-row justify-between p-2"> 
                     <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
@@ -247,76 +234,15 @@ export default function SettingPage() {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                            <View className="m-3 relative">
-                                <Image
-                                    className="rounded-full border-2 border-gray-400"
-                                    style={{
-                                        width: imageWidth,
-                                        height: imageWidth,
-                                    }}
-                                    resizeMode="cover"
-                                    source={
-                                        image
-                                            ? { uri: image }
-                                            : require('../../assets/images/default-avatar-icon.png')
-                                    }
-                                />
-                                <TouchableOpacity
-                                    className="absolute"
-                                    style={{
-                                        top: imageWidth - 35,
-                                        left: imageWidth - 35,
-                                    }}
-                                    activeOpacity={0.7}
-                                    onPress={() => setEditingProfilePicture(true)}
-                                >
-                                    <View className="bg-gray-100 p-2 rounded-full">
-                                        <FontAwesome name="camera" size={20} color="gray" />
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                            <View className="flex-row items-center border border-gray-500 py-1 px-2 m-2 rounded-xl bg-white justify-between">
-                                <TextInput value={username} onChangeText={setUsername} className="flex-1" style={{ fontFamily: "MontserratRegular" }}/>
-                                <TouchableOpacity onPress={clearUsername} activeOpacity={0.7}>
-                                    <FontAwesome name="times-circle" color="gray" size={25} />
-                                </TouchableOpacity>
-                            </View>
+                            <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{marginLeft: 16}}/>
+                            <RoundedTextInput value={username} setValue={setUsername} clearValue={clearUsername} placeholder="Enter username here" maxLength={20}/>
                             {usernameError && 
                             <View className="px-3">
                                 <Text className="text-red-500">You can't leave your username blank.</Text>
                             </View>}
                         </View>
                     </TouchableWithoutFeedback>
-                        {/* Modal for editing profile picture */}
-                        <Modal animationType="slide" visible={isEditingProfilePicture} transparent={true}>
-                            <TouchableWithoutFeedback onPress={() => setEditingProfilePicture(false)}>
-                                <View className="flex-1 justify-center items-center bg-black/50">
-                                    <View className="bg-white flex-col justify-center items-center p-4 rounded-md">
-                                        <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>Profile photo</Text>
-                                        <View className="flex-row">
-                                            <TouchableOpacity onPress={() => uploadImage("camera")} className="w-[25%]">
-                                                <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                                    <FontAwesome name="camera" size={20} color="gray" />
-                                                    <Text style={{ fontFamily: "MontserratRegular" }}>Camera</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => uploadImage("gallery")} className="w-[25%]">
-                                                <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                                    <FontAwesome name="image" size={20} color="gray" />
-                                                    <Text style={{ fontFamily: "MontserratRegular" }}>Gallery</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={removeImage} className="w-[25%]">
-                                                <View className="p-2 m-2 bg-gray-200 flex justify-center items-center rounded-md">
-                                                    <FontAwesome name="trash" size={20} color="gray" />
-                                                    <Text style={{ fontFamily: "MontserratRegular" }}>Remove</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        </Modal>
+                    <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={uploadImage} onRemove={removeImage}/>
                 </Modal>
             </View>
         </SafeAreaView>

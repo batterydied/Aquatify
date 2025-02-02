@@ -16,6 +16,7 @@ import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-rou
 import { fetchOrders } from "@/lib/apiCalls";
 import { order } from "../../lib/interface";
 import { goToProductPage } from "@/lib/goToProductPage";
+import BackArrow from "@/components/BackArrow";
 
 export default function Orders() {
     const {userData} = useUserData();
@@ -111,6 +112,7 @@ export default function Orders() {
         );
     }
 
+    const handleBack = () => router.push("/(tabs)/profile");
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
             {loading ? ( // Show loading indicator while data is being fetched
@@ -119,18 +121,7 @@ export default function Orders() {
                 </View>
             ) : (
                 <View>
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="ml-4 mb-0 absolute z-10"
-                        onPress={() => router.push("/(tabs)/profile")}
-                    >
-                        <FontAwesome
-                            name="arrow-left"
-                            size={20}
-                            color="gray"
-                            className="ml-2"
-                        />
-                    </TouchableOpacity>
+                    <BackArrow handleBack={handleBack} />
                     <ScrollView className="mt-4 p-4">
                         {/* Search Bar */}
                         <TextInput

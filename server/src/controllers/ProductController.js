@@ -305,10 +305,6 @@ class ProductController {
       // Step 1: Find all products
       const products = await Product.findAll();
   
-      if (products.length === 0) {
-        return res.status(404).json({ error: "No products found." });
-      }
-  
       // Step 2: Delete related data for all products
       for (const product of products) {
         await product.destroy();

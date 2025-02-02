@@ -25,6 +25,8 @@ class ShopRoutes {
 
         // Delete a shop by ID
         this.router.delete("/:id", ShopController.deleteShop);
+
+        this.router.delete("/", ShopController.deleteAllShops);
     }
 }
 

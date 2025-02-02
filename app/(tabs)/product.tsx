@@ -22,6 +22,7 @@ import {
   import { useUserData } from "@/contexts/UserContext";
   import { Redirect } from "expo-router";
   import { SafeAreaView } from "react-native-safe-area-context";
+import BackArrow from "@/components/BackArrow";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -284,60 +285,45 @@ import {
       .slice(0, 3); // Get the first 3 reviews
   
     return (
-      <SafeAreaView className="p-5 bg-gray-200 flex-1">
-        <TouchableOpacity
-          activeOpacity={0.7}
-          className="ml-4 mt-16 mb-0 absolute z-10"
-          onPress={handleBack}
-        >
-          <FontAwesome
-            name="arrow-left"
-            size={20}
-            color="gray"
-            className="ml-2" // Adds some margin to the left of the icon
-          />
-        </TouchableOpacity>
+      <SafeAreaView className="bg-gray-200 flex-1">
+        <BackArrow handleBack={handleBack}/>
         <FlatList
-          data={sortedAndLimitedReviews}
-          renderItem={renderReview}
-          keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponent={renderHeader}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            <View>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setShowAllReviews(true)}>
-                <Text className="text-blue-800">See All Reviews</Text>
-              </TouchableOpacity>
-              <Modal animationType="slide" transparent={true} visible={showAllReviews}>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  className="ml-4 mt-16 mb-0 absolute z-10"
-                  onPress={() => setShowAllReviews(false)}
-                >
-                  <FontAwesome
-                    name="arrow-left"
-                    size={20}
-                    color="gray"
-                    className="ml-2" // Adds some margin to the left of the icon
+        className="p-4"
+        data={sortedAndLimitedReviews}
+        renderItem={renderReview}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={renderHeader}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <View>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => setShowAllReviews(true)}>
+              <Text className="text-blue-800">See All Reviews</Text>
+            </TouchableOpacity>
+            <Modal animationType="slide" transparent={true} visible={showAllReviews}>
+              <BackArrow handleBack={() => setShowAllReviews(false)} 
+              style={{
+                marginTop: 64,
+                position: 'absolute',
+                zIndex: 10, 
+              }}
+              />
+              <View className="flex-1 items-center bg-gray-200">
+                <View className="mt-24 w-[95%] h-[85%]">
+                  <ReviewFilterDropdown
+                    sortOption={showAllReviewsFilter}
+                    select={setShowAllReviewsFilter}
                   />
-                </TouchableOpacity>
-                <View className="flex-1 items-center bg-gray-200">
-                  <View className="mt-24 w-[95%] h-[85%]">
-                    <ReviewFilterDropdown
-                      sortOption={showAllReviewsFilter}
-                      select={setShowAllReviewsFilter}
-                    />
-                    <FlatList
-                      data={reviewFilter(product.reviews)}
-                      renderItem={renderModalReview}
-                      keyExtractor={(item) => item.id.toString()}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  </View>
+                  <FlatList
+                    data={reviewFilter(product.reviews)}
+                    renderItem={renderModalReview}
+                    keyExtractor={(item) => item.id.toString()}
+                    showsVerticalScrollIndicator={false}
+                  />
                 </View>
-              </Modal>
-            </View>
-          }
+              </View>
+            </Modal>
+          </View>
+        }
         />
       </SafeAreaView>
     );

@@ -18,6 +18,7 @@ import {
   import { fetchPaymentMethods, addPaymentMethod, updatePaymentMethod, deletePaymentMethod } from "@/lib/apiCalls";
   import { FontAwesome } from "@expo/vector-icons";
   import { validateCardName, validateCardNumber, validateExpiryMonth, validateExpiryYear, validateCVV } from "@/lib/validatePayments";
+import BackArrow from "@/components/BackArrow";
   
   export default function PaymentsPage() {
     const [paymentMethods, setPaymentMethods] = useState<paymentMethod[]>([]);
@@ -168,7 +169,9 @@ import {
       });
       setEditingPaymentMethod(null);
     };
-  
+    
+    const handleBack = () => router.push("/(tabs)/profile");
+
     const renderPaymentMethod = (method: paymentMethod) => {
       return (
         <View key={method.id} className="bg-white rounded-lg p-4 mb-3 shadow-sm">
@@ -210,18 +213,7 @@ import {
                   ):
             (<TouchableWithoutFeedback>
                 <View>
-                    <TouchableOpacity
-                    activeOpacity={0.7}
-                    className="ml-4 mb-0 absolute z-10"
-                    onPress={() => router.push("/(tabs)/profile")}
-                    >
-                        <FontAwesome
-                        name="arrow-left"
-                        size={20}
-                        color="gray"
-                        className="ml-2"
-                        />
-                    </TouchableOpacity>
+                    <BackArrow handleBack={handleBack} />
                     <ScrollView className="mt-4 p-4">
                     <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.06, marginBottom: 20 }}>
                         Payment Methods

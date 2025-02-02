@@ -15,17 +15,23 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect } from "expo-router";
-import { shopInterface } from "@/lib/interface";
+import EditableProfilePicture from "@/components/EditableProfilePicture";
+import BackArrow from "@/components/BackArrow";
+import RoundedTextInput from "@/components/RoundedTextInput";
+import Description from "@/components/Description";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
-    const [shopData, setShopData] = useState<shopInterface|null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [isCreatingShop, setIsCreatingShop] = useState(false);
     const {width} = useWindowDimensions();
     const [shopName, setShopName] = useState<string>("");
     const [shopDescription, setShopDescription] = useState<string>("");
+    const [imageUri, setImageUri] = useState<string | null>(null);
+    const imageWidth = width * 0.25;
+    const [isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
+    const [shopNameError, setShopNameError] = useState(false);
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
@@ -62,20 +68,25 @@ export default function ShopList() {
         if (userData.hasShop) goToShop();
     }, [userData])
 
+    const handleBack = () => router.push("/(tabs)/profile");
+
+    const exitingCreatingShop = ()=>setIsCreatingShop(false);
+
+
+    const clearShopName = () => {
+        setShopName("");
+    }
+
+    const saveChanges = async () => {
+        if (shopName === "") {
+            setShopNameError(true);
+            return;
+        }
+    }
+
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
-            <TouchableOpacity
-                activeOpacity={0.7}
-                className="ml-4 mt-16 mb-0 absolute z-10"
-                onPress={() => router.push("/(tabs)/profile")}
-            >
-                <FontAwesome
-                name="arrow-left"
-                size={20}
-                color="gray"
-                className="ml-2" // Adds some margin to the left of the icon
-                />
-            </TouchableOpacity>
+            <BackArrow handleBack={handleBack} />
             {loading ? ( // Show loading indicator while data is being fetched
                 <View className="flex-1 justify-center items-center">
                     <ActivityIndicator size="large" color="gray" />
@@ -112,37 +123,23 @@ export default function ShopList() {
             <Modal animationType="slide" visible={isCreatingShop}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <View className="flex-1 bg-gray-200">
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="ml-4 mt-16 mb-0 absolute z-10"
-                        onPress={()=>setIsCreatingShop(false)}
-                        >
-                        <FontAwesome
-                            name="arrow-left"
-                            size={20}
-                            color="gray"
-                            className="ml-2" // Adds some margin to the left of the icon
+                        <BackArrow handleBack={exitingCreatingShop}
+                        style={{
+                            marginTop: 64,
+                            position: 'absolute',
+                            zIndex: 10, 
+                        }}
                         />
-                        </TouchableOpacity>
                         <View className="flex-1 justify-center items-center"> 
-                            <TextInput 
-                            value={shopName}
-                            className="text-black border w-[80%] p-2 mb-4 rounded-md"
-                            placeholder="Enter shop name here"
-                            placeholderTextColor={"gray"}
-                            style={{ fontFamily: "MontserratRegular" }}
-                            onChangeText={setShopName}
-                            />
-                            <TextInput 
-                            value={shopDescription}
-                            className="text-black w-[80%] border h-[20%] p-2 rounded-md"
-                            placeholder="Enter shop description here"
-                            placeholderTextColor={"gray"}
-                            style={{ fontFamily: "MontserratRegular" }}
-                            onChangeText={setShopDescription}
-                            multiline={true}
-                            />
-                      
+                            <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{
+                                marginBottom: 16,
+                            }}/>
+                           <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "80%"}} maxLength={20}/>
+                            {shopNameError && 
+                            <View className="px-3">
+                                <Text className="text-red-500">You can't leave your username blank.</Text>
+                            </View>}
+                            <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here"/>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
