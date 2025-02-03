@@ -15,6 +15,7 @@ const Shop = sequelize.define("Shop", {
     unique: true,
     validate: {
       notEmpty: true,
+      len: [1, 20], // Restrict to 1-20 characters
     },
   },
   userId: {
@@ -28,6 +29,9 @@ const Shop = sequelize.define("Shop", {
   description: {
     type: DataTypes.STRING,
     allowNull: true,
+    validate: {
+      len: [0, 200], // Restrict to 0-200 characters
+    },
   },
   avatarFileURI: {
     type: DataTypes.STRING,

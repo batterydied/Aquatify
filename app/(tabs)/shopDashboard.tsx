@@ -6,7 +6,6 @@ import {
     Modal,
     Image,
     useWindowDimensions,
-    TextInput,
     TouchableWithoutFeedback,
     Keyboard,
 } from "react-native";
@@ -21,6 +20,7 @@ import RoundedTextInput from "@/components/RoundedTextInput";
 import Description from "@/components/Description";
 import * as ImagePicker from "expo-image-picker";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
+import { createShop } from "@/lib/apiCalls";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
@@ -70,10 +70,18 @@ export default function ShopList() {
         setShopName("");
     }
 
-    const saveChanges = async () => {
+    const handleCreateShop = async () => {
         if (shopName === "") {
             setShopNameError(true);
             return;
+        }
+        try {
+            await createShop(imageUri, shopName, shopDescription, userData.id);
+            setIsCreatingShop(false);
+            goToShop();
+        } catch (error) {
+            console.error("Error creating shop:", error);
+            alert("Failed to create shop. Please try again.");
         }
     }
 
@@ -178,14 +186,14 @@ export default function ShopList() {
                             }}/>
                            <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "50%"}} maxLength={20}/>
                             {shopNameError && 
-                            <View className="px-3">
+                            <View className="pb-2">
                                 <Text className="text-red-500">You can't leave your shop name blank.</Text>
                             </View>}
                             <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here" style={{
                                 height: "30%",
                                 width: "90%"
                             }}/>
-                            <TouchableOpacity activeOpacity={0.7}>
+                            <TouchableOpacity activeOpacity={0.7} onPress={handleCreateShop}>
                                 <View className="m-4 p-2 bg-orange-400 px-4 rounded-md">
                                     <Text style={{ fontFamily: "MontserratRegular" }}>
                                         Save

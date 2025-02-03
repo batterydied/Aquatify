@@ -353,3 +353,18 @@ export async function getProductsByShopId(shopId: string){
   }
 }
 
+export async function createShop(imageUri: string | null, shopName: string, shopDescription: string, userId: string){
+  try{
+    const response = await axios.post(`${BASE_URL}/api/shop`, {
+      shopName,
+      description: shopDescription,
+      userId,
+      avatarFileUri: imageUri
+    });
+    return response.data
+  }catch(error){
+    console.log(error);
+    return null;
+  }
+}
+
