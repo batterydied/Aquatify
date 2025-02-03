@@ -58,9 +58,10 @@ class UserController {
   
       // If name is not provided, use the email prefix (before @)
       const userName = name || email.split('@')[0];
+      const first20Chars = userName.slice(0, 20);
   
       // Create the user
-      const newUser = await User.create({ name: userName, email });
+      const newUser = await User.create({ name: first20Chars, email });
       return res.status(201).json(newUser);
     } catch (error) {
       if (error.name === 'SequelizeUniqueConstraintError') {

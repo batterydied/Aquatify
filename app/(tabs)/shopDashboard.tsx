@@ -174,14 +174,17 @@ export default function ShopList() {
                         />
                         <View className="flex-1 justify-center items-center"> 
                             <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingShopImage} style={{
-                                marginBottom: 16,
+                                marginBottom: 8,
                             }}/>
-                           <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "80%"}} maxLength={20}/>
+                           <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "50%"}} maxLength={20}/>
                             {shopNameError && 
                             <View className="px-3">
                                 <Text className="text-red-500">You can't leave your shop name blank.</Text>
                             </View>}
-                            <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here"/>
+                            <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here" style={{
+                                height: "30%",
+                                width: "90%"
+                            }}/>
                             <TouchableOpacity activeOpacity={0.7}>
                                 <View className="m-4 p-2 bg-orange-400 px-4 rounded-md">
                                     <Text style={{ fontFamily: "MontserratRegular" }}>

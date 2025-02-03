@@ -1,9 +1,10 @@
 import { productType, image, address, addressData, paymentMethodData, cartItem } from "./interface";
 import { extractFilename } from "./extractFilename";
 import axios from 'axios';
+import { __IP } from "../GLOBAL"
 
 function getIP() {
-  return "192.168.1.23";
+  return __IP;
 }
 
 export const BASE_URL = "http://" + getIP() + ":3000";

@@ -188,7 +188,7 @@ export default function SettingPage() {
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="wallet" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                Payments
+                                Payment
                             </Text>
                         </View>
                     </TouchableOpacity>
@@ -199,7 +199,7 @@ export default function SettingPage() {
                         <View className="flex justify-center items-center">
                             <FontAwesome5 name="store" size={20} color="gray" />
                             <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                My shop
+                                Shop
                             </Text>
                         </View>
                     </TouchableOpacity>

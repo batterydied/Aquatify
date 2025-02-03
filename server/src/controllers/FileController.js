@@ -2,6 +2,7 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import fs from "fs";
 import axios from "axios";
+import { __IP } from '../../../GLOBAL.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -98,7 +99,7 @@ class FileController {
           const fileURI = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
       
           // Update the user's avatarFileURI in the database
-          await axios.put(`http://192.168.1.23:3000/api/user/${id}`, {
+          await axios.put(`http://${__IP}:3000/api/user/${id}`, {
             avatarFileURI: fileURI,
           });
       
