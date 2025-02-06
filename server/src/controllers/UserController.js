@@ -171,7 +171,7 @@ class UserController {
     }
   }
 
-  static async deleteAvatar(req, res){
+  static async deleteAvatarURI(req, res){
     try {
       const { id } = req.params;
 

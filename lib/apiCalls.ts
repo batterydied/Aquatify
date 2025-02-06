@@ -154,7 +154,7 @@ export async function moveItem(cartId: string) {
   }
 }
 
-export async function uploadAvatar(previousUri: string | null, uri: string | null, id: string) {
+export async function uploadAvatar(previousUri: string | null, uri: string | null, userId: string) {
   try {
     if (previousUri) {
       try {
@@ -168,10 +168,13 @@ export async function uploadAvatar(previousUri: string | null, uri: string | nul
       const formData = new FormData();
       formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
 
-      const response = await axios.post(`${BASE_URL}/api/file/upload/avatar/${id}`, formData);
-      return response.data;
+      const response = await axios.post(`${BASE_URL}/api/file/upload/`, formData);
+      const data = response.data
+      const fileURI = data.file.uri;
+      await axios.put(`${BASE_URL}/api/user/${userId}`, fileURI);
+      return data;
     }else{
-      await axios.delete(`${BASE_URL}/api/user/avatar/${id}`);
+      await axios.delete(`${BASE_URL}/api/user/avatar/${userId}`);
       return null;
     }
   } catch (error) {
@@ -180,9 +183,9 @@ export async function uploadAvatar(previousUri: string | null, uri: string | nul
   }
 }
 
-export async function deleteAvatar(id: string, uri: string){
+export async function deleteAvatar(userId: string, uri: string){
   try{
-    const response = await axios.post(`${BASE_URL}/api/file/delete/avatar/${id}`);
+    const response = await axios.post(`${BASE_URL}/api/file/delete/avatar/${userId}`);
     return response.data;
   }catch(error){
     console.error("Error deleting avatar:", error);
@@ -190,10 +193,10 @@ export async function deleteAvatar(id: string, uri: string){
   }
 }
 
-export async function updateUsername(name: string, id: string) {
+export async function updateUsername(username: string, userId: string) {
   try {
-    const response = await axios.put(`${BASE_URL}/api/user/${id}`,{
-      name,
+    const response = await axios.put(`${BASE_URL}/api/user/${userId}`,{
+      name: username,
     });
     return response.data;
   } catch (error) {

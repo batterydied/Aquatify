@@ -7,7 +7,8 @@ import {
     Modal, 
     TouchableWithoutFeedback, 
     TextInput, 
-    Keyboard 
+    Keyboard, 
+    ActivityIndicator
 } from "react-native";
 import SignOutButton from "../../components/SignOutButton";
 import { Redirect, router } from "expo-router";
@@ -29,6 +30,7 @@ export default function SettingPage() {
     const [isEditingProfile, setEditingProfile] = useState(false);
     const [isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
     const imageWidth = width * 0.25;
+    const [loading, setLoading] = useState(false);
 
     // New state to track original image URI
     const [originalImageUri, setOriginalImageUri] = useState<string | null>(null);
@@ -45,18 +47,19 @@ export default function SettingPage() {
     }
 
     useEffect(() => {
-        if (userData.avatarFileURI) {
-            setImageUri(userData.avatarFileURI);
-            setOriginalImageUri(userData.avatarFileURI); // Set original image initially
-        }
-    }, [userData.avatarFileURI]);
-
-    useEffect(() => {
-        if (userData.name) {
+        setLoading(true);
+    
+        if (userData.name !== undefined) {
             setUsername(userData.name);
             setPreviousUsername(userData.name);
+            
+            setImageUri(userData.avatarFileURI);
+            setOriginalImageUri(userData.avatarFileURI); 
+    
+            setLoading(false);
         }
-    }, [userData.name]);
+    }, [userData.name, userData.avatarFileURI]);
+    
 
     const uploadImage = async (mode: string) => {
         try {
@@ -157,94 +160,102 @@ export default function SettingPage() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
-            <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={userData.name}/>
-            <View className="flex px-2 w-full">
-                <View className="w-full flex-row justify-between p-2"> 
-                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
-                    onPress={()=>router.push({
-                    pathname: "/(tabs)/address"})}>
-                        <View className="flex justify-center items-center">
-                            <FontAwesome5 name="address-book" size={20} color="gray" />
-                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                Address
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
-                    onPress={()=>router.push({
-                    pathname: "/(tabs)/orderList"})}>
-                        <View className="flex justify-center items-center">
-                            <FontAwesome5 name="box" size={20} color="gray" />
-                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                Orders
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
-                    onPress={()=>router.push({
-                    pathname: "/(tabs)/payments"})}>
-                        <View className="flex justify-center items-center">
-                            <FontAwesome5 name="wallet" size={20} color="gray" />
-                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                Payment
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
-                    onPress={()=>router.push({
-                    pathname: "/(tabs)/shopDashboard"})}>
-                        <View className="flex justify-center items-center">
-                            <FontAwesome5 name="store" size={20} color="gray" />
-                            <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                Shop
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-
-                </View>
-                <TouchableOpacity activeOpacity={0.7} onPress={() => setEditingProfile(true)} className="my-2 bg-white p-2 rounded-3xl w-full">
-                    <View className="w-full">
-                        <View className="flex-row justify-center items-center">
-                            <FontAwesome className="mr-2" name="edit" size={20} color="gray"/>
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg">
-                                Edit profile
-                            </Text>
-                        </View>
+            {loading ? ( // Show loading indicator while data is being fetched
+                    <View className="flex-1 justify-center items-center">
+                      <ActivityIndicator size="large" color="gray" />
                     </View>
-                </TouchableOpacity>
-                <SignOutButton />
-                <Modal animationType="slide" visible={isEditingProfile}>
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View className="flex-1 bg-gray-200">
-                            <View className="mt-16 flex-row w-full justify-between px-4">
-                                <TouchableOpacity onPress={discardChanges}>
-                                    <View className="rounded-lg m-2">
-                                        <FontAwesome name="times" color="gray" size={30} />
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={saveChanges}>
-                                    <View className="rounded-lg m-2">
-                                        <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                            Save
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
+            ):(
+            <View>
+                <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={userData.name}/>
+                <View className="flex px-2 w-full">
+                    <View className="w-full flex-row justify-between p-2"> 
+                        <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
+                        onPress={()=>router.push({
+                        pathname: "/(tabs)/address"})}>
+                            <View className="flex justify-center items-center">
+                                <FontAwesome5 name="address-book" size={20} color="gray" />
+                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                    Address
+                                </Text>
                             </View>
-                            <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{marginLeft: 16}}/>
-                            <RoundedTextInput value={username} setValue={setUsername} clearValue={clearUsername} placeholder="Enter username here" maxLength={20}/>
-                            {usernameError && 
-                            <View className="px-3">
-                                <Text className="text-red-500">You can't leave your username blank.</Text>
-                            </View>}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
+                        onPress={()=>router.push({
+                        pathname: "/(tabs)/orderList"})}>
+                            <View className="flex justify-center items-center">
+                                <FontAwesome5 name="box" size={20} color="gray" />
+                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                    Orders
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7}
+                        onPress={()=>router.push({
+                        pathname: "/(tabs)/payments"})}>
+                            <View className="flex justify-center items-center">
+                                <FontAwesome5 name="wallet" size={20} color="gray" />
+                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                    Payment
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
+                        onPress={()=>router.push({
+                        pathname: "/(tabs)/shopDashboard"})}>
+                            <View className="flex justify-center items-center">
+                                <FontAwesome5 name="store" size={20} color="gray" />
+                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                    Shop
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+
+                    </View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => setEditingProfile(true)} className="my-2 bg-white p-2 rounded-3xl w-full">
+                        <View className="w-full">
+                            <View className="flex-row justify-center items-center">
+                                <FontAwesome className="mr-2" name="edit" size={20} color="gray"/>
+                                <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg">
+                                    Edit profile
+                                </Text>
+                            </View>
                         </View>
-                    </TouchableWithoutFeedback>
-                    <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={uploadImage} onRemove={removeImage}/>
-                </Modal>
+                    </TouchableOpacity>
+                    <SignOutButton />
+                    <Modal animationType="slide" visible={isEditingProfile}>
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <View className="flex-1 bg-gray-200">
+                                <View className="mt-16 flex-row w-full justify-between px-4">
+                                    <TouchableOpacity onPress={discardChanges}>
+                                        <View className="rounded-lg m-2">
+                                            <FontAwesome name="times" color="gray" size={30} />
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={saveChanges}>
+                                        <View className="rounded-lg m-2">
+                                            <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
+                                                Save
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{marginLeft: 16}}/>
+                                <RoundedTextInput value={username} setValue={setUsername} clearValue={clearUsername} placeholder="Enter username here" maxLength={20}/>
+                                {usernameError && 
+                                <View className="px-3">
+                                    <Text className="text-red-500">You can't leave your username blank.</Text>
+                                </View>}
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={uploadImage} onRemove={removeImage}/>
+                    </Modal>
+                </View>
             </View>
+            )}
         </SafeAreaView>
     );
 }

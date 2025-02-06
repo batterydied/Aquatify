@@ -70,26 +70,8 @@ class FileController {
         });
     }
 
-    static upload(req, res){
-        if (!req.file) {
-          return res.status(400).json({ error: "No file uploaded" });
-        }
-      
-        res.status(200).json({
-          message: "File uploaded successfully",
-          file: {
-            originalName: req.file.originalname,
-            filename: req.file.filename,
-            path: req.file.path,
-            size: req.file.size,
-          },
-        });
-    }
-
-    static async uploadAvatar(req, res) {
+    static async upload(req, res) {
         try {
-          const { id } = req.params;
-      
           // Check if a file is uploaded
           if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
@@ -97,11 +79,6 @@ class FileController {
       
           // Construct the full URI for the uploaded file
           const fileURI = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-      
-          // Update the user's avatarFileURI in the database
-          await axios.put(`http://${__IP}:3000/api/user/${id}`, {
-            avatarFileURI: fileURI,
-          });
       
           // Respond with the new file information
           res.status(200).json({

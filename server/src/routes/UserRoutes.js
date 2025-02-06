@@ -43,7 +43,7 @@ class UserRoutes {
     this.router.delete("/", UserController.deleteAllUsers);
 
     // Delete an User's avatar
-    this.router.delete("/avatar/:id", UserController.deleteAvatar)
+    this.router.delete("/avatar/:id", UserController.deleteAvatarURI)
 
     // Delete a User by ID
     this.router.delete("/:id", UserController.deleteUser);
