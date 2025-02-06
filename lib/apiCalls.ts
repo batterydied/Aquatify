@@ -154,38 +154,9 @@ export async function moveItem(cartId: string) {
   }
 }
 
-export async function uploadAvatar(previousUri: string | null, uri: string | null, userId: string) {
-  try {
-    if (previousUri) {
-      try {
-        await axios.delete(`${BASE_URL}/api/file/${extractFilename(previousUri)}`);
-        console.log("Previous avatar deleted successfully");
-      } catch (error) {
-        console.error("Error deleting previous avatar:", error);
-      }
-    }
-    if(uri){
-      const formData = new FormData();
-      formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
-
-      const response = await axios.post(`${BASE_URL}/api/file/upload/`, formData);
-      const data = response.data
-      const fileURI = data.file.uri;
-      await axios.put(`${BASE_URL}/api/user/${userId}`, fileURI);
-      return data;
-    }else{
-      await axios.delete(`${BASE_URL}/api/user/avatar/${userId}`);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error uploading avatar:", error);
-    return null;
-  }
-}
-
-export async function deleteAvatar(userId: string, uri: string){
+export async function deleteFile(filename: string){
   try{
-    const response = await axios.post(`${BASE_URL}/api/file/delete/avatar/${userId}`);
+    const response = await axios.delete(`${BASE_URL}/api/file/${filename}`);
     return response.data;
   }catch(error){
     console.error("Error deleting avatar:", error);
@@ -358,11 +329,13 @@ export async function getProductsByShopId(shopId: string){
 
 export async function createShop(imageUri: string | null, shopName: string, shopDescription: string, userId: string){
   try{
+    const responseUri = await uploadImage(null, imageUri);
+    console.log(responseUri);
     const response = await axios.post(`${BASE_URL}/api/shop`, {
       shopName,
       description: shopDescription,
       userId,
-      avatarFileUri: imageUri
+      avatarFileURI: responseUri
     });
     return response.data
   }catch(error){
@@ -371,3 +344,46 @@ export async function createShop(imageUri: string | null, shopName: string, shop
   }
 }
 
+export async function uploadImage(previousUri: string | null, uri: string | null) {
+  try {
+    if (previousUri) {
+      try {
+        await deleteFile(extractFilename(previousUri));
+        console.log("Previous image deleted successfully");
+      } catch (error) {
+        console.error("Error deleting previous image:", error);
+      }
+    }
+    if(uri){
+      const formData = new FormData();
+      formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
+
+      const response = await axios.post(`${BASE_URL}/api/file/upload/`, formData);
+      return response.data.file.uri;
+    }
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return null;
+  }
+}
+
+export async function uploadAvatar(previousUri: string | null, uri: string | null, userId: string) {
+  try {
+      if(uri){
+        const fileURI = await uploadImage(previousUri, uri);
+        await axios.put(`${BASE_URL}/api/user/${userId}`, {
+          avatarFileURI: fileURI
+        });
+        return fileURI;
+      }else if(!uri && previousUri){
+        await deleteFile(extractFilename(previousUri));
+        await axios.put(`${BASE_URL}/api/user/${userId}`, {
+          avatarFileURI: null
+        })
+        return null;
+      }
+  } catch (error) {
+    console.error("Error uploading avatar:", error);
+    return null;
+  }
+}

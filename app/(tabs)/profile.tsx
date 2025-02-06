@@ -1,12 +1,10 @@
 import { 
     Text, 
     View, 
-    Image, 
     useWindowDimensions, 
     TouchableOpacity, 
     Modal, 
     TouchableWithoutFeedback, 
-    TextInput, 
     Keyboard, 
     ActivityIndicator
 } from "react-native";
@@ -119,10 +117,10 @@ export default function SettingPage() {
         try {
             // Update the avatar if it has changed
             if (originalImageUri !== imageUri) {
-                const avatarResponse = await uploadAvatar(originalImageUri, imageUri, userData.id);
-                if (avatarResponse) {
+                const fileURI = await uploadAvatar(originalImageUri, imageUri, userData.id);
+                if (fileURI) {
                     // Update the userData context with the new avatar URI
-                    setUserData({ ...userData, avatarFileURI: avatarResponse.file.uri });
+                    setUserData({ ...userData, avatarFileURI: fileURI });
                     setOriginalImageUri(imageUri); // Update the original image state
                 } else {
                     setUserData({ ...userData, avatarFileURI: null});
