@@ -75,7 +75,7 @@ class UserController {
   static async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { name, email, avatarFileURI} = req.body;
+      const { name, email, avatarFileURI, hasShop} = req.body;
 
       const user = await User.findByPk(id);
       if (!user) {
@@ -87,6 +87,7 @@ class UserController {
       if (name !== undefined) updatedFields.name = name;
       if (email !== undefined) updatedFields.email = email;
       if (avatarFileURI !== undefined) updatedFields.avatarFileURI = avatarFileURI;
+      if (hasShop !== undefined) updatedFields.hasShop = hasShop;
 
       if (Object.keys(updatedFields).length > 0) {
         await user.update(updatedFields);

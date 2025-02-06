@@ -22,7 +22,8 @@ import ProfilePicture from "@/components/ProfilePicture";
 
 export default function Shop() {
     const {userData} = useUserData();
-    const params = useLocalSearchParams()
+    const {userId} = useLocalSearchParams();
+    const userIdString = Array.isArray(userId) ? userId[0] : String(userId);
     const [shop, setShop] = useState<shopInterface | null>(null);
     const [originalImageUri, setOriginalImageUri] = useState<string | null>(null);
     const [imageUri, setImageUri] = useState<string | null>(null);
@@ -39,15 +40,44 @@ export default function Shop() {
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
     }
-
-     useEffect(()=>{
-        if(userData && shop) setLoading(false);
-    },[userData, shop]);
     
     useEffect(()=>{
-        fetchUserShop
+        fetchShopData();
     }, [userData])
-    
+
+    useEffect(() => {
+        if (shop && shop.avatarFileURI) {
+            setImageUri(shop.avatarFileURI);
+            setOriginalImageUri(shop.avatarFileURI);
+            setShopName(shop.shopName);
+            setShopDescription(shop.description);
+        }
+    }, [shop]);
+
+    useEffect(() => { 
+        fetchProductData();
+    }, [shop]);
+
+    const fetchProductData = async () => {
+        try {
+            if(shop){
+                const data = await getProductsByShopId(shop.id);
+                setProductGrids((data || []).sort((a: productGrid, b: productGrid) => b.rating - a.rating));
+            }
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
+
+    const fetchShopData = async () => {
+        try {
+            const shopData = await fetchUserShop(userIdString);
+            setShop(shopData);
+            console.log(shopData);
+        } catch (error) {
+            console.error("Error fetching shop:", error);
+        }
+    }
 
     if (!shop) {
         return (
@@ -60,26 +90,6 @@ export default function Shop() {
     const isMyShop = (shopUserId: string) => {
         return shopUserId === userData.id;
     }
-
-    useEffect(() => {
-        if (shop && shop.avatarFileURI) {
-            setImageUri(shop.avatarFileURI);
-            setOriginalImageUri(shop.avatarFileURI);
-        }
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const data = await getProductsByShopId(shop.id);
-            setProductGrids((data || []).sort((a: productGrid, b: productGrid) => b.rating - a.rating));
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    };
-
-    useEffect(() => { 
-            fetchData();
-    }, []);
 
     const renderItem = ({ item }: { item: productGrid }) => {
         const images = sortImageById(item.images);

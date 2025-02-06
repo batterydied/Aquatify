@@ -327,19 +327,22 @@ export async function getProductsByShopId(shopId: string){
   }
 }
 
-export async function createShop(imageUri: string | null, shopName: string, shopDescription: string, userId: string){
+export async function createShop(imageURI: string | null, shopName: string, shopDescription: string, userId: string){
   try{
-    const responseUri = await uploadImage(null, imageUri);
-    console.log(responseUri);
+    const responseURI = await uploadImage(null, imageURI);
     const response = await axios.post(`${BASE_URL}/api/shop`, {
       shopName,
       description: shopDescription,
       userId,
-      avatarFileURI: responseUri
+      avatarFileURI: responseURI
+    });
+    await axios.put(`${BASE_URL}/api/user/${userId}`, {
+      hasShop: true
     });
     return response.data
   }catch(error){
     console.log(error);
+    if(imageURI) await deleteFile(extractFilename(imageURI));
     return null;
   }
 }
