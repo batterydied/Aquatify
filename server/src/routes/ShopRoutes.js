@@ -11,20 +11,20 @@ class ShopRoutes {
         // Fetch all shops
         this.router.get("/", ShopController.getAllShops);
 
-        this.router.get("/:id/products", ShopController.getProductsByShopId);
+        this.router.get("/:shopId/products", ShopController.getProductsByShopId);
 
         this.router.get("/user/:userId", ShopController.getShopByUserId);
         // Fetch a single shop by ID
-        this.router.get("/:id", ShopController.getShopById);
+        this.router.get("/:shopId", ShopController.getShopById);
 
         // Create a new shop for a user
         this.router.post("/", ShopController.createShop);
 
         // Update an existing shop
-        this.router.put("/:id", ShopController.updateShop);
+        this.router.put("/:shopId", ShopController.updateShop);
 
         // Delete a shop by ID
-        this.router.delete("/:id", ShopController.deleteShop);
+        this.router.delete("/:shopId", ShopController.deleteShop);
 
         this.router.delete("/", ShopController.deleteAllShops);
     }

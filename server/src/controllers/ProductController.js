@@ -41,7 +41,7 @@ class ProductController {
       const { name, secondaryName, shopId, shopName, categories, description, images, reviews, productTypes } = req.body;
   
       // Validate input
-      if (!name || !sellerId || !sellerName || !categories) {
+      if (!name || !shopId || !shopName || !categories) {
         return res.status(400).json({ error: "Missing required fields" });
       }
   

@@ -17,7 +17,7 @@ import { Redirect, router, useFocusEffect } from "expo-router";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import BackArrow from "@/components/BackArrow";
 import RoundedTextInput from "@/components/RoundedTextInput";
-import Description from "@/components/Description";
+import EditableDescription from "@/components/EditableDescription";
 import * as ImagePicker from "expo-image-picker";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import { createShop } from "@/lib/apiCalls";
@@ -81,7 +81,7 @@ export default function ShopList() {
             goToShop();
         } catch (error) {
             console.error("Error creating shop:", error);
-            alert("Failed to create shop. Please try again.");
+            alert("Failed to create shop. Try another shop name");
         }
     }
 
@@ -189,7 +189,7 @@ export default function ShopList() {
                             <View className="pb-2">
                                 <Text className="text-red-500">You can't leave your shop name blank.</Text>
                             </View>}
-                            <Description value={shopDescription} setValue={setShopDescription} placeholder="Enter description here" style={{
+                            <EditableDescription value={shopDescription} setValue={setShopDescription} placeholder="Enter description here" style={{
                                 height: "30%",
                                 width: "90%"
                             }}/>

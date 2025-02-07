@@ -19,8 +19,8 @@ class ShopController {
   // Get a single shop by ID
   static async getShopById(req, res) {
     try {
-      const { id } = req.params;
-      const shop = await Shop.findByPk(id);
+      const { shopId } = req.params;
+      const shop = await Shop.findByPk(shopId);
 
       if (!shop) {
         return res.status(404).json({ error: "Shop not found." });
@@ -75,10 +75,10 @@ class ShopController {
   // Update an existing shop
   static async updateShop(req, res) {
     try {
-      const { id } = req.params;
+      const { shopId } = req.params;
       const { shopName, description, avatarFileURI } = req.body;
 
-      const shop = await Shop.findByPk(id);
+      const shop = await Shop.findByPk(shopId);
       if (!shop) {
         return res.status(404).json({ error: "Shop not found." });
       }
@@ -119,9 +119,10 @@ class ShopController {
 
   static async getProductsByShopId(req, res){
     try {
-      const { id } = req.params;
+      const { shopId } = req.params;
       const products = await Product.findAll({
-        where: {shopId: id}
+        where: { shopId },
+        include: ["images", "reviews"]
       })
       return res.status(200).json(products);
     } catch (error) {
