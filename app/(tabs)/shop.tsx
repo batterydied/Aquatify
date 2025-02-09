@@ -14,8 +14,8 @@ import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { fetchUserShop, getProductsByShopId, sortImageById, updateShopDescription, updateShopName, uploadShopAvatar } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
+import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { fetchUserShop, getProductsByShopId, sortImageById, updateShopDescription, updateShopName, uploadShopAvatar, deleteShop, updateShopStatus  } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
 import { productGrid, shopInterface } from "@/lib/interface";
 import { goToProductPage } from "@/lib/goToProductPage";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
@@ -54,14 +54,18 @@ export default function Shop() {
         return <Redirect href="/(auth)/sign-in" />;
     }
     
-    useEffect(()=>{
+    useFocusEffect(
+        useCallback(() => {
         fetchShopData();
-    }, [userData])
+        }, [])
+    );
 
     useEffect(() => {
-        if (shop && shop.avatarFileURI) {
-            setImageUri(shop.avatarFileURI);
-            setOriginalImageUri(shop.avatarFileURI);
+        if (shop) {
+            if (shop.avatarFileURI){
+                setImageUri(shop.avatarFileURI);
+                setOriginalImageUri(shop.avatarFileURI);
+            }
             setShopName(shop.shopName);
             setPreviousShopName(shop.shopName);
             setShopDescription(shop.description);
@@ -227,6 +231,13 @@ export default function Shop() {
             setIsEditingShopAvatar(false);
         };
 
+    async function handleDeleteShop(shopId: string, avatarFileURI: string, userId: string) {
+        await deleteShop(shopId, avatarFileURI);
+        await updateShopStatus(userId, false);
+        setIsEditingShop(false);
+        router.push("./profile");
+    }
+
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
             <View>
@@ -278,7 +289,7 @@ export default function Shop() {
             </Modal>
             <Modal animationType="slide" visible={isEditingShop}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View className="flex-1 bg-gray-200">
+                    <View className="flex-1 bg-gray-200 items-center">
                         <View className="mt-16 flex-row w-full justify-between px-4">
                             <TouchableOpacity onPress={discardChanges}>
                                 <View className="rounded-lg m-2">
@@ -293,12 +304,21 @@ export default function Shop() {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                        <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setIsEditingShopAvatar} style={{marginLeft: 16}}/>
-                        <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" maxLength={20}/>
+                        <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setIsEditingShopAvatar} />
+                        <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" maxLength={20} style={{width: "60%"}}/>
                         {shopNameError && 
                         <View className="px-3">
                             <Text className="text-red-500">You can't leave your shop name blank.</Text>
                         </View>}
+                        <EditableDescription value={shopDescription} setValue={setShopDescription} placeholder="Enter shop description here" maxLength={200} style={{padding: 8, height: "30%", width: "90%"}}/>
+                        <View className="flex w-full items-center">
+                            <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> handleDeleteShop(shop.id, shop.avatarFileURI, userData.id)}>
+                                <View className="bg-red-500 rounded-xl p-4 flex-row items-center">
+                                    <FontAwesome name="trash" size={20} color="white" className="mr-2"/>
+                                    <Text className="text-white" style={{ fontFamily: "MontserratBold" }}>Delete my shop</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
                 <EditProfilePictureModal visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={uploadImage} onRemove={removeImage}/>

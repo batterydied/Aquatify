@@ -9,9 +9,9 @@ import {
     ActivityIndicator
 } from "react-native";
 import SignOutButton from "../../components/SignOutButton";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, useFocusEffect } from "expo-router";
 import { useUserData } from "@/contexts/UserContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from "expo-image-picker";
@@ -23,7 +23,7 @@ import ProfilePicture from "@/components/ProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 
 export default function SettingPage() {
-    const {userData, setUserData} = useUserData();
+    const {userData, setUserData, fetchUserData} = useUserData();
     const {width} = useWindowDimensions();
     const [isEditingProfile, setEditingProfile] = useState(false);
     const [isEditingProfilePicture, setEditingProfilePicture ] = useState(false);
@@ -44,6 +44,13 @@ export default function SettingPage() {
         return <Redirect href="/(auth)/sign-in" />;
     }
 
+    
+    useFocusEffect(
+        useCallback(() => {
+            console.log(userData.id);
+        fetchUserData();
+        }, [])
+    );
     useEffect(() => {
         setLoading(true);
     
@@ -57,7 +64,6 @@ export default function SettingPage() {
             setLoading(false);
         }
     }, [userData.name, userData.avatarFileURI]);
-    
 
     const uploadImage = async (mode: string) => {
         try {

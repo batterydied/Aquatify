@@ -102,9 +102,9 @@ class ShopController {
   // Delete a shop by ID
   static async deleteShop(req, res) {
     try {
-      const { id } = req.params;
+      const { shopId } = req.params;
 
-      const shop = await Shop.findByPk(id);
+      const shop = await Shop.findByPk(shopId);
       if (!shop) {
         return res.status(404).json({ error: "Shop not found." });
       }

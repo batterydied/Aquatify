@@ -55,7 +55,10 @@ class UserController {
   static async createUser(req, res) {
     try {
       const { name, email } = req.body;
-  
+
+      if (!email || typeof email !== "string" || !email.includes("@")) {
+      return res.status(400).json({ error: "A valid email is required." });
+    }
       // If name is not provided, use the email prefix (before @)
       const userName = name || email.split('@')[0];
       const first20Chars = userName.slice(0, 20);
@@ -67,7 +70,7 @@ class UserController {
       if (error.name === 'SequelizeUniqueConstraintError') {
         return res.status(500).json({ error: "This user already exists." });
       }
-      return res.status(500).json({ error: "An error occurred while creating the user." });
+      return res.status(500).json({ error: `An error occurred while creating the user. ${error}` });
     }
   }  
 

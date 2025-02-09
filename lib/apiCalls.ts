@@ -412,15 +412,10 @@ export async function uploadShopAvatar(previousUri: string | null, uri: string |
 
 export async function updateShopName(shopName: string, shopId: string) {
   try {
-    try {
-      const response = await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
-        shopName
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error updating shop avatar:", error);
-      return null;
-    }
+    const response = await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
+      shopName
+    });
+    return response.data;
   } catch (error) {
     console.error("Error updating shop avatar:", error);
     return null;
@@ -429,12 +424,37 @@ export async function updateShopName(shopName: string, shopId: string) {
 
 export async function updateShopDescription(description: string, shopId: string) {
   try {
-      const response = await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
-        description
-      });
-      return response.data;
+    const response = await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
+      description
+    });
+    return response.data;
   } catch (error) {
     console.error("Error updating shop avatar:", error);
+    return null;
+  }
+}
+
+export async function deleteShop(shopId: string, fileURI: string){
+  try {
+    if(fileURI){
+      await deleteFile(extractFilename(fileURI))
+    }
+    const response = await axios.delete(`${BASE_URL}/api/shop/${shopId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting shop: ", error);
+    return null;
+  } 
+}
+
+export async function updateShopStatus(userId: string, status: boolean){
+  try {
+    const response = await axios.put(`${BASE_URL}/api/user/${userId}`, {
+      hasShop: status
+    })
+    return response.data;
+  } catch (error) {
+    console.error("Error updating shop status: ", error);
     return null;
   }
 }
