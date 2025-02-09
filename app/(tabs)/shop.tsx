@@ -8,7 +8,8 @@ import {
     FlatList,
     Modal,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    Alert
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
@@ -232,10 +233,29 @@ export default function Shop() {
         };
 
     async function handleDeleteShop(shopId: string, avatarFileURI: string, userId: string) {
-        await deleteShop(shopId, avatarFileURI);
-        await updateShopStatus(userId, false);
-        setIsEditingShop(false);
-        router.push("./profile");
+        Alert.alert(
+            "Delete Shop",
+            "Are you sure you want to delete this shop?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Delete",
+                    onPress: async () => {
+                        try{
+                        await deleteShop(shopId, avatarFileURI);
+                        await updateShopStatus(userId, false);
+                        setIsEditingShop(false);
+                        router.push("./profile");
+                        }catch{
+                            Alert.alert("Error", "Failed to delete shop.");
+                        }
+                    }
+                }
+            ]
+        )
     }
 
     return (
