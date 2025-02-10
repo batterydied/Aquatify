@@ -28,6 +28,7 @@ import EditableProfilePicture from "@/components/EditableProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import * as ImagePicker from "expo-image-picker";
+import DescriptionModal from "@/components/DescriptionModal";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -133,7 +134,7 @@ export default function Shop() {
         )
     };
 
-    const handleBack = () => router.push("/(tabs)/profile");
+    const handleBack = () => {router.push("/(tabs)/profile")};
 
     const discardChanges = () => {
         setImageUri(originalImageUri);
@@ -292,21 +293,10 @@ export default function Shop() {
                 columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                bounces={false}
+                bounces={true}
                 />
             </View>
-            <Modal animationType="slide" visible={showShopDescription} transparent={true}>
-                <View className="flex-1 justify-center items-center bg-black/50">
-                    <View className="flex justify-center items-center bg-gray-200 h-[50%] w-[90%] rounded-md">
-                        <Text style={{fontFamily: "MontserratRegular"}}>
-                            {shopDescription}
-                        </Text>
-                    </View>
-                    <TouchableOpacity className="mt-4" activeOpacity={0.7} onPress={()=>setShowShopDescription(false)}>
-                        <FontAwesome name="times" size={45} color="#454545"/>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
+            <DescriptionModal visible={showShopDescription} description={shopDescription} setter={setShowShopDescription} />
             <Modal animationType="slide" visible={isEditingShop}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View className="flex-1 bg-gray-200 items-center">

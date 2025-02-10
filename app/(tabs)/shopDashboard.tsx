@@ -61,7 +61,7 @@ export default function ShopList() {
         if (userData.hasShop) goToShop();
     }, [userData])
 
-    const handleBack = () => router.push("/(tabs)/profile");
+    const handleBack = () => {router.push("/(tabs)/profile")};
 
     const exitingCreatingShop = ()=>setIsCreatingShop(false);
 

@@ -1,7 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from "url";
 import fs from "fs";
-import axios from "axios";
 import { __IP } from '../../../GLOBAL.js';
 
 const __filename = fileURLToPath(import.meta.url);

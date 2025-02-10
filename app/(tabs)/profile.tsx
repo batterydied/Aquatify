@@ -44,13 +44,6 @@ export default function SettingPage() {
         return <Redirect href="/(auth)/sign-in" />;
     }
 
-    
-    useFocusEffect(
-        useCallback(() => {
-            console.log(userData.id);
-        fetchUserData();
-        }, [])
-    );
     useEffect(() => {
         setLoading(true);
     
