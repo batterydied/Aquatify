@@ -55,12 +55,10 @@ import BackArrow from "@/components/BackArrow";
       }
     };
   
-    useFocusEffect(
-      useCallback(() => {
-        fetchProductData();
-      }, [])
-    );
-  
+    useEffect(() => {
+      fetchProductData();
+    }, [productId]);  
+
     useEffect(() => {
       if (product) {
         setSelectedType(product.productTypes[0]);

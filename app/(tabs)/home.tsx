@@ -63,7 +63,9 @@ export default function HomePage() {
 
         return (
             <View className="flex-1 mx-1">
-                <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, "home")}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                    console.log("Navigating to product:", item.productId);
+                    goToProductPage(item.productId, "home")}}>
                     <Image
                         source={{ uri: images[0].url }}
                         className="h-[85%] w-full rounded-lg"
