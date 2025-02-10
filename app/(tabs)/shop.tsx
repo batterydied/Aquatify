@@ -2,7 +2,6 @@ import {
     Text, 
     View, 
     TouchableOpacity, 
-    Image,
     useWindowDimensions,
     ActivityIndicator,
     FlatList,
@@ -11,24 +10,31 @@ import {
     Keyboard,
     Alert
 } from "react-native";
+import { 
+    fetchUserShop, 
+    getProductsByShopId, 
+    updateShopDescription, 
+    updateShopName, 
+    uploadShopAvatar,
+    deleteShop, 
+    updateShopStatus 
+} from "@/lib/apiCalls";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { fetchUserShop, getProductsByShopId, sortImageById, updateShopDescription, updateShopName, uploadShopAvatar, deleteShop, updateShopStatus  } from "@/lib/apiCalls"; // Assuming you have an API call to fetch the user's shop
 import { productGrid, shopInterface } from "@/lib/interface";
-import { goToProductPage } from "@/lib/goToProductPage";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import BackArrow from "@/components/BackArrow";
 import ProfilePicture from "@/components/ProfilePicture";
-import { formatReviewsCount } from "@/lib/reviewFormat";
 import EditableDescription from "@/components/EditableDescription";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import * as ImagePicker from "expo-image-picker";
 import DescriptionModal from "@/components/DescriptionModal";
+import FlatListItem from "@/components/FlatListItem";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -51,6 +57,7 @@ export default function Shop() {
     const {width} = useWindowDimensions();
     const { itemsPerRow, itemWidth } = calculateItemWidthAndRow(12, 200, width);
     const imageWidth = width * 0.25;
+    const iconWidth = width * 0.15;
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;
@@ -111,28 +118,9 @@ export default function Shop() {
         return shopUserId === userData.id;
     }
 
-    const renderItem = ({ item }: { item: productGrid }) => {
-        const images = sortImageById(item.images);
-
-        return (
-            <View className="flex-1 mx-1">
-                <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, "shop")}>
-                    <Image
-                        source={{ uri: images[0].url }}
-                        className="h-[85%] w-full rounded-lg"
-                        resizeMode="cover"
-                    />
-                    <View className="h-[15%]">
-                        <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
-                        <View className="flex-row justify-between">
-                            <Text style={{ fontFamily: "MontserratRegular" }}>{'$' + item.price}</Text>
-                            <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    };
+    const handleRenderItem = ({item}: { item: productGrid }) => (
+        <FlatListItem item={item} path= "shop" itemWidth={itemWidth} />
+    );
 
     const handleBack = () => {router.push("/(tabs)/profile")};
 
@@ -284,11 +272,7 @@ export default function Shop() {
                 key={width}
                 data={productGrids}
                 keyExtractor={(item: productGrid) => item.productId}
-                renderItem={({ item }) => (
-                    <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
-                        {renderItem({ item })}
-                    </View>
-                )}
+                renderItem={handleRenderItem}
                 numColumns={itemsPerRow}
                 columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
                 showsVerticalScrollIndicator={false}
@@ -296,6 +280,11 @@ export default function Shop() {
                 bounces={true}
                 />
             </View>
+            <TouchableOpacity className="absolute bottom-4 right-4">
+                <View className="p-2 rounded-[50%] bg-gray-500" style={[{ width: iconWidth, height: iconWidth }]}>
+                    <Text>Hey</Text>
+                </View>
+            </TouchableOpacity>
             <DescriptionModal visible={showShopDescription} description={shopDescription} setter={setShowShopDescription} />
             <Modal animationType="slide" visible={isEditingShop}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

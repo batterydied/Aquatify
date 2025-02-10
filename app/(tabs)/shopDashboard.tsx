@@ -33,6 +33,7 @@ export default function ShopList() {
     const imageWidth = width * 0.25;
     const [isEditingShopImage, setEditingShopImage ] = useState(false);
     const [shopNameError, setShopNameError] = useState(false);
+    
 
     if (!userData) {
         return <Redirect href="/(auth)/sign-in" />;

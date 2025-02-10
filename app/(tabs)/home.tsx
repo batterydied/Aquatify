@@ -20,6 +20,7 @@ import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { goToProductPage } from "@/lib/goToProductPage";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
+import FlatListItem from "@/components/FlatListItem";
 
 export default function HomePage() {
     useLockPortraitOrientation();
@@ -58,30 +59,9 @@ export default function HomePage() {
         })
     }
 
-    const renderItem = ({ item }: { item: productGrid }) => {
-        const images = sortImageById(item.images);
-
-        return (
-            <View className="flex-1 mx-1">
-                <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                    console.log("Navigating to product:", item.productId);
-                    goToProductPage(item.productId, "home")}}>
-                    <Image
-                        source={{ uri: images[0].url }}
-                        className="h-[85%] w-full rounded-lg"
-                        resizeMode="cover"
-                    />
-                    <View className="h-[15%]">
-                        <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
-                        <View className="flex-row justify-between">
-                            <Text style={{ fontFamily: "MontserratRegular" }}>{'$' + item.price}</Text>
-                            <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    };
+    const handleRenderItem = ({item}: { item: productGrid }) => (
+        <FlatListItem item={item} path= "home" itemWidth={itemWidth} />
+    );
 
     useEffect(() => {
         const fetchData = async () => {
@@ -287,11 +267,7 @@ export default function HomePage() {
                 key={width}
                 data={filteredProducts}
                 keyExtractor={(item: productGrid) => item.productId}
-                renderItem={({ item }) => (
-                    <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
-                        {renderItem({ item })}
-                    </View>
-                )}
+                renderItem={handleRenderItem}
                 numColumns={itemsPerRow}
                 columnWrapperStyle={itemsPerRow > 1 && { justifyContent: "flex-start" }}
                 showsVerticalScrollIndicator={false}
