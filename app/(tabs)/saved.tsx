@@ -128,8 +128,9 @@ export default function SavedPage() {
               <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
                 <Text
                   style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
+                    fontSize: width * 0.035,
+                    color: "#7f1d1d",
+                    fontFamily: "MontserratBold",
                   }}
                 >
                   Remove
@@ -138,8 +139,7 @@ export default function SavedPage() {
               <TouchableOpacity onPress={() => handleMoveItem(item.id)} className="ml-4">
                 <Text
                   style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
+                    fontSize: width * 0.035,
                   }}
                 >
                   Move back to cart

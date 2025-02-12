@@ -11,7 +11,7 @@ import {
     KeyboardAvoidingView,
     Platform,
   } from "react-native";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useUserData } from "@/contexts/UserContext";
 import { calculatePriceWithQuantity, getProductType, fetchAddresses, fetchPaymentMethods, placeOrder, deleteAllItemFromCart } from "@/lib/apiCalls";
 import { cartItem, address, paymentMethod } from "@/lib/interface";
@@ -73,6 +73,11 @@ export default function CheckoutPage() {
         return null;
     }
 
+    useFocusEffect(
+    useCallback(() => {
+        fetchData();
+    }, []))
+
     const fetchData = async () => {
         setLoading(true); // Start loading
         try {
@@ -86,12 +91,6 @@ export default function CheckoutPage() {
         setLoading(false); // Stop loading
         }
     };
-
-    useFocusEffect(
-        useCallback(() => {
-        fetchData();
-        }, [fetchData])
-    );
 
     const handlePlaceOrder = async () => {
         // Validate Shipping Information
@@ -331,7 +330,7 @@ export default function CheckoutPage() {
                 />
                 <TouchableOpacity className="p-2" onPress={()=>handleAddressSelect(null)}>
                     <View>
-                        <Text className="text-red-500" style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
+                        <Text className="text-red-500" style={{ fontFamily: "MontserratBold", fontSize: width * 0.035 }}>
                             Clear
                         </Text>
                     </View>
@@ -391,7 +390,7 @@ export default function CheckoutPage() {
                 />
                 <TouchableOpacity className="p-2" onPress={()=>handlePaymentMethodSelect(null)}>
                     <View>
-                        <Text className="text-red-500" style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
+                        <Text className="text-red-500" style={{ fontFamily: "MontserratBold", fontSize: width * 0.035 }}>
                             Clear
                         </Text>
                     </View>

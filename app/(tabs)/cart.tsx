@@ -16,6 +16,7 @@ import QuantityDropdownComponent from "@/components/QuantityDropdown";
 import { useUserData } from "@/contexts/UserContext";
 import { Redirect, router } from "expo-router"; 
 import { SafeAreaView } from "react-native-safe-area-context";
+import CustomButton from "../../components/CustomButton";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
@@ -179,8 +180,9 @@ export default function CartPage() {
               <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
                 <Text
                   style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
+                    fontSize: width * 0.035,
+                    color: "#7f1d1d",
+                    fontFamily: "MontserratBold",
                   }}
                 >
                   Remove
@@ -190,7 +192,7 @@ export default function CartPage() {
                 <TouchableOpacity onPress= {() => handleSaveItem(item.id)} className="ml-4">
                   <Text
                     style={{
-                      fontSize: width * 0.025,
+                      fontSize: width * 0.035,
                       fontFamily: "MontserratRegular",
                     }}
                   >
@@ -203,8 +205,9 @@ export default function CartPage() {
             <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
               <Text
                 style={{
-                  fontSize: width * 0.025,
-                  fontFamily: "MontserratRegular",
+                  fontSize: width * 0.035,
+                  color: "#7f1d1d",
+                  fontFamily: "MontserratBold",
                 }}
               >
                 Remove
@@ -235,42 +238,32 @@ export default function CartPage() {
               {"Subtotal: $" + subtotal.toFixed(2)}
             </Text>
             <View className="w-full flex items-center">
-              <TouchableOpacity 
-              activeOpacity={0.7}
-              className="bg-orange-400 p-3 rounded-full w-[95%] m-2"
-              onPress={() => router.push({
-                pathname: "/(tabs)/checkout",
-                params: {
-                  cartItems: JSON.stringify(cartItems),
-                  subtotal: subtotal.toFixed(2),
-                },
-              })}
-              >
-                <Text
-                  className="text-center"
-                  style={{
-                    fontSize: width * 0.035,
-                    fontFamily: "MontserratRegular",
-                  }}
-                >
-                  Proceed to checkout
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-              activeOpacity={0.7}
-              className="bg-red-700 p-3 rounded-full w-[95%] m-2"
+              <CustomButton title="Proceed to checkout" color="black" size={width * 0.035} 
+              onPress={
+                () => router.push({
+                  pathname: "/(tabs)/checkout",
+                  params: {
+                    cartItems: JSON.stringify(cartItems),
+                    subtotal: subtotal.toFixed(2),
+                  },
+                })
+              }
+              style={{
+                backgroundColor: "#fb923c",
+                borderRadius: 32,
+                width: 380,
+                margin: 8,
+                padding: 12
+              }}/>
+              <CustomButton title="Empty cart" 
+              color="white"
               onPress={handleDeleteAllItemFromCart}
-              >
-                <Text
-                  className="text-center text-white"
-                  style={{
-                    fontSize: width * 0.035,
-                    fontFamily: "MontserratRegular",
-                  }}
-                >
-                  Empty cart
-                </Text>
-              </TouchableOpacity>
+              style={{
+                backgroundColor: "#b91c1c",
+                borderRadius: 32,
+                width: 380,
+                padding: 12
+              }}/>
             </View>
           </View>
           <FlatList

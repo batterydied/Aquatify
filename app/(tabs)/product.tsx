@@ -9,18 +9,19 @@ import {
     useWindowDimensions,
     Modal,
   } from "react-native";
-  import { useRouter, useLocalSearchParams } from "expo-router";
-  import { useEffect, useState, useRef } from "react";
-  import { getProductById, addItemToCart, sortImageById } from "../../lib/apiCalls";
-  import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
-  import ProductDropdownComponent from "../../components/ProductDropdown";
-  import QuantityDropdownComponent from "../../components/QuantityDropdown";
-  import ReviewFilterDropdown from "../../components/ReviewFilterDropdwon";
-  import ReviewComponent from "../../components/ReviewComponent";
-  import { useUserData } from "@/contexts/UserContext";
-  import { Redirect } from "expo-router";
-  import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useEffect, useState, useRef } from "react";
+import { getProductById, addItemToCart, sortImageById } from "../../lib/apiCalls";
+import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
+import ProductDropdownComponent from "../../components/ProductDropdown";
+import QuantityDropdownComponent from "../../components/QuantityDropdown";
+import ReviewFilterDropdown from "../../components/ReviewFilterDropdwon";
+import ReviewComponent from "../../components/ReviewComponent";
+import { useUserData } from "@/contexts/UserContext";
+import { Redirect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import BackArrow from "@/components/BackArrow";
+import CustomButton from "@/components/CustomButton";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -222,19 +223,26 @@ import BackArrow from "@/components/BackArrow";
                     maxQuantity={selectedType.quantity}
                   />
                   <View className="flex-column items-center">
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      className="bg-blue-400 w-[95%] p-3 rounded-full m-2"
-                      onPress={handleAddItemToCart}
-                    >
-                      <Text className="text-center text-white">Add to cart</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      className="bg-orange-400 w-[95%] p-3 rounded-full m-2"
-                    >
-                      <Text className="text-center">Buy now</Text>
-                    </TouchableOpacity>
+                    <CustomButton 
+                    title="Add to cart"
+                    color= "white"
+                    style={{
+                      backgroundColor: "#60a5fa",
+                      width: 380,
+                      margin: 8
+                    }}
+                    onPress={handleAddItemToCart}
+                    />
+                    <CustomButton 
+                    title="Buy now"
+                    color= "black"
+                    style={{
+                      backgroundColor: "#fb923c",
+                      width: 380,
+                      margin: 8
+                    }}
+                    onPress={handleAddItemToCart}
+                    />
                   </View>
                 </View>
               ) : (
