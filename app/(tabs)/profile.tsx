@@ -9,9 +9,9 @@ import {
     ActivityIndicator
 } from "react-native";
 import SignOutButton from "../../components/SignOutButton";
-import { Redirect, router, useFocusEffect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useUserData } from "@/contexts/UserContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from "expo-image-picker";

@@ -13,7 +13,11 @@ const DescriptionModal = ({
     return (
         <Modal animationType="slide" visible={visible} transparent={true}>
             <View className="flex-1 justify-center items-center bg-black/50">
-                <View className="flex justify-center items-center bg-gray-200 h-[50%] w-[90%] rounded-md">
+                <View className="flex justify-center items-center bg-gray-200 rounded-md"
+                style={{
+                    width: 350,
+                    height: 300
+                }}>
                     <Text style={{fontFamily: "MontserratRegular"}}>
                         {description}
                     </Text>
