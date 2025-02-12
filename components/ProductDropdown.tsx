@@ -2,13 +2,15 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
 
-type DropdownComponentProps = {
-  data: any[];
-  value: any;
-  select: (item: any)=>void;
-};
-
-const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, select, value }) => {
+const DropdownComponent = ({
+  data, 
+  select, 
+  value
+}: {
+    data: any[], 
+    value: any, 
+    select: (item: any)=>void
+}) => {
   const sortedProductTypeById = data.sort((a, b) => a.id - b.id);
   const renderItem = (item: any) => {
     return (

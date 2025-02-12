@@ -1,6 +1,17 @@
 import { TextInput } from "react-native"
 
-const EditableDescription = ({value, setValue, style, placeholder, maxLength} : {value: string, setValue: (description: string)=>void, style?: object, placeholder: string, maxLength?: number})=>{
+const EditableDescription = ({
+    value, 
+    setValue, 
+    style, 
+    placeholder, 
+    maxLength
+} : {
+    value: string, 
+    setValue: (description: string)=>void, 
+    style?: object, 
+    placeholder: string, 
+    maxLength?: number})=>{
     return (
         <TextInput 
         value={value}

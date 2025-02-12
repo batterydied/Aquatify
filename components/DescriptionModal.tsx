@@ -1,7 +1,15 @@
 import { FontAwesome } from "@expo/vector-icons"
 import { Modal, View, Text, TouchableOpacity } from "react-native"
 
-const DescriptionModal = ({visible, description, setter} : {visible: boolean, description: string, setter: (state: boolean)=>void}) => {
+const DescriptionModal = ({
+    visible, 
+    description, 
+    setter
+} : {
+    visible: boolean, 
+    description: string, 
+    setter: (state: boolean)=>void
+}) => {
     return (
         <Modal animationType="slide" visible={visible} transparent={true}>
             <View className="flex-1 justify-center items-center bg-black/50">

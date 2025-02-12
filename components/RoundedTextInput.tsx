@@ -1,7 +1,21 @@
 import { FontAwesome } from "@expo/vector-icons"
 import { TextInput, TouchableOpacity, View } from "react-native"
 
-const RoundedTextInput = ({value, setValue, clearValue, placeholder, style, maxLength}: {value: string, setValue: (newValue: string)=>void, clearValue: ()=>void, placeholder: string, style?: object, maxLength?: number})=>{
+const RoundedTextInput = ({
+    value, 
+    setValue, 
+    clearValue, 
+    placeholder, 
+    style, 
+    maxLength
+}: {
+    value: string, 
+    setValue: (newValue: string)=>void, 
+    clearValue: ()=>void, 
+    placeholder: string, 
+    style?: object, 
+    maxLength?: number
+})=>{
     return (
         <View className="flex-row items-center border border-gray-500 py-1 px-2 m-2 rounded-xl justify-between" style={style}>
             <TextInput 

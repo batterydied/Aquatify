@@ -3,13 +3,15 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
 import { address } from '@/lib/interface';
 
-type AddressDropdownProps = {
-  data: address[];
-  value: address | null;
-  select: (item: address) => void;
-};
-
-const AddressDropdown: React.FC<AddressDropdownProps> = ({ data, select, value }) => {
+const AddressDropdown = ({
+  data, 
+  select, 
+  value
+} : {
+  data: address[], 
+  value: address | null, 
+  select: (item: address) => void
+}) => {
   const sortedAddresses = data.sort((a, b) => a.id.localeCompare(b.id)); // Sort addresses by ID
 
   const renderItem = (item: address) => {

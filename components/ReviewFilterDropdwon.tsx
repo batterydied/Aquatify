@@ -3,12 +3,13 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
 import { reviewSortOptionArray, reviewSortOption } from '@/lib/interface';
 
-type DropdownComponentProps = {
-    sortOption: reviewSortOption
-    select: (option: reviewSortOption)=>void;
-};
-
-const DropdownComponent: React.FC<DropdownComponentProps> = ({ sortOption, select}) => {
+const DropdownComponent= ({ 
+  sortOption, 
+  select
+}: {
+  sortOption: reviewSortOption,
+  select: (option: reviewSortOption)=>void
+}) => {
   const renderItem = (option: reviewSortOption) => {
     return (
       <View style={styles.item}>

@@ -2,17 +2,19 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
 
-type DropdownComponentProps = {
-  maxQuantity: number;  // Maximum quantity value (e.g., 10)
-  currentQuantity: string;  // Currently selected quantity
-  select: (quantity: string) => void;  // Function to handle quantity selection
-};
-
-const DropdownComponent: React.FC<DropdownComponentProps> = ({ maxQuantity, select, currentQuantity }) => {
+const DropdownComponent = ({ 
+  maxQuantity,
+  select, 
+  currentQuantity
+ } : {
+  maxQuantity: number, 
+  currentQuantity: string, 
+  select: (quantity: string) => void
+}) => {
   // Create an array of objects where each object contains the number as both label and value
   const quantityOptions = Array.from({ length: maxQuantity }, (_, index) => ({
     label: (index + 1).toString(),  // Label as the string number
-    value: (index + 1).toString(),               // Value as the number
+    value: (index + 1).toString(),  // Value as the number
   }));
 
   const renderItem = (item: { label: string; value: string}) => {

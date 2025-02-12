@@ -4,12 +4,12 @@ import { productGrid } from "../lib/interface";
 import { goToProductPage } from "../lib/goToProductPage";
 import { formatReviewsCount } from "../lib/reviewFormat";
 
- const FlatlistItem = ({ item, path, itemWidth }: { item: productGrid, path: string, itemWidth: number }) => {
+ const FlatlistItem = ({item, path, itemWidth}: {item: productGrid, path: string, itemWidth: number}) => {
     const images = sortImageById(item.images);
 
     return (
         <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
-        <View className="flex-1 mx-1">
+        <View className="flex-1 m-1">
             <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, path)}>
                 <Image
                     source={{ uri: images[0].url }}

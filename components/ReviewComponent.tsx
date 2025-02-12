@@ -9,7 +9,7 @@ const ReviewItem = ({
     rating,
     comment,
     isModal = false,
-}: {
+} : {
     user: string;
     userId: string;
     updatedAt: string;

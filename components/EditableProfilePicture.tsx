@@ -1,8 +1,17 @@
-import React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-const EditableProfilePicture = ({ imageUri, imageWidth, setEdit, style } : {imageUri: string | null, imageWidth: number, setEdit: (state: boolean)=>void, style? : object}) => {
+const EditableProfilePicture = ({
+  imageUri, 
+  imageWidth, 
+  setEdit, 
+  style
+} : {
+  imageUri: string | null, 
+  imageWidth: number, 
+  setEdit: (state: boolean)=>void, 
+  style? : object
+}) => {
   return (
     <View className="m-3 relative" style={style}>
       <Image

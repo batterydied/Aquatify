@@ -1,19 +1,16 @@
-import React from "react";
 import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-type EditProfilePictureModalProps = {
-  visible: boolean;
-  onClose: () => void;
-  onUpload: (source: "camera" | "gallery") => void;
-  onRemove: () => void;
-};
-
-const EditProfilePictureModal: React.FC<EditProfilePictureModalProps> = ({
-  visible,
-  onClose,
-  onUpload,
-  onRemove,
+const EditProfilePictureModal = ({
+  visible, 
+  onClose, 
+  onUpload, 
+  onRemove
+} : {
+  visible: boolean, 
+  onClose: () => void, 
+  onUpload: (source: "camera" | "gallery") => void,
+  onRemove: () => void
 }) => {
   return (
     <Modal animationType="slide" visible={visible} transparent>

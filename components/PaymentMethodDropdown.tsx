@@ -3,13 +3,15 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesome } from '@expo/vector-icons';
 import { paymentMethod } from '@/lib/interface';
 
-type PaymentMethodsDropdownProps = {
-  data: paymentMethod[];
-  value: paymentMethod | null;
-  select: (item: paymentMethod) => void;
-};
-
-const PaymentMethodsDropdown: React.FC<PaymentMethodsDropdownProps> = ({ data, select, value }) => {
+const PaymentMethodsDropdown = ({
+  data, 
+  select, 
+  value
+}: {
+  data: paymentMethod[], 
+  value: paymentMethod | null, 
+  select: (item: paymentMethod) => void
+}) => {
   const sortedPaymentMethods = data.sort((a, b) => a.id.localeCompare(b.id)); // Sort payment methods by ID
 
   const renderItem = (item: paymentMethod) => {

@@ -10,15 +10,13 @@ import {
     Modal,
   } from "react-native";
   import { useRouter, useLocalSearchParams } from "expo-router";
-  import { useEffect, useState, useRef, useCallback } from "react";
-  import { useFocusEffect } from "@react-navigation/native";
+  import { useEffect, useState, useRef } from "react";
   import { getProductById, addItemToCart, sortImageById } from "../../lib/apiCalls";
   import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
   import ProductDropdownComponent from "../../components/ProductDropdown";
   import QuantityDropdownComponent from "../../components/QuantityDropdown";
   import ReviewFilterDropdown from "../../components/ReviewFilterDropdwon";
   import ReviewComponent from "../../components/ReviewComponent";
-  import { FontAwesome } from "@expo/vector-icons";
   import { useUserData } from "@/contexts/UserContext";
   import { Redirect } from "expo-router";
   import { SafeAreaView } from "react-native-safe-area-context";

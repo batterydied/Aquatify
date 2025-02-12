@@ -10,7 +10,6 @@ import {
     Keyboard,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
-import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect } from "expo-router";
@@ -21,6 +20,7 @@ import EditableDescription from "@/components/EditableDescription";
 import * as ImagePicker from "expo-image-picker";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import { createShop } from "@/lib/apiCalls";
+import CreateShopButton from "@/components/PlusButton";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
@@ -30,9 +30,11 @@ export default function ShopList() {
     const [shopName, setShopName] = useState<string>("");
     const [shopDescription, setShopDescription] = useState<string>("");
     const [imageUri, setImageUri] = useState<string | null>(null);
-    const imageWidth = width * 0.25;
     const [isEditingShopImage, setEditingShopImage ] = useState(false);
     const [shopNameError, setShopNameError] = useState(false);
+
+    const imageWidth = width * 0.25;
+    const iconWidth = width * 0.15;
     
 
     if (!userData) {
@@ -161,13 +163,12 @@ export default function ShopList() {
                         height: width * .18
                     }}
                     />
-                    <TouchableOpacity
-                    onPress={()=>setIsCreatingShop(true)}
-                    activeOpacity={0.7}
-                    className="bg-c2 rounded-full absolute left-1/2 transform -translate-x-1/2 z-10 bottom-1 w-20 h-20 flex items-center justify-center shadow-sm"
-                    >
-                        <FontAwesome name="plus" color="white" size={24} />
-                    </TouchableOpacity>
+                    <CreateShopButton size={iconWidth} style={{
+                        position: "absolute",
+                        left: "50%",
+                        transform: [{ translateX: '-50%' }],
+                        bottom: 1
+                    }} setter={setIsCreatingShop}/>
                 </View>
             </View>
             }

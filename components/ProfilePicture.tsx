@@ -1,7 +1,16 @@
-import React from "react";
 import { View, Image, Text } from "react-native";
 
-const ProfilePicture = ({ imageUri, imageWidth, name, style } : {imageUri: string | null, imageWidth: number, name: string, style?: object}) => {
+const ProfilePicture = ({ 
+    imageUri, 
+    imageWidth, 
+    name, 
+    style 
+}: {
+    imageUri: string | null, 
+    imageWidth: number, 
+    name: string, 
+    style?: object
+})=> {
   return (
          <View className="p-4" style={style}>
             <Image

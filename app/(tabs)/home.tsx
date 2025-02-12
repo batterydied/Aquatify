@@ -1,7 +1,6 @@
 import { 
     View,
     Text, 
-    Image, 
     FlatList, 
     TouchableOpacity, 
     TextInput, 
@@ -10,15 +9,13 @@ import {
     useWindowDimensions 
 } from "react-native";
 import { useState, useEffect } from "react";
-import { getProducts, sortImageById } from "@/lib/apiCalls";
+import { getProducts } from "@/lib/apiCalls";
 import { productGrid, filterCriteriaType, categoryTypes } from "@/lib/interface";
-import { formatReviewsCount } from "@/lib/reviewFormat";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { goToProductPage } from "@/lib/goToProductPage";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import FlatListItem from "@/components/FlatListItem";
 

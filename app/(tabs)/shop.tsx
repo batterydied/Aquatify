@@ -35,6 +35,9 @@ import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import * as ImagePicker from "expo-image-picker";
 import DescriptionModal from "@/components/DescriptionModal";
 import FlatListItem from "@/components/FlatListItem";
+import AddProductButton from "@/components/PlusButton";
+import EditShopButton from "@/components/EditShopButton";
+import CreateProductModal from "@/components/CreateProductModal";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -53,6 +56,7 @@ export default function Shop() {
     const [isEditingShop, setIsEditingShop] = useState(false);
     const [shopNameError, setShopNameError] = useState(false);
     const [isEditingShopAvatar, setIsEditingShopAvatar] = useState(false);
+    const [isCreatingProduct, setIsCreatingProduct] = useState(false);
 
     const {width} = useWindowDimensions();
     const { itemsPerRow, itemWidth } = calculateItemWidthAndRow(12, 200, width);
@@ -260,11 +264,7 @@ export default function Shop() {
                     </View>
                 </TouchableOpacity>
                 {isMyShop(shop.userId) && 
-                    <View className="w-full flex items-end absolute pr-4">
-                        <TouchableOpacity activeOpacity={0.7} onPress={()=>setIsEditingShop(true)}>
-                            <FontAwesome name="cog" color="gray" size={28}/>
-                        </TouchableOpacity>
-                    </View>
+                    <EditShopButton setter={setIsEditingShop}/>
                 }
             </View>
             <View className="items-center">
@@ -280,11 +280,16 @@ export default function Shop() {
                 bounces={true}
                 />
             </View>
-            <TouchableOpacity className="absolute bottom-4 right-4">
-                <View className="p-2 rounded-[50%] bg-gray-500" style={[{ width: iconWidth, height: iconWidth }]}>
-                    <Text>Hey</Text>
-                </View>
-            </TouchableOpacity>
+            {isMyShop(shop.userId) && 
+                <AddProductButton style={{
+                    position: 'absolute',
+                    bottom: 16,
+                    right: 16,
+                }} 
+                size={iconWidth}
+                setter={setIsCreatingProduct}
+                 />
+            }
             <DescriptionModal visible={showShopDescription} description={shopDescription} setter={setShowShopDescription} />
             <Modal animationType="slide" visible={isEditingShop}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -322,6 +327,7 @@ export default function Shop() {
                 </TouchableWithoutFeedback>
                 <EditProfilePictureModal visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={uploadImage} onRemove={removeImage}/>
             </Modal>
+            <CreateProductModal visible={isCreatingProduct} onClose={()=>setIsCreatingProduct(false)} onSubmit={(product: any)=>{}}/>
         </SafeAreaView>
     );
 }

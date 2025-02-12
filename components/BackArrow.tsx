@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons"
 import { TouchableOpacity, View } from "react-native"
 
-const BackArrow = ({handleBack, style} : {handleBack: ()=>void, style?: object })=>{
+const BackArrow = ({handleBack, style} : {handleBack: ()=>void, style?: object})=>{
     return (
         <View style={style}>
             <TouchableOpacity
