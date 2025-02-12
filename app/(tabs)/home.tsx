@@ -18,6 +18,7 @@ import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import FlatListItem from "@/components/FlatListItem";
+import ErrorText from "@/components/ErrorText";
 
 export default function HomePage() {
     useLockPortraitOrientation();
@@ -185,7 +186,7 @@ export default function HomePage() {
                             className={`p-2 border-[1px] border-gray-300 rounded ${!filterError ? "mb-4" : ""}`}
                             style={{ fontFamily: "MontserratRegular" }}
                         />
-                        {filterError && (<Text className="text-red-500">Min price can't be higher than max price.</Text>)}
+                        {filterError && <ErrorText message="Min price can't be higher than max price."/>}
                         <TextInput
                             placeholder="Max price"
                             placeholderTextColor="grey"

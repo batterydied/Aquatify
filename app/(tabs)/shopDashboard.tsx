@@ -21,6 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import { createShop } from "@/lib/apiCalls";
 import CreateShopButton from "@/components/PlusButton";
+import ErrorText from "@/components/ErrorText";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
@@ -188,9 +189,10 @@ export default function ShopList() {
                             }}/>
                            <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" style={{width: "50%"}} maxLength={20}/>
                             {shopNameError && 
-                            <View className="pb-2">
-                                <Text className="text-red-500">You can't leave your shop name blank.</Text>
-                            </View>}
+                            <ErrorText message="You can't leave your shop name blank."
+                            style={{
+                                paddingBottom: 8
+                            }}/>}
                             <EditableDescription value={shopDescription} setValue={setShopDescription} placeholder="Enter description here" style={{
                                 height: "30%",
                                 width: "90%"

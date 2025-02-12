@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Image, TouchableWithout
 import { useSignIn } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
+import ErrorText from '@/components/ErrorText';
 
 export default function ForgotPasswordPage() {
   const [emailAddress, setEmailAddress] = useState('');
@@ -96,7 +97,13 @@ export default function ForgotPasswordPage() {
             >
                 <Text className="text-white text-center" style={{fontFamily: "MontserratRegular"}}>Send reset code</Text>
             </TouchableOpacity>
-            {error ? <Text className="text-red-700 text-center mt-2">{error}</Text> : null}
+            {error &&  
+            <ErrorText message={error}
+            style={{
+              textAlign: "center",
+              marginTop: 8
+            }}
+            />}
             <TouchableOpacity
             onPress={()=>router.push('/(auth)/sign-in')}
             activeOpacity={0.7}
@@ -146,7 +153,13 @@ export default function ForgotPasswordPage() {
             >
                 <Text className="text-white text-center">Reset Password</Text>
             </TouchableOpacity>
-            {error ? <Text className="text-red-500 text-center mt-2">{error}</Text> : null}
+            {error &&  
+            <ErrorText message={error}
+            style={{
+              textAlign: "center",
+              marginTop: 8
+            }}
+            />}
             <TouchableOpacity
             onPress={()=>router.push('/(auth)/sign-in')}
             activeOpacity={0.7}

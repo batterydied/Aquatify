@@ -74,23 +74,16 @@ const CreateProductModal = ({
                     </TouchableOpacity>
                     <CreateProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} />
                     <TouchableOpacity />
-                    <View style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                    <CustomButton 
+                    title="Submit" 
+                    color="white"
+                    style={{
+                        backgroundColor: "#60a5fa",
+                        justifySelf: "center",
                         margin: 8
-                    }}>
-                        <CustomButton 
-                        title="Submit" 
-                        color="white"
-                        style={{
-                            backgroundColor: "#60a5fa",
-                            justifySelf: "center",
-                            width: 100
-                        }} 
-                        onPress={handleSubmit}
-                        />
-                    </View>
+                    }} 
+                    onPress={handleSubmit}
+                    />
                 </View>
             </TouchableWithoutFeedback>
         </Modal>

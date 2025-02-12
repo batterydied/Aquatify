@@ -1,3 +1,38 @@
+export const validateQuantity = (unformattedQuantity: string)=>{
+    if(!unformattedQuantity){
+        return false;
+    }
+
+    const quantity = Number(unformattedQuantity);
+
+    if(quantity < 0){
+        return false;
+    }   
+    if (!Number.isInteger(quantity)) {
+        return false;
+    }
+    return true;
+}
+
+export const validatePricing = (unformattedPrice: string)=> {
+    if(!unformattedPrice){
+        return false;
+    }
+
+    const price = Number(unformattedPrice);
+
+    if (price < 0) {
+        return false;
+    }
+
+    const decimalPlaces = unformattedPrice.split(".")[1]?.length || 0;
+    if (decimalPlaces > 2) {
+        return false;
+    }
+
+    return true;
+}
+
 export const validateCardNumber = (cardNumber: string): boolean => {
     // Remove all non-numeric characters
     const cleanedCardNumber = cardNumber.replace(/\D/g, "");
@@ -52,3 +87,13 @@ export const validateCVV = (cvv: string): boolean => {
 export const validateCardName = (cardName: string): boolean => {
     return cardName.trim().length > 0;
 };
+
+export function isValidZipCode(zipCode: string | number): boolean {
+    // Convert to string in case the input is a number
+    const zipCodeStr = zipCode.toString();
+  
+    // Check if the zip code is exactly 5 digits and contains only numbers
+    return /^\d{5}$/.test(zipCodeStr);
+  }
+  
+  export default isValidZipCode;

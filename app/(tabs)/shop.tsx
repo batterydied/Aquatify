@@ -38,6 +38,7 @@ import FlatListItem from "@/components/FlatListItem";
 import AddProductButton from "@/components/PlusButton";
 import EditShopButton from "@/components/EditShopButton";
 import CreateProductModal from "@/components/CreateProductModal";
+import ErrorText from "@/components/ErrorText";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -311,9 +312,10 @@ export default function Shop() {
                         <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setIsEditingShopAvatar} />
                         <RoundedTextInput value={shopName} setValue={setShopName} clearValue={clearShopName} placeholder="Enter shop name here" maxLength={20} style={{width: "60%"}}/>
                         {shopNameError && 
-                        <View className="px-3">
-                            <Text className="text-red-500">You can't leave your shop name blank.</Text>
-                        </View>}
+                        <ErrorText style={{
+                            padding: 12
+                        }}
+                        message="You can't leave your shop name blank."/>}
                         <EditableDescription value={shopDescription} setValue={setShopDescription} placeholder="Enter shop description here" maxLength={200} style={{padding: 8, height: "30%", width: "90%"}}/>
                         <View className="flex w-full items-center">
                             <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> handleDeleteShop(shop.id, shop.avatarFileURI, userData.id)}>

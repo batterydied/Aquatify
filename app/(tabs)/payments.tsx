@@ -17,7 +17,7 @@ import {
   import { paymentMethod } from "@/lib/interface";
   import { fetchPaymentMethods, addPaymentMethod, updatePaymentMethod, deletePaymentMethod } from "@/lib/apiCalls";
   import { FontAwesome } from "@expo/vector-icons";
-  import { validateCardName, validateCardNumber, validateExpiryMonth, validateExpiryYear, validateCVV } from "@/lib/validatePayments";
+  import { validateCardName, validateCardNumber, validateExpiryMonth, validateExpiryYear, validateCVV } from "@/lib/validation";
 import BackArrow from "@/components/BackArrow";
   
   export default function PaymentsPage() {

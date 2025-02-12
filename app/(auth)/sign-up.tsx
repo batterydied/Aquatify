@@ -3,6 +3,7 @@ import { Text, TextInput, View, TouchableOpacity, Image, TouchableWithoutFeedbac
 import { useSignUp } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
 import { FontAwesome } from '@expo/vector-icons'
+import ErrorText from '@/components/ErrorText'
 
 export default function SignOutPage() {
   const { isLoaded, signUp, setActive } = useSignUp()
@@ -12,7 +13,7 @@ export default function SignOutPage() {
   const [password, setPassword] = React.useState('')
   const [pendingVerification, setPendingVerification] = React.useState(false)
   const [code, setCode] = React.useState('')
-  const [errorMessage, setErrorMessage] = React.useState('') // State to hold error message
+  const [errorMessage, setErrorMessage] = React.useState('')
 
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
@@ -130,9 +131,13 @@ export default function SignOutPage() {
                     style={{ fontFamily: 'MontserratRegular' }}
                 />
             </View>
-            {errorMessage && (
-                <Text className="text-red-700" style={{fontFamily:"MontserratRegular"}}>{errorMessage}</Text> // Display error message in red
-            )}
+            {errorMessage &&  
+            <ErrorText message={errorMessage}
+            style={{
+              textAlign: "center",
+              marginTop: 8
+            }}
+            />}
             <TouchableOpacity
             activeOpacity={0.7} 
             className="bg-c3 w-[80%] flex justify-center items-center p-2 m-2 rounded-full"

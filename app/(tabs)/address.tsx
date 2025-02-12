@@ -17,8 +17,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect } from "expo-router";
 import { saveEditedAddress, addNewAddress, deleteAddress, fetchAddresses } from "@/lib/apiCalls";
 import { address } from "@/lib/interface";
-import { isValidZipCode } from "../../lib/isValidZipCode";
+import { isValidZipCode } from "../../lib/validation";
 import BackArrow from "@/components/BackArrow";
+import CustomButton from "@/components/CustomButton";
 
 export default function Address() {
     const {userData} = useUserData();
@@ -151,18 +152,12 @@ export default function Address() {
             (<View>
                 <BackArrow handleBack={handleBack} />
                 <ScrollView className="mt-4 p-4">
-                    {/* Add Address Button */}
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => setAddingAddress(true)}
-                        className="bg-blue-500 p-4 rounded-xl mb-4"
-                    >
-                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-white text-center text-lg">
-                            Add New Address
-                        </Text>
-                    </TouchableOpacity>
-
-                    {/* Address List */}
+                    <CustomButton title="Add new address" onPress={() => setAddingAddress(true)} color="white" size={16}
+                    style={{
+                        backgroundColor: "#60a5fa",
+                        padding: 16,
+                        marginBottom: 16
+                    }}/>
                     {addresses.map((address) => (
                     <View key={address.id} className="bg-white rounded-xl p-4 mb-4 shadow-sm">
                         <View className="flex-row justify-between items-center">

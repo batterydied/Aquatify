@@ -21,6 +21,7 @@ import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import ProfilePicture from "@/components/ProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
+import ErrorText from "@/components/ErrorText";
 
 export default function SettingPage() {
     const {userData, setUserData, fetchUserData} = useUserData();
@@ -243,9 +244,9 @@ export default function SettingPage() {
                                 <EditableProfilePicture imageUri={imageUri} imageWidth={imageWidth} setEdit={setEditingProfilePicture} style={{marginLeft: 16}}/>
                                 <RoundedTextInput value={username} setValue={setUsername} clearValue={clearUsername} placeholder="Enter username here" maxLength={20}/>
                                 {usernameError && 
-                                <View className="px-3">
-                                    <Text className="text-red-500">You can't leave your username blank.</Text>
-                                </View>}
+                                <ErrorText message="You can't leave your username blank." style={{
+                                    padding: 12
+                                }}/>}
                             </View>
                         </TouchableWithoutFeedback>
                         <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={uploadImage} onRemove={removeImage}/>

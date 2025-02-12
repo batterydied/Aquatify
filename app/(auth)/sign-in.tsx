@@ -8,7 +8,7 @@ import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/mo
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function SignInPage() {
-    const [fontsLoaded] = useFonts({
+    const [ fontsLoaded ] = useFonts({
         MontserratRegular: Montserrat_400Regular,
         MontserratBold: Montserrat_700Bold,
     });
@@ -16,8 +16,8 @@ export default function SignInPage() {
     const { signIn, setActive, isLoaded } = useSignIn();
     const router = useRouter();
 
-    const [emailAddress, setEmailAddress] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [ emailAddress, setEmailAddress ] = React.useState('');
+    const [ password, setPassword ] = React.useState('');
     const { startOAuthFlow: startGoogleOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
 
     const handleGoogleSignIn = React.useCallback(async () => {
