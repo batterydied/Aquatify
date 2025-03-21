@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     TouchableOpacity,
     Image,
     FlatList,
@@ -22,6 +21,7 @@ import { Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackArrow from "@/components/BackArrow";
 import CustomButton from "@/components/CustomButton";
+import CustomText from "@/components/CustomText";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -85,9 +85,7 @@ import CustomButton from "@/components/CustomButton";
       // Handle case where product data is not available
       return (
         <View className="flex-1 justify-center items-center bg-gray-200">
-          <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-            Product not found.
-          </Text>
+          <CustomText text="Product not found." style={{fontSize: 18}} />
         </View>
       );
     }
@@ -188,28 +186,18 @@ import CustomButton from "@/components/CustomButton";
             </View>
             <View className={width > 600 ? "w-[50%]" : "w-[100%]"}>
               {/* Product Details */}
-              <Text className="text-gray-700" style={{ fontFamily: "MontserratRegular" }}>
-                {product.secondaryName}
-              </Text>
-              <Text className="text-xl" style={{ fontFamily: "MontserratBold" }}>
-                {product.name}
-              </Text>
+              <CustomText text={product.secondaryName} style={{color: "#374151"}} />
+              <CustomText text={product.name} style={{fontSize: 18}} isBold={true}/>
               <TouchableOpacity activeOpacity={0.7}>
-                <Text className="text-xl text-blue-800" style={{ fontFamily: "MontserratRegular" }}>
-                  {"Visit the " + product.shopName + " store"}
-                </Text>
+                <CustomText text={"Visit the " + product.shopName + " store"} style={{fontSize: 18, color: "#1e40af"}} />
               </TouchableOpacity>
-              <Text>
-                {"★" +
+              <CustomText text={"★" +
                   (product.rating % 1 === 0 ? product.rating.toFixed(0) : product.rating.toFixed(1)) +
-                  `(${product.reviews.length})`}
-              </Text>
+                  `(${product.reviews.length})`} />
   
-              <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-  
-              <Text className="text-2xl" style={{ fontFamily: "MontserratBold" }}>
-                {selectedType && "$" + selectedType.price}
-              </Text>
+              <View className="w-full h-[1px] bg-gray-600 my-3" />
+
+              <CustomText text={selectedType? "$" + selectedType.price : ""} style={{fontSize: 18}} isBold={true} />
               <ProductDropdownComponent
                 value={selectedType}
                 select={setSelectedType}
@@ -246,16 +234,14 @@ import CustomButton from "@/components/CustomButton";
                   </View>
                 </View>
               ) : (
-                <Text className="text-red-700 text-lg">Out of stock</Text>
+                <CustomText text="Out of stock" style={{fontSize: 18, color: "#9b1c1c"}} />
               )}
             </View>
           </View>
           <View className="mt-2">
-            <Text style={{ fontFamily: "MontserratRegular" }}>{product.description}</Text>
-  
-            <View className="w-full h-[1px] bg-gray-600 my-3"></View>
-  
-            <Text className="mb-2">Item reviews</Text>
+            <CustomText text={product.description} />
+            <View className="w-full h-[1px] bg-gray-600 my-3" />
+            <CustomText text="Item reviews" style={{marginBottom: 8}} />
           </View>
         </View>
       );
@@ -301,7 +287,7 @@ import CustomButton from "@/components/CustomButton";
         ListFooterComponent={
           <View>
             <TouchableOpacity activeOpacity={0.7} onPress={() => setShowAllReviews(true)}>
-              <Text className="text-blue-800">See All Reviews</Text>
+              <CustomText text="See all reviews" style={{color: "#1e40af"}} />
             </TouchableOpacity>
             <Modal animationType="slide" transparent={true} visible={showAllReviews}>
               <BackArrow handleBack={() => setShowAllReviews(false)} 

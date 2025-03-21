@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   Image,
@@ -20,6 +19,7 @@ import {
 } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { goToProductPage } from "@/lib/goToProductPage";
+import CustomText from "@/components/CustomText";
 
 export default function SavedPage() {
   const [savedItems, setSavedItems] = useState<cartItem[]>([]);
@@ -69,15 +69,7 @@ export default function SavedPage() {
       >
         <View className="w-full bg-c3 rounded-lg my-2">
           <View className="p-4">
-            <Text
-              className="mb-2"
-              style={{
-                fontSize: width * 0.025,
-                fontFamily: "MontserratRegular",
-              }}
-            >
-              {item.Product.shopName}
-            </Text>
+            <CustomText text={item.Product.shopName} style={{fontSize: width * 0.025}}/>
             <View className="flex-row mb-2">
               <Image
                 source={{ uri: sortImageById(item.Product.images)[0].url }}
@@ -88,62 +80,24 @@ export default function SavedPage() {
                 }}
               />
               <View>
-                <Text
-                  style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratBold",
-                  }}
-                >
-                  {item.Product.name}
-                </Text>
-                <Text
-                  className="text-gray-800"
-                  style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
-                  }}
-                >
-                  {item.Product.secondaryName}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: width * 0.025,
-                    fontFamily: "MontserratRegular",
-                  }}
-                >
-                  {`(${productType?.type})`}
-                </Text>
-                <Text
-                  className="text-green-800"
-                  style={{
-                    fontSize: width * 0.04,
-                    fontFamily: "MontserratBold",
-                  }}
-                >
-                  {`$${productType?.price}`}
-                </Text>
+                <CustomText text={item.Product.name} style={{fontSize: width * 0.025}} isBold={true}/>
+                <CustomText 
+                  text={item.Product.secondaryName} 
+                  style={{ 
+                    fontSize: width * 0.025, 
+                    color: "#1f2937"
+                  }} 
+                />
+                <CustomText style={{fontSize: width * 0.025}} text={`(${productType?.type})`} />
+                <CustomText style={{fontSize: width * 0.04, color: "#065f46"}} text={`$${productType?.price}`} isBold={true} />
               </View>
             </View>
             <View className="flex-row">
               <TouchableOpacity onPress={() => handleDeletingItem(item.id)}>
-                <Text
-                  style={{
-                    fontSize: width * 0.035,
-                    color: "#7f1d1d",
-                    fontFamily: "MontserratBold",
-                  }}
-                >
-                  Remove
-                </Text>
+                <CustomText style={{fontSize: width * 0.035, color: "#7f1d1d"}} text="Remove" isBold={true}/>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleMoveItem(item.id)} className="ml-4">
-                <Text
-                  style={{
-                    fontSize: width * 0.035,
-                  }}
-                >
-                  Move back to cart
-                </Text>
+                <CustomText style={{fontSize: width * 0.035}} text="Move back to cart"/>
               </TouchableOpacity>
             </View>
           </View>
@@ -177,9 +131,7 @@ export default function SavedPage() {
               height: width * 0.5,
             }}
           />
-          <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
-            You have no saved items!
-          </Text>
+          <CustomText style={{fontSize: 30}} text="You have no saved items!"/>
         </View>
       )}
     </SafeAreaView>

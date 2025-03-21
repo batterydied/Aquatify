@@ -1,5 +1,4 @@
 import { 
-    Text, 
     View, 
     TouchableOpacity, 
     ScrollView, 
@@ -17,6 +16,7 @@ import { fetchOrders } from "@/lib/apiCalls";
 import { order } from "../../lib/interface";
 import { goToProductPage } from "@/lib/goToProductPage";
 import BackArrow from "@/components/BackArrow";
+import CustomText from "@/components/CustomText";
 
 export default function Orders() {
     const {userData} = useUserData();
@@ -107,7 +107,7 @@ export default function Orders() {
     if (error) {
         return (
             <SafeAreaView className="flex-1 bg-gray-200 justify-center items-center">
-                <Text style={{ fontFamily: "MontserratRegular" }}>Error fetching orders.</Text>
+                <CustomText text="Error fetching orders." />
             </SafeAreaView>
         );
     }
@@ -143,30 +143,18 @@ export default function Orders() {
                                 >
                                     <View className="flex-row justify-between items-center">
                                         <View className="flex-1">
-                                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                                Order #{order.orderId.slice(0, 8)}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Created: {new Date(order.createdAt).toLocaleDateString()}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Updated: {new Date(order.updatedAt).toLocaleDateString()}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Total: ${order.totalPrice.toFixed(2)}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Status: {order.status}
-                                            </Text>
+                                            <CustomText text={`Order #${order.orderId.slice(0, 8)}`} style={{fontSize: 18}} isBold={true} />
+                                            <CustomText text={`Created: ${new Date(order.createdAt).toLocaleDateString()}`} style={{color:"#4B5563"}} />
+                                            <CustomText text={`Updated: ${new Date(order.updatedAt).toLocaleDateString()}`} style={{color:"#4B5563"}} />
+                                            <CustomText text={`Total: $${order.totalPrice.toFixed(2)}`} style={{color:"#4B5563"}} />
+                                            <CustomText text={`Status: ${order.status}`} style={{color:"#4B5563"}} />
                                         </View>
                                         <FontAwesome name="chevron-right" size={20} color="gray" />
                                     </View>
                                 </TouchableOpacity>
                             ))
                         ) : (
-                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600 text-center">
-                                No orders found.
-                            </Text>
+                            <CustomText text="No orders found." style={{color: "#4B5563", textAlign: "center"}} />
                         )}
                     </ScrollView>
 
@@ -178,82 +166,47 @@ export default function Orders() {
                                     <TouchableOpacity onPress={closeOrderDetails}>
                                         <FontAwesome name="times" size={24} color="gray" />
                                     </TouchableOpacity>
-                                    <Text style={{ fontFamily: "MontserratBold" }} className="text-xl">
-                                        Order Details
-                                    </Text>
+                                    <CustomText text="Order Details" style={{fontSize: 20}} isBold={true} />
                                     <View />
                                 </View>
 
                                 {selectedOrder && (
                                     <View className="bg-white rounded-xl p-4 shadow-sm">
-                                        <Text style={{ fontFamily: "MontserratBold" }} className="text-lg mb-2">
-                                            Order #{selectedOrder.orderId.slice(0, 8)}
-                                        </Text>
-                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                            Updated: {new Date(selectedOrder.updatedAt).toLocaleDateString()}
-                                        </Text>
-                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                            Status: {selectedOrder.status}
-                                        </Text>
+                                        <CustomText text={`Order # ${selectedOrder.orderId.slice(0, 8)}`} style={{fontSize: 18, marginBottom: 8}} isBold={true} />
+                                        <CustomText text={`Updated:  ${new Date(selectedOrder.updatedAt).toLocaleDateString()}`} style={{color:"#4B5563"}} />
+                                        <CustomText text={`Status: ${selectedOrder.status}`} style={{color:"#4B5563"}} />
 
                                         <View className="mt-4">
-                                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                                Shipping Address
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                {selectedOrder.name}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                {selectedOrder.streetAddress}
-                                                {selectedOrder.streetAddress2 && (
-                                                    <Text>, {selectedOrder.streetAddress2}</Text>
-                                                )}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                {selectedOrder.city}, {selectedOrder.state} {selectedOrder.zipCode}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Phone: {selectedOrder.phoneNumber}
-                                            </Text>
+                                            <CustomText text="Shipping Address" style={{fontSize: 18}} isBold={true} />
+
+                                            <CustomText text={selectedOrder.name} style={{color:"#4B5563"}} />
+                                            <CustomText text={selectedOrder.streetAddress} style={{color:"#4B5563"}} />
+                                            {selectedOrder.streetAddress2 && (
+                                                    <CustomText text={selectedOrder.streetAddress2} style={{color:"#4B5563"}}/> 
+                                            )}
+                                            <CustomText text={`${selectedOrder.city}, ${selectedOrder.state} ${selectedOrder.zipCode}`} style={{color:"#4B5563"}} />
+                                            <CustomText text={`Phone: ${selectedOrder.phoneNumber}`} style={{color:"#4B5563"}} />
                                         </View>
 
                                         <View className="mt-4">
-                                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                                Products
-                                            </Text>
+                                            <CustomText text="Products" style={{fontSize: 18}} isBold={true} />
                                             {selectedOrder.orderProducts.map((product) => (
                                                 <TouchableOpacity key={product.productId} activeOpacity={0.7} onPress={()=>goToProductPage(product.productId, "orders", selectedOrder.orderId)} >
                                                     <View className="mt-2">
-                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                            Product ID: {product.productId.slice(0, 4)}...{product.productId.slice(-4)}
-                                                        </Text>
-                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                            {product.productName} ({product.productType})
-                                                        </Text>
-                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                            Quantity: {product.quantity}
-                                                        </Text>
-                                                        <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                            Price: ${product.priceAtTimeOfOrder.toFixed(2)}
-                                                        </Text>
+                                                        <CustomText text={`Product ID: ${product.productId.slice(0, 4)}...${product.productId.slice(-4)}`} style={{color:"#4B5563"}} />
+                                                        <CustomText text={`${product.productName} (${product.productType})`} style={{color:"#4B5563"}} />
+                                                        <CustomText text={`Quantity: ${product.quantity}`} style={{color:"#4B5563"}} />
+                                                        <CustomText text={`Price: $${product.priceAtTimeOfOrder.toFixed(2)}`} style={{color:"#4B5563"}} />
                                                     </View>
                                                 </TouchableOpacity>
                                             ))}
                                         </View>
 
                                         <View className="mt-4">
-                                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                                Payment Summary
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Subtotal: ${selectedOrder.subtotal.toFixed(2)}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratRegular" }} className="text-gray-600">
-                                                Tax: ${selectedOrder.tax.toFixed(2)}
-                                            </Text>
-                                            <Text style={{ fontFamily: "MontserratBold" }} className="text-lg">
-                                                Total: ${selectedOrder.totalPrice.toFixed(2)}
-                                            </Text>
+                                            <CustomText text="Payment Summary" style={{fontSize: 18}} isBold={true} />
+                                            <CustomText text={`Subtotal: $${selectedOrder.subtotal.toFixed(2)}`} style={{color:"#4B5563"}} />
+                                            <CustomText text={`Tax: $${selectedOrder.tax.toFixed(2)}`} style={{fontSize: 18}} />
+                                            <CustomText text={`Total: $${selectedOrder.totalPrice.toFixed(2)}`} style={{fontSize: 18}} />
                                         </View>
                                     </View>
                                 )}

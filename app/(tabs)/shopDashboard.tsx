@@ -1,5 +1,4 @@
 import { 
-    Text, 
     View, 
     TouchableOpacity, 
     ActivityIndicator,
@@ -22,6 +21,7 @@ import EditProfilePictureModal from "@/components/EditProfilePictureModal";
 import { createShop } from "@/lib/apiCalls";
 import CreateShopButton from "@/components/PlusButton";
 import ErrorText from "@/components/ErrorText";
+import CustomText from "@/components/CustomText";
 
 export default function ShopList() {
     const {userData, fetchUserData} = useUserData();
@@ -149,12 +149,14 @@ export default function ShopList() {
             <View className="flex-1">
                 <View className="flex-1">
                     <View className="flex-1 justify-center items-center">
-                        <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
-                            You don't have any shops!
-                        </Text>
-                        <Text className="text-3xl" style={{ fontFamily: "MontserratRegular" }}>
-                            Would you like to create one?
-                        </Text>
+                        <CustomText 
+                        style={{fontSize: 30}}
+                        text="You don't have any shops!"
+                        />
+                        <CustomText 
+                        style={{fontSize: 30}}
+                        text="Would you like to create one?"
+                        />
                     </View>
                     <Image
                     className="ml-4"
@@ -199,9 +201,7 @@ export default function ShopList() {
                             }}/>
                             <TouchableOpacity activeOpacity={0.7} onPress={handleCreateShop}>
                                 <View className="m-4 p-2 bg-orange-400 px-4 rounded-md">
-                                    <Text style={{ fontFamily: "MontserratRegular" }}>
-                                        Save
-                                    </Text>
+                                    <CustomText text="Save"/>
                                 </View>
                             </TouchableOpacity>
                         </View>

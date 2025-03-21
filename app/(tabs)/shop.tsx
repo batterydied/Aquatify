@@ -1,5 +1,4 @@
 import { 
-    Text, 
     View, 
     TouchableOpacity, 
     useWindowDimensions,
@@ -24,7 +23,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { productGrid, shopInterface } from "@/lib/interface";
+import { filterCriteriaType, productGrid, shopInterface } from "@/lib/interface";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import BackArrow from "@/components/BackArrow";
 import ProfilePicture from "@/components/ProfilePicture";
@@ -39,6 +38,8 @@ import AddProductButton from "@/components/PlusButton";
 import EditShopButton from "@/components/EditShopButton";
 import CreateProductModal from "@/components/CreateProductModal";
 import ErrorText from "@/components/ErrorText";
+import ProductFilter from "@/components/ProductFilter";
+import CustomText from "@/components/CustomText";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -58,6 +59,20 @@ export default function Shop() {
     const [shopNameError, setShopNameError] = useState(false);
     const [isEditingShopAvatar, setIsEditingShopAvatar] = useState(false);
     const [isCreatingProduct, setIsCreatingProduct] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [filterError, setFilterError] = useState(false);
+    const [filterCriteria, setFilterCriteria] = useState<filterCriteriaType>({
+        minPrice: null,
+        maxPrice: null,
+        minRating: null,
+        categories: [],
+    });
+    const [currFilterCriteria, setCurrFilterCriteria] = useState<filterCriteriaType>({
+        minPrice: null,
+        maxPrice: null,
+        minRating: null,
+        categories: [],
+    });
 
     const {width} = useWindowDimensions();
     const { itemsPerRow, itemWidth } = calculateItemWidthAndRow(12, 200, width);
@@ -101,6 +116,31 @@ export default function Shop() {
             console.error("Error fetching products:", error);
         }
     };
+
+    useEffect(() => {
+        let filtered = productGrids;
+    
+        filtered = filtered.filter((product) => {
+            const matchesMinPrice =
+                filterCriteria.minPrice === null || product.price >= filterCriteria.minPrice;
+            const matchesMaxPrice =
+                filterCriteria.maxPrice === null || product.price <= filterCriteria.maxPrice;
+            const matchesRating =
+                filterCriteria.minRating === null || product.rating >= filterCriteria.minRating;
+
+            const matchesCategories =
+                filterCriteria.categories.length === 0 ||
+                filterCriteria.categories.every(category =>
+                    product.categories.some(productCategory =>
+                        productCategory.toLowerCase() === category.toLowerCase()
+                    )
+                );
+
+            return matchesMinPrice && matchesMaxPrice && matchesRating && matchesCategories;
+        });
+        
+        setFilteredProducts(filtered);
+    }, [productGrids,filterCriteria]);
 
     const fetchShopData = async () => {
         try {
@@ -177,54 +217,63 @@ export default function Shop() {
         setShopName("");
     }
 
-     const uploadImage = async (mode: string) => {
-            try {
-                let result: ImagePicker.ImagePickerResult;
-    
-                if (mode === 'gallery') {
-                    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                    if (!permission.granted) {
-                        alert('Permission to access the gallery is required!');
-                        return;
-                    }
-    
-                    result = await ImagePicker.launchImageLibraryAsync({
-                        mediaTypes: ["images"],
-                        allowsEditing: true,
-                        aspect: [1, 1],
-                        quality: 1,
-                    });
-                } else {
-                    const permission = await ImagePicker.requestCameraPermissionsAsync();
-                    if (!permission.granted) {
-                        alert('Permission to access the camera is required!');
-                        return;
-                    }
-    
-                    result = await ImagePicker.launchCameraAsync({
-                        allowsEditing: true,
-                        aspect: [1, 1],
-                        quality: 1,
-                    });
-                }
-    
-                if (!result.canceled) {
-                    saveImage(result.assets[0].uri); // Save the new image URI
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error uploading image');
-            }
-        };
+    const uploadImage = async (mode: string) => {
+        try {
+            let result: ImagePicker.ImagePickerResult;
 
-        const removeImage = () => {
-            setImageUri(null);
+            if (mode === 'gallery') {
+                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the gallery is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ["images"],
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            } else {
+                const permission = await ImagePicker.requestCameraPermissionsAsync();
+                if (!permission.granted) {
+                    alert('Permission to access the camera is required!');
+                    return;
+                }
+
+                result = await ImagePicker.launchCameraAsync({
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                });
+            }
+
+            if (!result.canceled) {
+                saveImage(result.assets[0].uri); // Save the new image URI
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error uploading image');
         }
-    
-        const saveImage = (image: string) => {
-            setImageUri(image);
-            setIsEditingShopAvatar(false);
-        };
+    };
+
+    const removeImage = () => {
+        setImageUri(null);
+    }
+
+    const saveImage = (image: string) => {
+        setImageUri(image);
+        setIsEditingShopAvatar(false);
+    };
+
+    const resetFilter = () => {
+        setCurrFilterCriteria({
+            minPrice: null,
+            maxPrice: null,
+            minRating: null,
+            categories: [],
+        })
+    }
 
     async function handleDeleteShop(shopId: string, avatarFileURI: string, userId: string) {
         Alert.alert(
@@ -251,27 +300,70 @@ export default function Shop() {
             ]
         )
     }
+    const applyFilters = (newFilters: filterCriteriaType) => {
+        if (newFilters.minPrice && newFilters.maxPrice && newFilters.minPrice > newFilters.maxPrice) {
+            setFilterError(true);
+        } else {
+            setFilterError(false);
+            setFilterCriteria(newFilters);
+            setModalVisible(false);
+        }
+    };
+
+    const handleCategoryToggle = (category: string) => {
+        const index = currFilterCriteria.categories.indexOf(category);
+        if (index === -1) {
+            setCurrFilterCriteria({
+                ...currFilterCriteria,
+                categories: [...currFilterCriteria.categories, category]
+            })
+        } else {
+            const newCategories = currFilterCriteria.categories;
+            newCategories.splice(index, 1);
+            setCurrFilterCriteria({
+                ...currFilterCriteria,
+                categories: newCategories,
+            })
+        }
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-200">
             <View>
                 <BackArrow handleBack={handleBack} />
                 <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={shopName}/>
-                <TouchableOpacity className="px-4 pb-4" activeOpacity={0.7} onPress={()=>setShowShopDescription(true)}>
-                    <View>
-                        <Text className="text-blue-500">
-                            More info
-                        </Text>
+                <View className="width-full flex-row justify-center">
+                    <View className="flex-row w-[90%] justify-between">
+                        <TouchableOpacity activeOpacity={0.7} onPress={()=>setShowShopDescription(true)}>
+                            <View>
+                                <CustomText style={{color: "#3b82f6"}}
+                                text="More Info" />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>setModalVisible(true)} className="pb-4">
+                            <CustomText
+                            text="Filter" />
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
+                </View>
                 {isMyShop(shop.userId) && 
                     <EditShopButton setter={setIsEditingShop}/>
                 }
             </View>
+            <ProductFilter 
+            modalVisible={modalVisible} 
+            currFilterCriteria={currFilterCriteria}
+            setCurrFilterCriteria={setCurrFilterCriteria}
+            filterError={filterError}
+            handleCategoryToggle={handleCategoryToggle}
+            resetFilter={resetFilter}
+            setModalVisible={setModalVisible}
+            applyFilters={applyFilters}
+            />
             <View className="items-center">
                 <FlatList
                 key={width}
-                data={productGrids}
+                data={filteredProducts}
                 keyExtractor={(item: productGrid) => item.productId}
                 renderItem={handleRenderItem}
                 numColumns={itemsPerRow}
@@ -303,9 +395,9 @@ export default function Shop() {
                             </TouchableOpacity>
                             <TouchableOpacity onPress={saveChanges}>
                                 <View className="rounded-lg m-2">
-                                    <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                        Save
-                                    </Text>
+                                    <CustomText 
+                                    style={{color: "#3b82f6",fontSize: 18}}
+                                    text="Save"/>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -321,7 +413,9 @@ export default function Shop() {
                             <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> handleDeleteShop(shop.id, shop.avatarFileURI, userData.id)}>
                                 <View className="bg-red-500 rounded-xl p-4 flex-row items-center">
                                     <FontAwesome name="trash" size={20} color="white" className="mr-2"/>
-                                    <Text className="text-white" style={{ fontFamily: "MontserratBold" }}>Delete my shop</Text>
+                                    <CustomText style={{color: "white"}}
+                                    text="Delete my shop"
+                                    isBold={true}/>
                                 </View>
                             </TouchableOpacity>
                         </View>

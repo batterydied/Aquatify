@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     TextInput,
     TouchableOpacity,
     useWindowDimensions,
@@ -19,6 +18,7 @@ import {
   import { FontAwesome } from "@expo/vector-icons";
   import { validateCardName, validateCardNumber, validateExpiryMonth, validateExpiryYear, validateCVV } from "@/lib/validation";
 import BackArrow from "@/components/BackArrow";
+import CustomText from "@/components/CustomText";
   
   export default function PaymentsPage() {
     const [paymentMethods, setPaymentMethods] = useState<paymentMethod[]>([]);
@@ -175,15 +175,9 @@ import BackArrow from "@/components/BackArrow";
     const renderPaymentMethod = (method: paymentMethod) => {
       return (
         <View key={method.id} className="bg-white rounded-lg p-4 mb-3 shadow-sm">
-          <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>
-            {method.cardName}
-          </Text>
-          <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
-            {`**** **** **** ${method.cardNumber.slice(-4)}`}
-          </Text>
-          <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
-            {`Expires: ${method.expiryMonth}/${method.expiryYear}`}
-          </Text>
+          <CustomText text={method.cardName} style={{fontSize: width * 0.04 }} isBold={true} />
+          <CustomText text={`**** **** **** ${method.cardNumber.slice(-4)}`} style={{fontSize: width * 0.035}} />
+          <CustomText text={`Expires: ${method.expiryMonth}/${method.expiryYear}`} style={{fontSize: width * 0.035}} />
           <View className="flex-row justify-between mt-2 items-center">
             <TouchableOpacity onPress={() => handleEditPaymentMethod(method)}>
               <FontAwesome name="edit" size={20} color="gray" className="mr-2" />
@@ -215,24 +209,18 @@ import BackArrow from "@/components/BackArrow";
                 <View>
                     <BackArrow handleBack={handleBack} />
                     <ScrollView className="mt-4 p-4">
-                    <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.06, marginBottom: 20 }}>
-                        Payment Methods
-                    </Text>
+                    <CustomText text="Payment Methods" style={{fontSize: width * 0.06, marginBottom: 20}} isBold={true} />
         
                     {/* List of Saved Payment Methods */}
                     {paymentMethods.length > 0 ? (
                         paymentMethods.map((method) => renderPaymentMethod(method))
                     ) : (
-                        <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.04, marginBottom: 20 }}>
-                        No payment methods saved.
-                        </Text>
+                        <CustomText text="No payment methods saved." style={{fontSize: width * 0.04, marginBottom: 20}} />
                     )}
         
                     {/* Add/Edit Payment Method Form */}
                     <View className="bg-white rounded-lg p-4 mb-4 shadow-sm">
-                        <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
-                        {editingPaymentMethod ? "Edit Payment Method" : "Add New Payment Method"}
-                        </Text>
+                        <CustomText text={editingPaymentMethod ? "Edit Payment Method" : "Add New Payment Method"} style={{fontSize: width * 0.04, marginBottom: 10}} isBold={true} />
                         <TextInput
                         placeholder="Cardholder Name"
                         placeholderTextColor="gray"
@@ -287,9 +275,7 @@ import BackArrow from "@/components/BackArrow";
                             onPress={handleCancel}
                             disabled={loading}
                             >
-                            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
-                                Cancel
-                            </Text>
+                            <CustomText text="Cancel" style={{fontSize: width * 0.04, color: "white"}} isBold={true} />
                             </TouchableOpacity>
                         )}
                         <TouchableOpacity
@@ -300,9 +286,7 @@ import BackArrow from "@/components/BackArrow";
                             {loading ? (
                             <ActivityIndicator size="small" color="white" />
                             ) : (
-                            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
-                                {editingPaymentMethod ? "Update" : "Add"}
-                            </Text>
+                            <CustomText text={editingPaymentMethod ? "Update": "Add"} style={{fontSize: width * 0.04, color: "white"}} isBold={true} />
                             )}
                         </TouchableOpacity>
                         </View>

@@ -12,7 +12,12 @@ const DescriptionModal = ({
 }) => {
     return (
         <Modal animationType="slide" visible={visible} transparent={true}>
-            <View className="flex-1 justify-center items-center bg-black/50">
+            <View 
+            className="flex-1 justify-center items-center"
+            style={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+            >
                 <View className="flex justify-center items-center bg-gray-200 rounded-md"
                 style={{
                     width: 350,

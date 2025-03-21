@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, View, Text, Button, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import CategoryDropdown from './MultiSelectDropdown';
 import RoundedTextInput from './RoundedTextInput';
 import { categoryTypes, productType } from '@/lib/interface';

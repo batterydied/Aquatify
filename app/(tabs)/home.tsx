@@ -1,10 +1,8 @@
 import { 
     View,
-    Text, 
     FlatList, 
     TouchableOpacity, 
     TextInput, 
-    Modal, 
     ActivityIndicator, 
     useWindowDimensions 
 } from "react-native";
@@ -18,7 +16,6 @@ import { useLockPortraitOrientation } from "@/hooks/useOrientation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import FlatListItem from "@/components/FlatListItem";
-import ErrorText from "@/components/ErrorText";
 import ProductFilter from "@/components/ProductFilter";
 
 export default function HomePage() {

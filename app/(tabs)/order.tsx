@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     SafeAreaView,
     TouchableOpacity,
     useWindowDimensions,
@@ -11,6 +10,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
 import { cartItem } from "@/lib/interface";
 import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
+import CustomText from "@/components/CustomText";
   
   export default function OrderConfirmationPage() {
     const params = useLocalSearchParams();
@@ -44,19 +44,11 @@ import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
       return (
         <View key={item.id} className="flex-row justify-between items-center p-4 border-b border-gray-300">
           <View>
-            <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035 }}>
-              {item.Product.name}
-            </Text>
-            {productType && <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.03, color: "gray" }}>
-              {productType.type}
-            </Text>}
-            <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.03, color: "gray" }}>
-              {`${item.quantity} x $${productType?.price.toFixed(2)}`}
-            </Text>
+            <CustomText text={item.Product.name} style={{fontSize: width * 0.035}} />
+            {productType && <CustomText text={productType.type} style={{fontSize: width * 0.03, color: "gray"}} /> }
+            <CustomText text={`${item.quantity} x $${productType?.price.toFixed(2)}`} style={{fontSize: width * 0.03, color: "gray"}} />
           </View>
-          <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.035 }}>
-            {`$${price.toFixed(2)}`}
-          </Text>
+          <CustomText text={`$${price.toFixed(2)}`} style={{fontSize: width * 0.035}} isBold={true} />
         </View>
       );
     };
@@ -64,40 +56,27 @@ import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
     return (
       <SafeAreaView className="flex-1 p-5 bg-gray-200">
         <ScrollView showsVerticalScrollIndicator={false} className="p-5">
-          <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.06, marginBottom: 20 }}>
-            Order Confirmation
-          </Text>
+          <CustomText text="Order Confirmation" style={{fontSize: width * 0.06, marginBottom: 20}} isBold={true} />
   
           {/* Order Summary */}
           <View className="bg-white rounded-lg p-4 mb-4">
-            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
-              Thank you for your order!
-            </Text>
-            <Text style={{ fontFamily: "MontserratRegular", fontSize: width * 0.035, marginBottom: 20 }}>
-              Your order has been successfully placed. Below are the details of your order.
-            </Text>
+            <CustomText text="Thank you for your order!" style={{fontSize: width * 0.04, marginBottom: 10}} isBold={true} />
+            <CustomText text="Your order has been successfully placed. Below are the details of your order." style={{fontSize: width * 0.035, marginBottom: 20}} />
   
-            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, marginBottom: 10 }}>
-              Order Summary
-            </Text>
+            <CustomText text="Order Summary" style={{fontSize: width * 0.04, marginBottom: 10}} isBold={true} />
             {cartItems.map((item) => renderCartItem(item))}
             <View className="flex-row justify-between mt-4">
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>Subtotal:</Text>
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>
-                {`$${subtotal.toFixed(2)}`}
-              </Text>
+              <CustomText text="Subtotal:" style={{fontSize: width * 0.04}} isBold={true} />
+              <CustomText text={`$${subtotal.toFixed(2)}`} style={{fontSize: width * 0.04 }} isBold={true} />
             </View>
             <View className="flex-row justify-between mt-2">
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>Tax:</Text>
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>
-                {`$${tax.toFixed(2)}`}
-              </Text>
+              <CustomText text="Tax:" style={{fontSize: width * 0.04}} isBold={true} />
+              <CustomText text={`$${tax.toFixed(2)}`} style={{fontSize: width * 0.04}} isBold={true} />
+
             </View>
             <View className="flex-row justify-between mt-2">
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>Total:</Text>
-              <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04 }}>
-                {`$${total.toFixed(2)}`}
-              </Text>
+              <CustomText text="Total:" style={{fontSize: width * 0.04}} isBold={true} />
+              <CustomText text={`$${total.toFixed(2)}`} style={{fontSize: width * 0.04}} isBold={true} />
             </View>
           </View>
   
@@ -106,9 +85,7 @@ import { calculatePriceWithQuantity, getProductType } from "@/lib/apiCalls";
             className="bg-orange-400 p-4 rounded-full items-center"
             onPress={() => router.push("/home")}
           >
-            <Text style={{ fontFamily: "MontserratBold", fontSize: width * 0.04, color: "white" }}>
-              Continue Shopping
-            </Text>
+            <CustomText text="Continue Shopping" style={{fontSize: width * 0.04, color: "white"}} isBold={true} />
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>

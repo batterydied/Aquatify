@@ -1,5 +1,4 @@
 import { 
-    Text, 
     View, 
     useWindowDimensions, 
     TouchableOpacity, 
@@ -22,6 +21,7 @@ import EditableProfilePicture from "@/components/EditableProfilePicture";
 import ProfilePicture from "@/components/ProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import ErrorText from "@/components/ErrorText";
+import CustomText from "@/components/CustomText";
 
 export default function SettingPage() {
     const {userData, setUserData, fetchUserData} = useUserData();
@@ -166,15 +166,12 @@ export default function SettingPage() {
             <View>
                 <ProfilePicture imageUri={imageUri} imageWidth={imageWidth} name={userData.name}/>
                 <View className="flex px-2 w-full">
-                    <View className="w-full flex-row justify-between p-2"> 
+                    <View className="w-full flex-row justify-between p-2 mb-4"> 
                         <TouchableOpacity className="w-[20%] flex justify-center items-center" activeOpacity={0.7} 
                         onPress={()=>router.push({
                         pathname: "/(tabs)/address"})}>
                             <View className="flex justify-center items-center">
                                 <FontAwesome5 name="address-book" size={20} color="gray" />
-                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                    Address
-                                </Text>
                             </View>
                         </TouchableOpacity>
 
@@ -183,9 +180,6 @@ export default function SettingPage() {
                         pathname: "/(tabs)/orderList"})}>
                             <View className="flex justify-center items-center">
                                 <FontAwesome5 name="box" size={20} color="gray" />
-                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                    Orders
-                                </Text>
                             </View>
                         </TouchableOpacity>
 
@@ -194,9 +188,6 @@ export default function SettingPage() {
                         pathname: "/(tabs)/payments"})}>
                             <View className="flex justify-center items-center">
                                 <FontAwesome5 name="wallet" size={20} color="gray" />
-                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                    Payment
-                                </Text>
                             </View>
                         </TouchableOpacity>
 
@@ -205,9 +196,6 @@ export default function SettingPage() {
                         pathname: "/(tabs)/shopDashboard"})}>
                             <View className="flex justify-center items-center">
                                 <FontAwesome5 name="store" size={20} color="gray" />
-                                <Text className="text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                    Shop
-                                </Text>
                             </View>
                         </TouchableOpacity>
 
@@ -217,9 +205,7 @@ export default function SettingPage() {
                         <View className="w-full">
                             <View className="flex-row justify-center items-center">
                                 <FontAwesome className="mr-2" name="edit" size={20} color="gray"/>
-                                <Text style={{ fontFamily: "MontserratRegular" }} className="text-lg">
-                                    Edit profile
-                                </Text>
+                                <CustomText text="Edit profile" style={{fontSize: 18}} />
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -235,9 +221,7 @@ export default function SettingPage() {
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={saveChanges}>
                                         <View className="rounded-lg m-2">
-                                            <Text className="text-blue-500 text-lg" style={{ fontFamily: "MontserratRegular" }}>
-                                                Save
-                                            </Text>
+                                            <CustomText text="Save" style={{fontSize: 18, color: "#3b82f6"}} />
                                         </View>
                                     </TouchableOpacity>
                                 </View>
