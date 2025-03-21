@@ -89,6 +89,16 @@ import CustomText from "@/components/CustomText";
         </View>
       );
     }
+
+    const goToShop = ()=>{
+        router.replace({
+            pathname: "/(tabs)/shop",
+            params: {
+                userId: product.shop.userId
+            },
+        });
+    }
+
     const renderReview = ({ item }: { item: review }) => (
       <ReviewComponent
         user={item.user}
@@ -188,8 +198,8 @@ import CustomText from "@/components/CustomText";
               {/* Product Details */}
               <CustomText text={product.secondaryName} style={{color: "#374151"}} />
               <CustomText text={product.name} style={{fontSize: 18}} isBold={true}/>
-              <TouchableOpacity activeOpacity={0.7}>
-                <CustomText text={"Visit the " + product.shopName + " store"} style={{fontSize: 18, color: "#1e40af"}} />
+              <TouchableOpacity activeOpacity={0.7} onPress={goToShop}>
+                <CustomText text={"Visit the " + product.shop.shopName + " store"} style={{fontSize: 18, color: "#1e40af"}} />
               </TouchableOpacity>
               <CustomText text={"★" +
                   (product.rating % 1 === 0 ? product.rating.toFixed(0) : product.rating.toFixed(1)) +

@@ -1,6 +1,8 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import { ShopModel } from './ShopModel.js'; // Import the Shop model
 
+const Shop = ShopModel.models.Shop;
 // Define Models
 const Product = sequelize.define("Product", {
   productId: {
@@ -10,8 +12,10 @@ const Product = sequelize.define("Product", {
   },
   name: { type: DataTypes.STRING, allowNull: false },
   secondaryName: { type: DataTypes.STRING, allowNull: true },
-  shopId: { type: DataTypes.UUID, allowNull: false },
-  shopName: { type: DataTypes.STRING, allowNull: false },
+  shopId: { type: DataTypes.UUID, allowNull: false, references: {
+    model: Shop,
+    key: 'id', // Foreign key reference to the Shop model's primary key
+  }},
   categories: { 
     type: DataTypes.ARRAY(DataTypes.STRING), // Array of strings
     allowNull: false 
@@ -77,6 +81,9 @@ Product.hasMany(Image, { foreignKey: "productId", as: "images", onDelete: "CASCA
 
 ProductType.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
 Product.hasMany(ProductType, { foreignKey: "productId", as: "productTypes", onDelete: "CASCADE" });
+
+Product.belongsTo(Shop, { foreignKey: 'shopId', as: "shop" });
+Shop.hasMany(Product, { foreignKey: 'shopId', onDelete: "CASCADE" });
 
 // Export Models
 class _ProductModel {

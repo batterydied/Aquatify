@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { getProducts } from "@/lib/apiCalls";
-import { productGrid, filterCriteriaType, categoryTypes } from "@/lib/interface";
+import { productGrid, filterCriteriaType } from "@/lib/interface";
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';

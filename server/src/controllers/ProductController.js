@@ -1,6 +1,9 @@
 import { ProductModel } from "../models/ProductModel.js";
+import { ShopModel } from "../models/ShopModel.js";
+import sequelize from "../database.js";
 
 const { Product, Image, Review, ProductType } = ProductModel.models;
+const { Shop } = ShopModel.models;
 
 class ProductController {
   constructor() {
@@ -10,7 +13,11 @@ class ProductController {
   // Retrieve all products from the database, including related images
   static async getAllProducts(req, res) {
     try {
-        const products = await Product.findAll({ include: ["images", "reviews", "productTypes"] });// Include related
+        const products = await Product.findAll({ include: ["images", "reviews", "productTypes", {
+          model: Shop,
+          as: "shop",
+          attributes: ['shopName', 'userId'] // Only include shopName
+        }]});// Include related
         res.status(200).json(products);
     } catch (error) {
         console.error("Error retrieving products:", error);
@@ -22,7 +29,11 @@ class ProductController {
   static async getProductById(req, res) {
     try {
       const { productId } = req.params;
-      const product = await Product.findByPk(productId, { include: ["images", "reviews", "productTypes"] }); // Include related
+      const product = await Product.findByPk(productId, { include: ["images", "reviews", "productTypes", {
+        model: Shop,
+        as: 'shop', // Alias for the association
+        attributes: ['shopName', 'userId'] // Only include the name of the shop
+      }] }); // Include related
 
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
@@ -38,10 +49,10 @@ class ProductController {
   // Add a new product to the database
   static async addProduct(req, res) {
     try {
-      const { name, secondaryName, shopId, shopName, categories, description, images, reviews, productTypes } = req.body;
+      const { name, secondaryName, shopId, categories, description, images, reviews, productTypes } = req.body;
   
       // Validate input
-      if (!name || !shopId || !shopName || !categories) {
+      if (!name || !shopId || !categories) {
         return res.status(400).json({ error: "Missing required fields" });
       }
   
@@ -50,7 +61,6 @@ class ProductController {
         name,
         secondaryName,
         shopId,
-        shopName,
         categories,
         description,
       });
@@ -107,7 +117,6 @@ class ProductController {
         name,
         secondaryName,
         shopId,
-        shopName,
         categories,
         description,
         price,
@@ -129,7 +138,6 @@ class ProductController {
       if (name !== undefined) updatedFields.name = name;
       if (secondaryName !== undefined) updatedFields.secondaryName = secondaryName;
       if (shopId !== undefined) updatedFields.shopId = shopId;
-      if (shopName !== undefined) updatedFields.shopName = shopName;
       if (categories !== undefined) updatedFields.categories = categories;
       if (description !== undefined) updatedFields.description = description;
       if (price !== undefined) updatedFields.price = price;

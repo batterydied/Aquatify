@@ -113,7 +113,7 @@ export default function CartPage() {
                 fontFamily: "MontserratRegular",
               }}
             >
-              {item.Product.shopName}
+              {item.Product.shop.shopName}
             </Text>
             <View className="flex-row mb-2">
               <Image

@@ -69,7 +69,7 @@ export default function SavedPage() {
       >
         <View className="w-full bg-c3 rounded-lg my-2">
           <View className="p-4">
-            <CustomText text={item.Product.shopName} style={{fontSize: width * 0.025}}/>
+            <CustomText text={item.Product.shop.shopName} style={{fontSize: width * 0.025}}/>
             <View className="flex-row mb-2">
               <Image
                 source={{ uri: sortImageById(item.Product.images)[0].url }}

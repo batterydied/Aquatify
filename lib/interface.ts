@@ -35,7 +35,10 @@ export interface productInterface{
     productId: string;
     secondaryName: string;
     shopId: string;
-    shopName: string;
+    shop: {
+        shopName: string,
+        userId: string
+    };
     description: string;
     rating: number;
     images: image[];
