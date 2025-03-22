@@ -9,6 +9,8 @@ import BackArrow from './BackArrow';
 import CustomButton from './CustomButton';
 import CustomText from './CustomText';
 import ErrorText from './ErrorText';
+import { FontAwesome } from '@expo/vector-icons';
+import UploadImageModal from './UploadImageModal';
 
 const CreateProductModal = ({
     visible, 
@@ -26,6 +28,8 @@ const CreateProductModal = ({
     const [initProductTypes, setInitProductTypes] = useState<initProductType[]>([]);
     const [isCreatingProductType, setIsCreatingProductType] = useState(false);
     const [productTypeError, setProductTypeError] = useState(false);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [imageURI, setImageURI] = useState<string[]>([]);
 
     const handleSubmit = () => {
         if(initProductTypes.length < 1){
@@ -92,7 +96,14 @@ const CreateProductModal = ({
                         </View>
                         {productTypeError && <ErrorText message="You need at least one product type added." style={{marginTop: 8}}/>}
                     </TouchableOpacity>
+                    <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsUploadingImage(true)}>
+                        <View style={{flexDirection: "row", alignContent: "center", backgroundColor: "gray", padding: 8, alignSelf: "flex-start", borderRadius: 12}}>
+                            <CustomText text="Upload images" style={{marginRight: 8, color: "white"}} />
+                            <FontAwesome name="upload" size={18} color="white"/>
+                        </View>
+                    </TouchableOpacity>
                     <ProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>
+                    <UploadImageModal visible={isUploadingImage} onClose={()=>setIsUploadingImage(false)}/>
                     <TouchableOpacity />
                     <CustomButton 
                     title="Submit" 
