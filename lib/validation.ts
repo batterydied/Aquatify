@@ -92,7 +92,7 @@ export const validateCardName = (cardName: string): boolean => {
     return cardName.trim().length > 0;
 };
 
-export function isValidZipCode(zipCode: string | number): boolean {
+export const isValidZipCode = (zipCode: string | number): boolean => {
     // Convert to string in case the input is a number
     const zipCodeStr = zipCode.toString();
   
@@ -100,4 +100,6 @@ export function isValidZipCode(zipCode: string | number): boolean {
     return /^\d{5}$/.test(zipCodeStr);
   }
   
-  export default isValidZipCode;
+export const isMyShop = (shopUserId: string, userId: string) => {
+  return shopUserId === userId;
+}

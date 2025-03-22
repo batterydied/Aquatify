@@ -22,6 +22,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackArrow from "@/components/BackArrow";
 import CustomButton from "@/components/CustomButton";
 import CustomText from "@/components/CustomText";
+import { isMyShop } from "@/lib/validation";
+import CogButton from "@/components/CogButton";
+import { FontAwesome } from "@expo/vector-icons";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -38,6 +41,7 @@ import CustomText from "@/components/CustomText";
       label: "Sort by Stars (Highest)",
       value: "sortByStarsHighest",
     });
+    const [isEditingProduct, setIsEditingProduct] = useState(false);
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
   
     const fetchProductData = async () => {
@@ -287,6 +291,9 @@ import CustomText from "@/components/CustomText";
     return (
       <SafeAreaView className="bg-gray-200 flex-1">
         <BackArrow handleBack={handleBack}/>
+        {isMyShop(product.shop.userId, userData.id) && 
+          <CogButton setter={setIsEditingProduct} style={{marginTop: 56}}/>
+        }
         <FlatList
         className="p-4"
         data={sortedAndLimitedReviews}
@@ -325,6 +332,31 @@ import CustomText from "@/components/CustomText";
           </View>
         }
         />
+        <Modal animationType="slide" visible={isEditingProduct}>
+          <View style={{flex: 1, backgroundColor: "#E5E7EB"}}>
+            <BackArrow style={{marginTop: 64}} handleBack={()=>{setIsEditingProduct(false)}}/>
+            <View style={{flex: 1, justifyContent: "center", alignItems: "center", marginTop: -64}}>
+              <CustomText text="test"/>
+              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> {}}>
+                  <View className="bg-blue-500 rounded-xl p-4 flex-row items-center">
+                      <FontAwesome name="upload" size={20} color="white" className="mr-2"/>
+                      <CustomText style={{color: "white"}}
+                      text="Update Product"
+                      isBold={true}/>
+                  </View>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> {}}>
+                  <View className="bg-red-500 rounded-xl p-4 flex-row items-center">
+                      <FontAwesome name="trash" size={20} color="white" className="mr-2"/>
+                      <CustomText style={{color: "white"}}
+                      text="Delete Product"
+                      isBold={true}/>
+                  </View>
+              </TouchableOpacity>
+
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     );
   }

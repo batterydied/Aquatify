@@ -1,9 +1,9 @@
 import { FontAwesome } from "@expo/vector-icons"
 import { TouchableOpacity, View, StyleSheet} from "react-native"
 
-const EditShopButton = ({setter}: {setter: (state: boolean) => void}) => {
+const CogButton = ({setter, style}: {setter: (state: boolean) => void, style?: object}) => {
     return (
-        <View style={styles.container}>
+        <View style={{...styles.container, ...style}}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => setter(true)}>
                 <FontAwesome name="cog" color="gray" size={28} />
             </TouchableOpacity>
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditShopButton;
+export default CogButton;

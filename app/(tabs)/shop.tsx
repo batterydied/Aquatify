@@ -35,11 +35,12 @@ import * as ImagePicker from "expo-image-picker";
 import DescriptionModal from "@/components/DescriptionModal";
 import FlatListItem from "@/components/FlatListItem";
 import AddProductButton from "@/components/PlusButton";
-import EditShopButton from "@/components/EditShopButton";
+import EditShopButton from "@/components/CogButton";
 import CreateProductModal from "@/components/CreateProductModal";
 import ErrorText from "@/components/ErrorText";
 import ProductFilter from "@/components/ProductFilter";
 import CustomText from "@/components/CustomText";
+import { isMyShop } from "@/lib/validation";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -157,10 +158,6 @@ export default function Shop() {
                 <ActivityIndicator size="large" color="grey" />
             </View>
         );
-    }
-
-    const isMyShop = (shopUserId: string) => {
-        return shopUserId === userData.id;
     }
 
     const handleRenderItem = ({item}: { item: productGrid }) => (
@@ -356,7 +353,7 @@ export default function Shop() {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {isMyShop(shop.userId) && 
+                {isMyShop(shop.userId, userData.id) && 
                     <EditShopButton setter={setIsEditingShop}/>
                 }
             </View>
@@ -383,7 +380,7 @@ export default function Shop() {
                 bounces={true}
                 />
             </View>
-            {isMyShop(shop.userId) && 
+            {isMyShop(shop.userId, userData.id) && 
                 <AddProductButton style={{
                     position: 'absolute',
                     bottom: 16,
