@@ -167,7 +167,17 @@ export default function Shop() {
         <FlatListItem item={item} path= "shop" itemWidth={itemWidth} />
     );
 
-    const handleBack = () => {router.push("/(tabs)/profile")};
+    const handleBack = () => {
+        resetFilter();
+        //manual change as react references to the old value
+        applyFilters({
+            minPrice: null,
+            maxPrice: null,
+            minRating: null,
+            categories: []
+        })
+        router.push("/(tabs)/profile");
+    };
 
     const discardChanges = () => {
         setImageUri(originalImageUri);

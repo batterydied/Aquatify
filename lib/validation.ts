@@ -21,6 +21,10 @@ export const validatePricing = (unformattedPrice: string)=> {
 
     const price = Number(unformattedPrice);
 
+    if(Number.isNaN(price)){
+      return false;
+    }
+
     if (price < 0) {
         return false;
     }

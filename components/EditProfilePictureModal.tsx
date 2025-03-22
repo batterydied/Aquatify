@@ -15,7 +15,7 @@ const EditProfilePictureModal = ({
   return (
     <Modal animationType="slide" visible={visible} transparent>
       <TouchableWithoutFeedback onPress={onClose}>
-        <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="flex-1 justify-center items-center" style={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
             <View className="bg-white flex-col justify-center items-center p-4 rounded-md"
              onStartShouldSetResponder={() => true}>
               <Text className="text-black text-2xl" style={{ fontFamily: "MontserratBold" }}>

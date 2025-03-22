@@ -1,12 +1,12 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
-const CustomButton = ({title, style, color, onPress, size}: {title: string, style?: object, color?: string, onPress: ()=>void, size?: number}) => {
+const CustomButton = ({title, style, color, onPress, size, isBold=false}: {title: string, style?: object, color?: string, onPress: ()=>void, size?: number, isBold?: boolean}) => {
     return (
         <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
             <View style={[styles.container, style]}>
                 <Text style={{
                     color: color, 
-                    fontFamily: "MontserratRegular",
+                    fontFamily: isBold ? "MontserratBold" : "MontserratRegular",
                     fontSize: size
                 }}>
                     {title}

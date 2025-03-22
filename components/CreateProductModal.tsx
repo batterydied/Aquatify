@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import CategoryDropdown from './MultiSelectDropdown';
 import RoundedTextInput from './RoundedTextInput';
-import { categoryTypes, productType } from '@/lib/interface';
+import { categoryTypes, initProductType } from '@/lib/interface';
 import EditableDescription from './EditableDescription';
-import CreateProductTypeModal from './CreateProductTypeModal';
+import ProductTypeModal from './ProductTypeModal';
 import BackArrow from './BackArrow';
 import CustomButton from './CustomButton';
+import CustomText from './CustomText';
+import ErrorText from './ErrorText';
 
 const CreateProductModal = ({
     visible, 
@@ -21,18 +23,33 @@ const CreateProductModal = ({
     const [secondaryName, setSecondaryName] = useState('');
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [description, setDescription] = useState('');
-    const [productTypes, setProductTypes] = useState<productType[]>([]);
+    const [initProductTypes, setInitProductTypes] = useState<initProductType[]>([]);
     const [isCreatingProductType, setIsCreatingProductType] = useState(false);
+    const [productTypeError, setProductTypeError] = useState(false);
 
     const handleSubmit = () => {
-        const newProduct = {
-            name,
-            secondaryName,
-            categories: selectedCategories,
-            description,
-        };
-        onSubmit(newProduct);
-        onClose();
+        if(initProductTypes.length < 1){
+            setProductTypeError(true);
+        }else{
+            const newProduct = {
+                name,
+                secondaryName,
+                categories: selectedCategories,
+                description,
+            };
+            onSubmit(newProduct);
+            handleReset();
+            onClose();
+        }
+    };
+
+    const handleReset = () => {
+        setName('');
+        setSecondaryName('');
+        setSelectedCategories([]);
+        setDescription('');
+        setInitProductTypes([]);
+        setProductTypeError(false);
     };
 
     return (
@@ -62,17 +79,20 @@ const CreateProductModal = ({
                     }}/>
                     <CategoryDropdown selected={selectedCategories} setSelected= {setSelectedCategories} placeholder="Select categories" data={categoryTypes}/>
                     <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsCreatingProductType(true)}>
-                        <View>
+                        <View style={{flexDirection: "row"}}>
                             <Text style={{
                                 fontFamily: "MontserratRegular",
-                                color: "#3b82f6"
+                                color: "#3b82f6",
+                                marginRight: 8
                             }}
                             >
                                 Add a product type
                             </Text>
+                            <CustomText text={`(${initProductTypes.length.toString()})`}/>
                         </View>
+                        {productTypeError && <ErrorText message="You need at least one product type added." style={{marginTop: 8}}/>}
                     </TouchableOpacity>
-                    <CreateProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} />
+                    <ProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>
                     <TouchableOpacity />
                     <CustomButton 
                     title="Submit" 
@@ -83,6 +103,16 @@ const CreateProductModal = ({
                         margin: 8
                     }} 
                     onPress={handleSubmit}
+                    />
+                      <CustomButton 
+                    title="Reset" 
+                    color="white"
+                    style={{
+                        backgroundColor: "#DC2626",
+                        justifySelf: "center",
+                        margin: 8
+                    }} 
+                    onPress={handleReset}
                     />
                 </View>
             </TouchableWithoutFeedback>

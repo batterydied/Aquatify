@@ -53,6 +53,12 @@ export interface productType{
     type: string;
     quantity: number;
 }
+
+export interface initProductType{
+    price: number;
+    type: string;
+    quantity: number;
+}
   
 export type filterCriteriaType = {
     minPrice: number | null;
