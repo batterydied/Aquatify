@@ -1,8 +1,10 @@
 import { CartModel } from "../models/CartModel.js";
 import { ProductModel } from "../models/ProductModel.js";
+import { ShopModel } from "../models/ShopModel.js";
 
 const { Cart, Product } = CartModel.models;
 const { ProductType, Image } = ProductModel.models;
+const { Shop } = ShopModel.models;
 
 class CartController {
   /**
@@ -23,6 +25,10 @@ class CartController {
               {
                 model: Image,
                 as: "images",
+              },
+              {
+                model: Shop,
+                as: "shop",
               },
             ],
             logging: console.log,
@@ -55,6 +61,10 @@ class CartController {
               {
                 model: Image,
                 as: "images",
+              },
+              {
+                model: Shop,
+                as: "shop",
               },
             ],
           },
@@ -219,7 +229,8 @@ class CartController {
           model: Product,
           include: [
             { model: ProductType, as: "productTypes"},
-            { model: Image, as: "images" }
+            { model: Image, as: "images" },
+            { model: Shop, as: "shop" },
           ]
         },
       });
