@@ -31,7 +31,6 @@ import EditableDescription from "@/components/EditableDescription";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
-import * as ImagePicker from "expo-image-picker";
 import DescriptionModal from "@/components/DescriptionModal";
 import FlatListItem from "@/components/FlatListItem";
 import AddProductButton from "@/components/PlusButton";
@@ -41,6 +40,7 @@ import ErrorText from "@/components/ErrorText";
 import ProductFilter from "@/components/ProductFilter";
 import CustomText from "@/components/CustomText";
 import { isMyShop } from "@/lib/validation";
+import { uploadImage } from "@/lib/imageUpload";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -224,46 +224,6 @@ export default function Shop() {
         setShopName("");
     }
 
-    const uploadImage = async (mode: string) => {
-        try {
-            let result: ImagePicker.ImagePickerResult;
-
-            if (mode === 'gallery') {
-                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (!permission.granted) {
-                    alert('Permission to access the gallery is required!');
-                    return;
-                }
-
-                result = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ["images"],
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            } else {
-                const permission = await ImagePicker.requestCameraPermissionsAsync();
-                if (!permission.granted) {
-                    alert('Permission to access the camera is required!');
-                    return;
-                }
-
-                result = await ImagePicker.launchCameraAsync({
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            }
-
-            if (!result.canceled) {
-                saveImage(result.assets[0].uri); // Save the new image URI
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Error uploading image');
-        }
-    };
-
     const removeImage = () => {
         setImageUri(null);
     }
@@ -428,7 +388,7 @@ export default function Shop() {
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
-                <EditProfilePictureModal visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={uploadImage} onRemove={removeImage}/>
+                <EditProfilePictureModal visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
             </Modal>
             <CreateProductModal visible={isCreatingProduct} onClose={()=>setIsCreatingProduct(false)} onSubmit={(product: any)=>{}}/>
         </SafeAreaView>

@@ -29,7 +29,7 @@ const CreateProductModal = ({
     const [isCreatingProductType, setIsCreatingProductType] = useState(false);
     const [productTypeError, setProductTypeError] = useState(false);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
-    const [imageURI, setImageURI] = useState<string[]>([]);
+    const [imageURIs, setImageURIs] = useState<string[]>([]);
 
     const handleSubmit = () => {
         if(initProductTypes.length < 1){
@@ -59,72 +59,74 @@ const CreateProductModal = ({
     return (
         <Modal visible={visible} animationType="slide">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.container}>
+                <View style={{marginTop: 64}}>
                     <BackArrow handleBack={onClose}/>
-                    <Text style={styles.title}>Create Product</Text>
-                    <RoundedTextInput 
-                    value={name}
-                    setValue={setName}
-                    clearValue={()=>setName("")}
-                    maxLength={20}
-                    placeholder="Name"
-                    />
-                    <RoundedTextInput 
-                    value={secondaryName}
-                    setValue={setSecondaryName}
-                    clearValue={()=>setSecondaryName("")}
-                    maxLength={20}
-                    placeholder="Secondary name"
-                    />
-                    <EditableDescription value={description} setValue={setDescription} maxLength={200} placeholder="Enter description here" 
-                    style={{
-                        margin: 8,
-                        height: 300
-                    }}/>
-                    <CategoryDropdown selected={selectedCategories} setSelected= {setSelectedCategories} placeholder="Select categories" data={categoryTypes}/>
-                    <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsCreatingProductType(true)}>
-                        <View style={{flexDirection: "row"}}>
-                            <Text style={{
-                                fontFamily: "MontserratRegular",
-                                color: "#3b82f6",
-                                marginRight: 8
-                            }}
-                            >
-                                Add a product type
-                            </Text>
-                            <CustomText text={`(${initProductTypes.length.toString()})`}/>
-                        </View>
-                        {productTypeError && <ErrorText message="You need at least one product type added." style={{marginTop: 8}}/>}
-                    </TouchableOpacity>
-                    <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsUploadingImage(true)}>
-                        <View style={{flexDirection: "row", alignContent: "center", backgroundColor: "gray", padding: 8, alignSelf: "flex-start", borderRadius: 12}}>
-                            <CustomText text="Upload images" style={{marginRight: 8, color: "white"}} />
-                            <FontAwesome name="upload" size={18} color="white"/>
-                        </View>
-                    </TouchableOpacity>
-                    <ProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>
-                    <UploadImageModal visible={isUploadingImage} onClose={()=>setIsUploadingImage(false)}/>
-                    <TouchableOpacity />
-                    <CustomButton 
-                    title="Submit" 
-                    color="white"
-                    style={{
-                        backgroundColor: "#60a5fa",
-                        justifySelf: "center",
-                        margin: 8
-                    }} 
-                    onPress={handleSubmit}
-                    />
-                      <CustomButton 
-                    title="Reset" 
-                    color="white"
-                    style={{
-                        backgroundColor: "#DC2626",
-                        justifySelf: "center",
-                        margin: 8
-                    }} 
-                    onPress={handleReset}
-                    />
+                    <View style={{padding: 16}}>
+                        <Text style={styles.title}>Create Product</Text>
+                        <RoundedTextInput 
+                        value={name}
+                        setValue={setName}
+                        clearValue={()=>setName("")}
+                        maxLength={20}
+                        placeholder="Name"
+                        />
+                        <RoundedTextInput 
+                        value={secondaryName}
+                        setValue={setSecondaryName}
+                        clearValue={()=>setSecondaryName("")}
+                        maxLength={20}
+                        placeholder="Secondary name"
+                        />
+                        <EditableDescription value={description} setValue={setDescription} maxLength={200} placeholder="Enter description here" 
+                        style={{
+                            margin: 8,
+                            height: 300
+                        }}/>
+                        <CategoryDropdown selected={selectedCategories} setSelected= {setSelectedCategories} placeholder="Select categories" data={categoryTypes}/>
+                        <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsCreatingProductType(true)}>
+                            <View style={{flexDirection: "row"}}>
+                                <Text style={{
+                                    fontFamily: "MontserratRegular",
+                                    color: "#3b82f6",
+                                    marginRight: 8
+                                }}
+                                >
+                                    Add a product type
+                                </Text>
+                                <CustomText text={`(${initProductTypes.length.toString()})`}/>
+                            </View>
+                            {productTypeError && <ErrorText message="You need at least one product type added." style={{marginTop: 8}}/>}
+                        </TouchableOpacity>
+                        <TouchableOpacity className="m-2" activeOpacity={0.7} onPress={()=>setIsUploadingImage(true)}>
+                            <View style={{flexDirection: "row", alignContent: "center", backgroundColor: "gray", padding: 8, alignSelf: "flex-start", borderRadius: 12}}>
+                                <CustomText text="Upload images" style={{marginRight: 8, color: "white"}} />
+                                <FontAwesome name="upload" size={18} color="white"/>
+                            </View>
+                        </TouchableOpacity>
+                        <ProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>
+                        <UploadImageModal visible={isUploadingImage} onClose={()=>setIsUploadingImage(false)} imageURIs={imageURIs} setImageURIs={setImageURIs}/>
+                        <TouchableOpacity />
+                        <CustomButton 
+                        title="Submit" 
+                        color="white"
+                        style={{
+                            backgroundColor: "#60a5fa",
+                            justifySelf: "center",
+                            margin: 8
+                        }} 
+                        onPress={handleSubmit}
+                        />
+                        <CustomButton 
+                        title="Reset" 
+                        color="white"
+                        style={{
+                            backgroundColor: "#DC2626",
+                            justifySelf: "center",
+                            margin: 8
+                        }} 
+                        onPress={handleReset}
+                        />
+                    </View>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
@@ -132,19 +134,14 @@ const CreateProductModal = ({
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        marginTop: 32,
-    },
     content: {
         flex: 1,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginTop: 16,
         marginBottom: 16,
+        marginLeft: 8
     },
     productTypeContainer: {
         marginBottom: 16,

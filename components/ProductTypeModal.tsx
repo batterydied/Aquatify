@@ -1,6 +1,6 @@
 import { View, StyleSheet, Modal, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from "react-native"
 import RoundedTextInput from "./RoundedTextInput"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BackArrow from "./BackArrow";
 import CustomButton from "./CustomButton";
 import { validateQuantity, validatePricing } from "@/lib/validation";
@@ -8,7 +8,6 @@ import ErrorText from "./ErrorText";
 import { initProductType } from "@/lib/interface";
 import CustomText from "./CustomText";
 import EditProductTypeModal from "./EditProductTypeModal";
-import { FontAwesome } from "@expo/vector-icons";
 
 const CreateProductTypeModal = ({visible, onClose, initProductTypes, setInitProductTypes}: {visible: boolean, onClose: ()=>void, initProductTypes: initProductType[], setInitProductTypes: (val: initProductType[])=>void}) => {
     const [name, setName] = useState<string>("");
@@ -78,29 +77,31 @@ const CreateProductTypeModal = ({visible, onClose, initProductTypes, setInitProd
     return (
         <Modal visible={visible}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.container}>
+                <View style={{marginTop: 64}}>
                     <BackArrow handleBack={()=>{
                         clearValues();
                         onClose();
                     }}/>
-                    <Text style={styles.title}>
-                        Product Type Menu
-                    </Text>
-                    {initProductTypes.map((val: any)=>renderInitProductType(val))}
-                    <RoundedTextInput value={name} setValue={setName} placeholder="Enter product type here" clearValue={()=>setName("")}/>
-                    {!error.isNameValid && <ErrorText message="You can't leave the product name blank." style={{paddingHorizontal: 8}}/>}
-                    {!error.doNotHaveDuplicatedName && <ErrorText message="You can't have the same product type name." style={{paddingHorizontal: 8}}/>}
-                    <RoundedTextInput value={price} setValue={setPrice} placeholder="Enter pricing here" clearValue={()=>setPrice("")}/>
-                    {!error.isPriceValid && <ErrorText message="Please enter a valid pricing." style={{paddingHorizontal: 8}}/>}
-                    <RoundedTextInput value={quantity} setValue={setQuantity} placeholder="Enter quantity here" clearValue={()=>setQuantity("")}/>
-                    {!error.isQuantityValid && <ErrorText message="Please enter a valid quantity." style={{paddingHorizontal: 8}}/>}
-                    <CustomButton title="Submit" onPress={handleSubmit} color="white"
-                    style={{
-                        backgroundColor: "#60a5fa",
-                        margin: 8
-                    }}
-                    />
-                    {selectedType && <EditProductTypeModal val={selectedType} isEditingProductType={isEditingProductType} setIsEditingProductType={setIsEditingProductType} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>}
+                    <View style={{padding: 16}}>
+                        <Text style={styles.title}>
+                            Product Type Menu
+                        </Text>
+                        {initProductTypes.map((val: any)=>renderInitProductType(val))}
+                        <RoundedTextInput value={name} setValue={setName} placeholder="Enter product type here" clearValue={()=>setName("")}/>
+                        {!error.isNameValid && <ErrorText message="You can't leave the product name blank." style={{paddingHorizontal: 8}}/>}
+                        {!error.doNotHaveDuplicatedName && <ErrorText message="You can't have the same product type name." style={{paddingHorizontal: 8}}/>}
+                        <RoundedTextInput value={price} setValue={setPrice} placeholder="Enter pricing here" clearValue={()=>setPrice("")}/>
+                        {!error.isPriceValid && <ErrorText message="Please enter a valid pricing." style={{paddingHorizontal: 8}}/>}
+                        <RoundedTextInput value={quantity} setValue={setQuantity} placeholder="Enter quantity here" clearValue={()=>setQuantity("")}/>
+                        {!error.isQuantityValid && <ErrorText message="Please enter a valid quantity." style={{paddingHorizontal: 8}}/>}
+                        <CustomButton title="Submit" onPress={handleSubmit} color="white"
+                        style={{
+                            backgroundColor: "#60a5fa",
+                            margin: 8
+                        }}
+                        />
+                        {selectedType && <EditProductTypeModal val={selectedType} isEditingProductType={isEditingProductType} setIsEditingProductType={setIsEditingProductType} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>}
+                    </View>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
@@ -108,14 +109,11 @@ const CreateProductTypeModal = ({visible, onClose, initProductTypes, setInitProd
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 32,
-        padding: 16
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginVertical: 16
+        marginVertical: 16,
+        marginLeft: 8
     }
 })
 

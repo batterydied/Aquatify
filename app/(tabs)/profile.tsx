@@ -13,7 +13,6 @@ import { useUserData } from "@/contexts/UserContext";
 import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import * as ImagePicker from "expo-image-picker";
 import { uploadAvatar, updateUsername } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EditProfilePictureModal from "@/components/EditProfilePictureModal";
@@ -22,6 +21,7 @@ import ProfilePicture from "@/components/ProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import ErrorText from "@/components/ErrorText";
 import CustomText from "@/components/CustomText";
+import { uploadImage } from "@/lib/imageUpload";
 
 export default function SettingPage() {
     const {userData, setUserData, fetchUserData} = useUserData();
@@ -58,46 +58,6 @@ export default function SettingPage() {
             setLoading(false);
         }
     }, [userData.name, userData.avatarFileURI]);
-
-    const uploadImage = async (mode: string) => {
-        try {
-            let result: ImagePicker.ImagePickerResult;
-
-            if (mode === 'gallery') {
-                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (!permission.granted) {
-                    alert('Permission to access the gallery is required!');
-                    return;
-                }
-
-                result = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ["images"],
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            } else {
-                const permission = await ImagePicker.requestCameraPermissionsAsync();
-                if (!permission.granted) {
-                    alert('Permission to access the camera is required!');
-                    return;
-                }
-
-                result = await ImagePicker.launchCameraAsync({
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            }
-
-            if (!result.canceled) {
-                saveImage(result.assets[0].uri); // Save the new image URI
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Error uploading image');
-        }
-    };
 
     const removeImage = () => {
         setImageUri(null);
@@ -233,7 +193,7 @@ export default function SettingPage() {
                                 }}/>}
                             </View>
                         </TouchableWithoutFeedback>
-                        <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={uploadImage} onRemove={removeImage}/>
+                        <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
                     </Modal>
                 </View>
             </View>
