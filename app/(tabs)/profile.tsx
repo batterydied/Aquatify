@@ -15,13 +15,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { uploadAvatar, updateUsername } from "@/lib/apiCalls";
 import { SafeAreaView } from "react-native-safe-area-context";
-import EditProfilePictureModal from "@/components/EditProfilePictureModal";
+import EditProfilePictureModal from "@/components/UploadImageOptionModal";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import ProfilePicture from "@/components/ProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import ErrorText from "@/components/ErrorText";
 import CustomText from "@/components/CustomText";
 import { uploadImage } from "@/lib/imageUpload";
+import { BASE_URL } from "@/lib/apiCalls";
 
 export default function SettingPage() {
     const {userData, setUserData, fetchUserData} = useUserData();
@@ -51,9 +52,10 @@ export default function SettingPage() {
         if (userData.name !== undefined) {
             setUsername(userData.name);
             setPreviousUsername(userData.name);
-            
-            setImageUri(userData.avatarFileURI);
-            setOriginalImageUri(userData.avatarFileURI); 
+            if(userData.avatarFileURI){
+                setImageUri(BASE_URL + userData.avatarFileURI);
+                setOriginalImageUri(BASE_URL + userData.avatarFileURI); 
+            }
     
             setLoading(false);
         }
@@ -81,7 +83,7 @@ export default function SettingPage() {
                 if (fileURI) {
                     // Update the userData context with the new avatar URI
                     setUserData({ ...userData, avatarFileURI: fileURI });
-                    setOriginalImageUri(imageUri); // Update the original image state
+                    setOriginalImageUri(BASE_URL + imageUri); // Update the original image state
                 } else {
                     setUserData({ ...userData, avatarFileURI: null});
                     setOriginalImageUri(null); 
@@ -193,7 +195,7 @@ export default function SettingPage() {
                                 }}/>}
                             </View>
                         </TouchableWithoutFeedback>
-                        <EditProfilePictureModal visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
+                        <EditProfilePictureModal haveRemove={true} visible={isEditingProfilePicture} onClose={()=>setEditingProfilePicture(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
                     </Modal>
                 </View>
             </View>

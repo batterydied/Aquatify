@@ -359,7 +359,6 @@ export async function uploadImage(previousUri: string | null, uri: string | null
     if(uri){
       const formData = new FormData();
       formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
-
       const response = await axios.post(`${BASE_URL}/api/file/upload/`, formData);
       return response.data.file.uri;
     }
@@ -389,15 +388,15 @@ export async function uploadAvatar(previousUri: string | null, uri: string | nul
     return null;
   }
 }
-export async function uploadShopAvatar(previousUri: string | null, uri: string | null, shopId: string) {
+export async function uploadShopAvatar(previousUri: string | null, path: string | null, shopId: string) {
   try {
-      if(uri){
-        const fileURI = await uploadImage(previousUri, uri);
+      if(path){
+        const fileURI = await uploadImage(previousUri, path);
         await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
           avatarFileURI: fileURI
         });
         return fileURI;
-      }else if(!uri && previousUri){
+      }else if(!path && previousUri){
         await deleteFile(extractFilename(previousUri));
         await axios.put(`${BASE_URL}/api/shop/${shopId}`, {
           avatarFileURI: null
@@ -444,6 +443,16 @@ export async function deleteShop(shopId: string, fileURI: string){
   } catch (error) {
     console.error("Error deleting shop: ", error);
     return null;
+  } 
+}
+
+export async function extractFilenameAndDelete(fileURI: string){
+  try {
+    if(fileURI){
+      await deleteFile(extractFilename(fileURI))
+    }
+  } catch (error) {
+    console.error("Error deleting file: ", error);
   } 
 }
 

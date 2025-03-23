@@ -77,7 +77,7 @@ class FileController {
           }
       
           // Construct the full URI for the uploaded file
-          const fileURI = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+          const fileURI = `/uploads/${req.file.filename}`;
       
           // Respond with the new file information
           res.status(200).json({

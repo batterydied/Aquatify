@@ -30,7 +30,7 @@ import ProfilePicture from "@/components/ProfilePicture";
 import EditableDescription from "@/components/EditableDescription";
 import EditableProfilePicture from "@/components/EditableProfilePicture";
 import RoundedTextInput from "@/components/RoundedTextInput";
-import EditProfilePictureModal from "@/components/EditProfilePictureModal";
+import EditProfilePictureModal from "@/components/UploadImageOptionModal";
 import DescriptionModal from "@/components/DescriptionModal";
 import FlatListItem from "@/components/FlatListItem";
 import AddProductButton from "@/components/PlusButton";
@@ -41,6 +41,7 @@ import ProductFilter from "@/components/ProductFilter";
 import CustomText from "@/components/CustomText";
 import { isMyShop } from "@/lib/validation";
 import { uploadImage } from "@/lib/imageUpload";
+import { BASE_URL } from "@/lib/apiCalls";
 
 export default function Shop() {
     const {userData} = useUserData();
@@ -93,8 +94,8 @@ export default function Shop() {
     useEffect(() => {
         if (shop) {
             if (shop.avatarFileURI){
-                setImageUri(shop.avatarFileURI);
-                setOriginalImageUri(shop.avatarFileURI);
+                setImageUri(BASE_URL+shop.avatarFileURI);
+                setOriginalImageUri(BASE_URL+shop.avatarFileURI);
             }
             setShopName(shop.shopName);
             setPreviousShopName(shop.shopName);
@@ -388,7 +389,7 @@ export default function Shop() {
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
-                <EditProfilePictureModal visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
+                <EditProfilePictureModal haveRemove={true} visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
             </Modal>
             <CreateProductModal visible={isCreatingProduct} onClose={()=>setIsCreatingProduct(false)} onSubmit={(product: any)=>{}}/>
         </SafeAreaView>

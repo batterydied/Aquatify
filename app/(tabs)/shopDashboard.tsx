@@ -17,7 +17,7 @@ import BackArrow from "@/components/BackArrow";
 import RoundedTextInput from "@/components/RoundedTextInput";
 import EditableDescription from "@/components/EditableDescription";
 import * as ImagePicker from "expo-image-picker";
-import EditProfilePictureModal from "@/components/EditProfilePictureModal";
+import EditProfilePictureModal from "@/components/UploadImageOptionModal";
 import { createShop } from "@/lib/apiCalls";
 import CreateShopButton from "@/components/PlusButton";
 import ErrorText from "@/components/ErrorText";
@@ -205,7 +205,7 @@ export default function ShopList() {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                        <EditProfilePictureModal visible={isEditingShopImage} onClose={()=>setEditingShopImage(false)} onUpload={uploadImage} onRemove={removeImage}/>
+                        <EditProfilePictureModal haveRemove={true} visible={isEditingShopImage} onClose={()=>setEditingShopImage(false)} onUpload={uploadImage} onRemove={removeImage}/>
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
