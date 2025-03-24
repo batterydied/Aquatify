@@ -358,7 +358,7 @@ export async function uploadImage(previousUri: string | null, uri: string | null
     }
     if(uri){
       const formData = new FormData();
-      formData.append("file", { uri: uri, name: "profile-image.png", type: "image/png" } as any);
+      formData.append("file", { uri: uri, name: ".png", type: "image/png" } as any);
       const response = await axios.post(`${BASE_URL}/api/file/upload/`, formData);
       return response.data.file.uri;
     }

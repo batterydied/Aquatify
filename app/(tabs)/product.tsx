@@ -25,6 +25,7 @@ import CustomText from "@/components/CustomText";
 import { isMyShop } from "@/lib/validation";
 import CogButton from "@/components/CogButton";
 import { FontAwesome } from "@expo/vector-icons";
+import ProductImageFlatlist from "@/components/ProductImageFlatlist";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -33,7 +34,7 @@ import { FontAwesome } from "@expo/vector-icons";
     const [product, setProduct] = useState<productInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const scrollX = useRef(new Animated.Value(0)).current;
-    const {width } = useWindowDimensions();
+    const {width} = useWindowDimensions();
     const [selectedType, setSelectedType] = useState<productType | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState<string>("1");
     const [showAllReviews, setShowAllReviews] = useState(false);

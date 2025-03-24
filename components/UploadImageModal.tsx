@@ -13,9 +13,7 @@ const UploadImageModal = ({visible, onClose, imageURIs, setImageURIs} :
     const renderImage = (imageURI: string)=>{
         return (
             <View key={imageURI}>
-                <Text>
-                    
-                </Text>
+               
             </View>
         )
     }
@@ -24,7 +22,7 @@ const UploadImageModal = ({visible, onClose, imageURIs, setImageURIs} :
             <View style={{flex:1, marginTop: 64}}>
                 <BackArrow handleBack={onClose} />
                 <View style={{padding: 16}}>
-                    <CustomButton title="Select images" onPress={()=>uploadImage("gallery", saveImage)}/>
+                    <CustomButton title="Select images" onPress={()=>{uploadImage("gallery", saveImage)}}/>
                 </View>
                 {imageURIs.map((imageURI: string)=>renderImage(imageURI))}
             </View>
