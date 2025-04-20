@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import CategoryDropdown from './MultiSelectDropdown';
 import RoundedTextInput from './RoundedTextInput';
-import { categoryTypes, image, initProductType } from '@/lib/interface';
+import { categoryTypes, image, initProduct, initProductType } from '@/lib/interface';
 import EditableDescription from './EditableDescription';
 import ProductTypeModal from './ProductTypeModal';
 import BackArrow from './BackArrow';
@@ -15,11 +15,13 @@ import UploadImageModal from './UploadImageModal';
 const CreateProductModal = ({
     visible, 
     onClose, 
-    onSubmit
+    onSubmit,
+    shopId
 }: {
     visible: boolean, 
     onClose: () => void, 
-    onSubmit: (product: any) => void
+    onSubmit: (product: initProduct) => void,
+    shopId: string
 }) => {
     const [name, setName] = useState('');
     const [secondaryName, setSecondaryName] = useState('');
@@ -40,6 +42,9 @@ const CreateProductModal = ({
                 secondaryName,
                 categories: selectedCategories,
                 description,
+                productTypes: initProductTypes,
+                images: images,
+                shopId: shopId
             };
             onSubmit(newProduct);
             handleReset();

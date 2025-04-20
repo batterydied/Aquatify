@@ -160,9 +160,11 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
               <TouchableOpacity activeOpacity={0.7} onPress={goToShop}>
                 <CustomText text={"Visit the " + product.shop.shopName + " store"} style={{fontSize: 18, color: "#1e40af"}} />
               </TouchableOpacity>
-              <CustomText text={"★" +
+        
+              <CustomText text={product.rating? "★" +
                   (product.rating % 1 === 0 ? product.rating.toFixed(0) : product.rating.toFixed(1)) +
-                  `(${product.reviews.length})`} />
+                  `(${product.reviews.length})` : "No rating yet"} 
+              />
   
               <View className="w-full h-[1px] bg-gray-600 my-3" />
 

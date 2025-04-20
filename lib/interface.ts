@@ -165,3 +165,15 @@ export interface shopInterface {
     description: string;
     avatarFileURI: string;
 }
+
+export interface initProduct {
+    name: string;
+    secondaryName?: string;
+    shopId: string;
+    categories: string[];
+    description?: string;
+  
+    images?: image[];
+    productTypes?: initProductType[];
+  }
+  

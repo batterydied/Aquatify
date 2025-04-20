@@ -3,6 +3,7 @@ import { sortImageById } from "../lib/apiCalls";
 import { productGrid } from "../lib/interface";
 import { goToProductPage } from "../lib/goToProductPage";
 import { formatReviewsCount } from "../lib/reviewFormat";
+import CustomText from "./CustomText";
 
  const FlatlistItem = ({item, path, itemWidth}: {item: productGrid, path: string, itemWidth: number}) => {
     const images = sortImageById(item.images);
@@ -20,7 +21,8 @@ import { formatReviewsCount } from "../lib/reviewFormat";
                     <Text style={{ fontFamily: "MontserratRegular" }}>{item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}</Text>
                     <View className="flex-row justify-between">
                         <Text style={{ fontFamily: "MontserratRegular" }}>{'$' + item.price}</Text>
-                        <Text style={{ fontFamily: "MontserratRegular" }}>{item.rating % 1 === 0 ? `${item.rating.toFixed(0)}` : `${item.rating.toFixed(1)}`}{'★'}{` (${formatReviewsCount(item.reviews.length)})`}</Text>
+                        <CustomText text={item.rating? `${item.rating % 1 === 0 ? item.rating.toFixed(0) : item.rating.toFixed(1)}★ (${formatReviewsCount(item.reviews.length)})` 
+                        : "No rating yet"} />
                     </View>
                 </View>
             </TouchableOpacity>

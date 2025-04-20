@@ -1,4 +1,4 @@
-import { productType, image, address, addressData, paymentMethodData, cartItem } from "./interface";
+import { productType, image, address, addressData, paymentMethodData, cartItem, initProduct } from "./interface";
 import { extractFilename } from "./extractFilename";
 import axios from 'axios';
 import { __IP } from "../GLOBAL"
@@ -464,6 +464,16 @@ export async function updateShopStatus(userId: string, status: boolean){
     return response.data;
   } catch (error) {
     console.error("Error updating shop status: ", error);
+    return null;
+  }
+}
+
+export async function uploadProduct(product: initProduct){
+  try {
+    const response = await axios.post(`${BASE_URL}/api/product/`, product)
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading product: ", error);
     return null;
   }
 }

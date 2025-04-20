@@ -16,14 +16,15 @@ import {
     updateShopName, 
     uploadShopAvatar,
     deleteShop, 
-    updateShopStatus 
+    updateShopStatus, 
+    uploadProduct
 } from "@/lib/apiCalls";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUserData } from "@/contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { filterCriteriaType, productGrid, shopInterface } from "@/lib/interface";
+import { filterCriteriaType, initProduct, productGrid, shopInterface } from "@/lib/interface";
 import { calculateItemWidthAndRow } from "@/lib/calculateItemWidthAndRow";
 import BackArrow from "@/components/BackArrow";
 import ProfilePicture from "@/components/ProfilePicture";
@@ -391,7 +392,7 @@ export default function Shop() {
                 </TouchableWithoutFeedback>
                 <EditProfilePictureModal haveRemove={true} visible={isEditingShopAvatar} onClose={()=>setIsEditingShopAvatar(false)} onUpload={(mode: string)=>uploadImage(mode, saveImage)} onRemove={removeImage}/>
             </Modal>
-            <CreateProductModal visible={isCreatingProduct} onClose={()=>setIsCreatingProduct(false)} onSubmit={(product: any)=>{}}/>
+            <CreateProductModal shopId={shop.id} visible={isCreatingProduct} onClose={()=>setIsCreatingProduct(false)} onSubmit={(product: initProduct)=>{uploadProduct(product)}}/>
         </SafeAreaView>
     );
 }
