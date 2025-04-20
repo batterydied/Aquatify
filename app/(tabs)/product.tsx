@@ -1,7 +1,6 @@
 import {
     View,
     TouchableOpacity,
-    Image,
     FlatList,
     Animated,
     ActivityIndicator,
@@ -10,8 +9,8 @@ import {
   } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useState, useRef } from "react";
-import { getProductById, addItemToCart, sortImageById, deleteProduct, extractFilenameAndDelete } from "../../lib/apiCalls";
-import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
+import { getProductById, addItemToCart, sortImageById, deleteProduct, extractFilenameAndDelete, updateProduct } from "../../lib/apiCalls";
+import { productInterface, review, productType, reviewSortOption, initProduct } from "../../lib/interface";
 import ProductDropdownComponent from "../../components/ProductDropdown";
 import QuantityDropdownComponent from "../../components/QuantityDropdown";
 import ReviewFilterDropdown from "../../components/ReviewFilterDropdwon";
@@ -26,6 +25,7 @@ import { isMyShop } from "@/lib/validation";
 import CogButton from "@/components/CogButton";
 import { FontAwesome } from "@expo/vector-icons";
 import ProductImageFlatlist from "@/components/ProductImageFlatlist";
+import UpdateProductModal from "@/components/UpdateProductModal";
   
   export default function ProductPage() {
     const {userData} = useUserData();
@@ -43,6 +43,7 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
       value: "sortByStarsHighest",
     });
     const [isEditingProduct, setIsEditingProduct] = useState(false);
+    const [isUpdatingProduct, setIsUpdatingProduct] = useState(false);
     let imageWidth = width > 600 ? width * 0.4 : width * 0.8; // Set image width to 80% of screen width
   
     const fetchProductData = async () => {
@@ -242,10 +243,17 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
     };
 
     const handleDelete = ()=>{
-      product.images.map((img)=>{extractFilenameAndDelete(img.url)})
-      deleteProduct(productId)
-      setIsEditingProduct(false)
-      handleBack()
+      product.images.map((img)=>{extractFilenameAndDelete(img.url)});
+      deleteProduct(productId);
+      setIsEditingProduct(false);
+      handleBack();
+    }
+
+    const handleSubmit = async (productId: string, product: any)=>{
+      await updateProduct(productId, product);
+      fetchProductData();
+      setIsUpdatingProduct(false);
+      setIsEditingProduct(false);
     }
   
     const sortedAndLimitedReviews = product.reviews
@@ -300,7 +308,7 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
           <View style={{flex: 1, backgroundColor: "#E5E7EB"}}>
             <BackArrow style={{marginTop: 64}} handleBack={()=>{setIsEditingProduct(false)}}/>
             <View style={{flex: 1, justifyContent: "center", alignItems: "center", marginTop: -64}}>
-              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> {}}>
+              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> setIsUpdatingProduct(true)}>
                   <View className="bg-blue-500 rounded-xl p-4 flex-row items-center">
                       <FontAwesome name="upload" size={20} color="white" className="mr-2"/>
                       <CustomText style={{color: "white"}}
@@ -316,10 +324,11 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
                       isBold={true}/>
                   </View>
               </TouchableOpacity>
-
             </View>
+            <UpdateProductModal product={product} onSubmit={handleSubmit} onClose={()=>setIsUpdatingProduct(false)} visible={isUpdatingProduct} />
           </View>
         </Modal>
+
       </SafeAreaView>
     );
   }

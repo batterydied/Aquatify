@@ -487,3 +487,13 @@ export async function deleteProduct(productId: string){
     return null;
   }
 }
+
+export async function updateProduct(productId: string, product: any){
+  try {
+    const response = await axios.put(`${BASE_URL}/api/product/${productId}`, product)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating product: ", error);
+    return null;
+  }
+}

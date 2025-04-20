@@ -43,6 +43,7 @@ export interface productInterface{
     rating: number;
     images: image[];
     reviews: review[];
+    categories: string[];
     productTypes: productType[];
     price: number;
 }
