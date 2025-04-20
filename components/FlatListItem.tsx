@@ -12,7 +12,7 @@ import { formatReviewsCount } from "../lib/reviewFormat";
         <View className="flex-1 m-1">
             <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, path)}>
                 <Image
-                    source={{ uri: images[0].url }}
+                    source={images && images[0]? { uri: images[0].url }: require('../assets/images/no-image-icon.png')}
                     className="h-[85%] w-full rounded-lg"
                     resizeMode="cover"
                 />

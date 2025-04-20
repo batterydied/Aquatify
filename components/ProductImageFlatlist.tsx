@@ -10,9 +10,8 @@ const ProductImageFlatlist = ({images, imageWidth, width, scrollX}:{images: imag
             renderItem={({ item, index }) => (
                 <Image
                 key={index} // This will ensure each image has a unique key
-                source={{ /*uri: BASE_URL + item.url*/ uri: item.url }}
-                style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                className="rounded-lg"
+                source={item.url? {uri: item.url} : require('../assets/images/no-image-icon.png')}
+                style={{ width: imageWidth, height: imageWidth, borderRadius: 12 }} // Add a style for the image
                 />
             )}
             keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)

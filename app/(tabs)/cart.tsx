@@ -117,7 +117,7 @@ export default function CartPage() {
             </Text>
             <View className="flex-row mb-2">
               <Image
-                source={{ uri: sortImageById(item.Product.images)[0].url }}
+                source={item.Product.images && item.Product.images[0]? { uri: sortImageById(item.Product.images)[0].url } : require('../../assets/images/no-image-icon.png')}
                 className="rounded-md mr-2"
                 style={{
                   width: width * 0.2,
