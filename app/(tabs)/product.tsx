@@ -10,7 +10,7 @@ import {
   } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useState, useRef } from "react";
-import { getProductById, addItemToCart, sortImageById } from "../../lib/apiCalls";
+import { getProductById, addItemToCart, sortImageById, deleteProduct, extractFilenameAndDelete } from "../../lib/apiCalls";
 import { productInterface, review, productType, reviewSortOption } from "../../lib/interface";
 import ProductDropdownComponent from "../../components/ProductDropdown";
 import QuantityDropdownComponent from "../../components/QuantityDropdown";
@@ -240,6 +240,13 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
           return reviews;
       }
     };
+
+    const handleDelete = ()=>{
+      product.images.map((img)=>{extractFilenameAndDelete(img.url)})
+      deleteProduct(productId)
+      setIsEditingProduct(false)
+      handleBack()
+    }
   
     const sortedAndLimitedReviews = product.reviews
       .sort((a, b) => b.rating - a.rating) // Sort by updatedAt (newest first)
@@ -293,7 +300,6 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
           <View style={{flex: 1, backgroundColor: "#E5E7EB"}}>
             <BackArrow style={{marginTop: 64}} handleBack={()=>{setIsEditingProduct(false)}}/>
             <View style={{flex: 1, justifyContent: "center", alignItems: "center", marginTop: -64}}>
-              <CustomText text="test"/>
               <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> {}}>
                   <View className="bg-blue-500 rounded-xl p-4 flex-row items-center">
                       <FontAwesome name="upload" size={20} color="white" className="mr-2"/>
@@ -302,7 +308,7 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
                       isBold={true}/>
                   </View>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={()=> {}}>
+              <TouchableOpacity activeOpacity={0.7} className="m-4" onPress={handleDelete}>
                   <View className="bg-red-500 rounded-xl p-4 flex-row items-center">
                       <FontAwesome name="trash" size={20} color="white" className="mr-2"/>
                       <CustomText style={{color: "white"}}

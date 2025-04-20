@@ -43,7 +43,7 @@ const CreateProductModal = ({
                 categories: selectedCategories,
                 description,
                 productTypes: initProductTypes,
-                images: images,
+                images: images.map((img)=>img.url),
                 shopId: shopId
             };
             onSubmit(newProduct);
@@ -59,6 +59,7 @@ const CreateProductModal = ({
         setDescription('');
         setInitProductTypes([]);
         setProductTypeError(false);
+        setImages([]);
     };
 
     return (

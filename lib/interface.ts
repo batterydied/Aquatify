@@ -173,7 +173,7 @@ export interface initProduct {
     categories: string[];
     description?: string;
   
-    images?: image[];
+    images?: string[];
     productTypes?: initProductType[];
   }
   

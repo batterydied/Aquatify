@@ -477,3 +477,13 @@ export async function uploadProduct(product: initProduct){
     return null;
   }
 }
+
+export async function deleteProduct(productId: string){
+  try {
+    const response = await axios.delete(`${BASE_URL}/api/product/${productId}`)
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting product: ", error);
+    return null;
+  }
+}

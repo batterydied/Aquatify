@@ -1,5 +1,5 @@
 import { View, Image, TouchableOpacity, Text } from "react-native";
-import { sortImageById } from "../lib/apiCalls";
+import { BASE_URL, sortImageById } from "../lib/apiCalls";
 import { productGrid } from "../lib/interface";
 import { goToProductPage } from "../lib/goToProductPage";
 import { formatReviewsCount } from "../lib/reviewFormat";
@@ -11,9 +11,10 @@ import CustomText from "./CustomText";
     return (
         <View className="mb-4" style={[{ width: itemWidth, height: itemWidth }]}>
         <View className="flex-1 m-1">
-            <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, path)}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => goToProductPage(item.productId, path)}
+            style={{marginBottom: 8}}>
                 <Image
-                    source={images && images[0]? { uri: images[0].url }: require('../assets/images/no-image-icon.png')}
+                    source={images && images[0]? { uri: BASE_URL+ images[0].url }: require('../assets/images/no-image-icon.png')}
                     className="h-[85%] w-full rounded-lg"
                     resizeMode="cover"
                 />
