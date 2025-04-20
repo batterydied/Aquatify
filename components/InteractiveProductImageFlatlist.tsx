@@ -1,19 +1,35 @@
 import { BASE_URL } from "@/lib/apiCalls";
 import { image } from "@/lib/interface";
-import { FlatList, View, Image, Animated } from "react-native";
+import { FlatList, View, Image, Animated, TouchableOpacity } from "react-native";
+import CustomText from "./CustomText";
+import { extractFilenameAndDelete } from "@/lib/apiCalls";
 
-const ProductImageFlatlist = ({images, imageWidth, width, scrollX}:{images: image[], imageWidth: number, width: number, scrollX: Animated.Value})=>{
+const InteractiveProductImageFlatlist = ({setImages, images, imageWidth, width, scrollX}:{setImages: (vals: image[])=> void, images: image[], imageWidth: number, width: number, scrollX: Animated.Value})=>{
     return (
         <View style={{flexDirection: "column", alignItems: "center"}}>
             <FlatList
             data={images}
             renderItem={({ item, index }) => (
-                <Image
-                key={index} // This will ensure each image has a unique key
-                source={{ /*uri: BASE_URL + item.url*/ uri: item.url }}
-                style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                className="rounded-lg"
-                />
+                <View
+                key={index}
+                >
+                    <Image
+                    source={{ uri: BASE_URL + item.url }}
+                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
+                    className="rounded-lg"
+                    />
+                    <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={{
+                        padding: 8
+                    }}
+                    onPress={()=>{
+                        extractFilenameAndDelete(item.url)
+                        setImages(images.filter(img => img.url !== item.url))
+                        }}>
+                        <CustomText style={{fontSize: 16}}text="Delete" />
+                    </TouchableOpacity>
+                </View>
             )}
             keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
             horizontal
@@ -60,4 +76,4 @@ const ProductImageFlatlist = ({images, imageWidth, width, scrollX}:{images: imag
 
 }
 
-export default ProductImageFlatlist
+export default InteractiveProductImageFlatlist

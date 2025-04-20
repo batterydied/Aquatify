@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import CategoryDropdown from './MultiSelectDropdown';
 import RoundedTextInput from './RoundedTextInput';
-import { categoryTypes, initProductType } from '@/lib/interface';
+import { categoryTypes, image, initProductType } from '@/lib/interface';
 import EditableDescription from './EditableDescription';
 import ProductTypeModal from './ProductTypeModal';
 import BackArrow from './BackArrow';
@@ -29,7 +29,7 @@ const CreateProductModal = ({
     const [isCreatingProductType, setIsCreatingProductType] = useState(false);
     const [productTypeError, setProductTypeError] = useState(false);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
-    const [imageURIs, setImageURIs] = useState<string[]>([]);
+    const [images, setImages] = useState<image[]>([]);
 
     const handleSubmit = () => {
         if(initProductTypes.length < 1){
@@ -104,7 +104,7 @@ const CreateProductModal = ({
                             </View>
                         </TouchableOpacity>
                         <ProductTypeModal visible={isCreatingProductType} onClose={()=>setIsCreatingProductType(false)} initProductTypes={initProductTypes} setInitProductTypes={setInitProductTypes}/>
-                        <UploadImageModal visible={isUploadingImage} onClose={()=>setIsUploadingImage(false)} imageURIs={imageURIs} setImageURIs={setImageURIs}/>
+                        <UploadImageModal visible={isUploadingImage} onClose={()=>setIsUploadingImage(false)} images={images} setImages={setImages}/>
                         <TouchableOpacity />
                         <CustomButton 
                         title="Submit" 

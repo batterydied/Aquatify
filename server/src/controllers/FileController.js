@@ -109,7 +109,7 @@ class FileController {
     }
 
     static deleteFile(req, res) {
-        const { filename } = req.params; // Treat the `id` parameter as the filename
+        const { filename } = req.params; // Deleting by filename
         const filePath = path.join(__dirname, '../uploads', filename); // Construct the file path
 
         // Check if the file exists

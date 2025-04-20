@@ -152,53 +152,7 @@ import ProductImageFlatlist from "@/components/ProductImageFlatlist";
         <View>
           <View className={width > 600 ? "flex-row justify-evenly" : "flex-column"}>
             {/* Product Images */}
-            <View className="items-center">
-              <FlatList
-                data={images}
-                renderItem={({ item, index }) => (
-                  <Image
-                    key={index} // This will ensure each image has a unique key
-                    source={{ uri: item.url }}
-                    style={{ width: imageWidth, height: imageWidth }} // Add a style for the image
-                    className="rounded-lg"
-                  />
-                )}
-                keyExtractor={(item) => item.id.toString()} // Ensures each item has a unique key (item.id)
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled
-                bounces={false}
-                style={{ width: imageWidth }}
-                onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                  { useNativeDriver: false }
-                )}
-              />
-              {/* Custom Animated Scroll Indicator */}
-              <View className="flex-row justify-center mt-4">
-                {product.images.map((_, index) => {
-                  const dotOpacity = scrollX.interpolate({
-                    inputRange: [
-                      (index - 1) * width, // Previous page
-                      index * width, // Current page
-                      (index + 1) * width, // Next page
-                    ],
-                    outputRange: [0.3, 1, 0.3],
-                    extrapolate: "clamp", // Ensures values stay in the range [0.3, 1, 0.3]
-                  });
-  
-                  return (
-                    <Animated.View
-                      key={index}
-                      className="h-2 w-2 mx-2 bg-black rounded-xl mb-2"
-                      style={{
-                        opacity: dotOpacity,
-                      }}
-                    />
-                  );
-                })}
-              </View>
-            </View>
+            <ProductImageFlatlist images={images} imageWidth={imageWidth} width={width} scrollX={scrollX}/>
             <View className={width > 600 ? "w-[50%]" : "w-[100%]"}>
               {/* Product Details */}
               <CustomText text={product.secondaryName} style={{color: "#374151"}} />
